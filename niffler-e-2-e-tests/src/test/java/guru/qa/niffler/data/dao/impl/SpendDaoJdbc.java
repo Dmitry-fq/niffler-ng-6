@@ -1,7 +1,6 @@
 package guru.qa.niffler.data.dao.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.Databases;
 import guru.qa.niffler.data.dao.SpendDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
@@ -21,10 +20,15 @@ public class SpendDaoJdbc implements SpendDao {
 
     private static final Config CFG = Config.getInstance();
 
+    private final Connection connection;
+
+    public SpendDaoJdbc(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public SpendEntity create(SpendEntity spend) {
-        try (Connection connection = Databases.connection(CFG.spendJdbcUrl())) {
-            try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = connection.prepareStatement(
                     "INSERT INTO spend (username, spend_date, currency, amount, description, category_id) " +
                             "VALUES ( ?, ?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
@@ -47,8 +51,8 @@ public class SpendDaoJdbc implements SpendDao {
                     }
                 }
                 spend.setId(generatedKey);
+
                 return spend;
-            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -138,4 +142,3 @@ public class SpendDaoJdbc implements SpendDao {
         return spendEntity;
     }
 }
-
