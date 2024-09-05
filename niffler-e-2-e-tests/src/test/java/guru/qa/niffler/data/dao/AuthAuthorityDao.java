@@ -8,13 +8,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface AuthAuthorityDao {
-    AuthorityEntity createAuthority(AuthorityEntity authority) throws SQLException;
+    void createAuthority(AuthorityEntity... authority) throws SQLException;
 
-    Optional<AuthorityEntity> findById(UUID id);
+    Optional<AuthorityEntity> findAuthorityById(UUID id);
 
-    Optional<AuthorityEntity> findByUserId(UUID userId);
+    List<AuthorityEntity> findAuthoritiesByUserId(UUID userId);
 
-    void delete(AuthorityEntity user);
+    void deleteAuthority(AuthorityEntity user);
 
-    List<AuthorityEntity> findAll();
+    List<AuthorityEntity> findAllAuthorities();
 }

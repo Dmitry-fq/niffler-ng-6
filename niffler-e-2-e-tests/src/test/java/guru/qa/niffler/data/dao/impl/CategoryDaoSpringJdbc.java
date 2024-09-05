@@ -24,7 +24,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
     }
 
     @Override
-    public CategoryEntity create(CategoryEntity category) {
+    public CategoryEntity createCategory(CategoryEntity category) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         KeyHolder kh = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
@@ -70,7 +70,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
     }
 
     @Override
-    public List<CategoryEntity> findAllByUsername(String username) {
+    public List<CategoryEntity> findAllCategoriesByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         return jdbcTemplate.query(
                 "SELECT * FROM category WHERE username = ?",
@@ -89,7 +89,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
     }
 
     @Override
-    public List<CategoryEntity> findAll() {
+    public List<CategoryEntity> findAllCategories() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         return jdbcTemplate.query(
                 "SELECT * FROM category",

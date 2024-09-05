@@ -9,11 +9,11 @@ import java.util.UUID;
 public interface UdUserDao {
     UserEntity createUser(UserEntity user);
 
-    Optional<UserEntity> findById(UUID id);
+    Optional<UserEntity> findUserById(UUID id);
 
-    Optional<UserEntity> findByUsername(String username);
+    Optional<UserEntity> findUserByUsername(String username);
 
-    void delete(UserEntity user);
+    void deleteUser(UserEntity user);
 
-    List<UserEntity> findAll();
+    List<UserEntity> findAllUsers();
 }
