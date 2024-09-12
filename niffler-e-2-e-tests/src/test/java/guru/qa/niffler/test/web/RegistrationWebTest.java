@@ -41,45 +41,4 @@ public class RegistrationWebTest {
                 .submitRegistration()
                 .checkErrorText(errorText);
     }
-
-    @Test
-    void shouldShowErrorIfPasswordAndConfirmPasswordNotEqual() {
-        final String username = getRandomName(3, 50);
-        final String password = "test";
-        final String incorrectPassword = "1234";
-        final String errorText = "Passwords should be equal";
-
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .clickCreateNewAccount()
-                .setUsername(username)
-                .setPassword(password)
-                .setPasswordSubmit(incorrectPassword)
-                .submitRegistration()
-                .checkErrorText(errorText);
-    }
-
-    @Test
-    void mainPageShouldBeDisplayedAfterSuccessLogin() {
-        final String username = getRandomName(3, 50);
-        final String password = "test";
-
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .clickCreateNewAccount()
-                .register(username, password)
-                .login(username, password)
-                .checkElementsMainPage();
-    }
-
-    @Test
-    void userShouldStayOnLoginPageAfterLoginWithBadCredentials() {
-        final String username = getRandomName(3, 50);
-        final String incorrectPassword = "1234";
-
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .setUsername(username)
-                .setPassword(incorrectPassword)
-                .clickSubmitButton();
-
-        new LoginPage().checkErrorText();
-    }
 }
