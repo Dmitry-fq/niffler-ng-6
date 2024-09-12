@@ -2,6 +2,7 @@ buildscript {
     ext {
         grpcVersion = '1.66.0'
         junitVersion = '5.11.0'
+        assertJVersion = '3.26.3'
         allureVersion = '2.29.0'
         selenideVersion = '7.4.2'
         retrofitVersion = '2.11.0'
@@ -67,6 +68,8 @@ dependencies {
     testImplementation "org.slf4j:slf4j-api:${slf4jVersion}"
     // JUnit
     testImplementation "org.junit.jupiter:junit-jupiter:${junitVersion}"
+    // AssertJ
+    testImplementation "org.assertj:assertj-core:${assertJVersion}"
     // REST
     testImplementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     testImplementation "com.squareup.retrofit2:converter-jackson:${retrofitVersion}"
