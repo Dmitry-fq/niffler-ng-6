@@ -31,7 +31,7 @@ public class SpendApiClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertThat(response.code()).isEqualTo(200);
+        assertThat(response.code()).isEqualTo(201);
 
         return response.body();
     }
