@@ -2,8 +2,8 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class RegisterPage {
 
@@ -59,9 +59,7 @@ public class RegisterPage {
     }
 
     public RegisterPage checkErrorText(String expectedText) {
-        assertThat(error.getText())
-                .as("Текст ошибки некорректный")
-                .isEqualTo(expectedText);
+        error.shouldHave(text(expectedText));
 
         return this;
     }

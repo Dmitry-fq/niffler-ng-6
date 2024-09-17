@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-import static guru.qa.niffler.utils.Utils.getRandomName;
+import static guru.qa.niffler.utils.Utils.getRandomNameIfEmpty;
 
 public class CreateCategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback {
 
@@ -21,9 +21,9 @@ public class CreateCategoryExtension implements BeforeEachCallback, AfterTestExe
                 .ifPresent(annotation -> {
                     CategoryJson category = new CategoryJson(
                             null,
-                            getRandomName(1, 30),
+                            getRandomNameIfEmpty(annotation.name(), 1, 30),
                             annotation.username(),
-                            annotation.archived()
+                            false
                     );
                     CategoryJson createdCategory = spendApiClient.createCategory(category);
                     if (annotation.archived()) {
@@ -45,19 +45,12 @@ public class CreateCategoryExtension implements BeforeEachCallback, AfterTestExe
     @Override
     public void afterTestExecution(ExtensionContext context) {
         CategoryJson category = context.getStore(CreateCategoryExtension.NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-        if (!category.archived()) {
-            CategoryJson updatedCategory = new CategoryJson(
-                    category.id(),
-                    category.name(),
-                    category.username(),
-                    true
-            );
-            updatedCategory = spendApiClient.updateCategory(updatedCategory);
-
-            context.getStore(NAMESPACE).put(
-                    context.getUniqueId(),
-                    updatedCategory
-            );
-        }
+        CategoryJson updatedCategory = new CategoryJson(
+                category.id(),
+                category.name(),
+                category.username(),
+                true
+        );
+        spendApiClient.updateCategory(updatedCategory);
     }
 }
