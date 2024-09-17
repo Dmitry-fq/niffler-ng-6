@@ -7,7 +7,7 @@ import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static guru.qa.niffler.utils.Utils.getRandomName;
+import static guru.qa.niffler.utils.RandomDataUtils.getRandomName;
 
 @ExtendWith(BrowserExtension.class)
 public class RegistrationWebTest {

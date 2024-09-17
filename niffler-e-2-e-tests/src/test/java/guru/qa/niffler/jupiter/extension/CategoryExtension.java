@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-import static guru.qa.niffler.utils.Utils.getRandomName;
+import static guru.qa.niffler.utils.RandomDataUtils.getRandomName;
 
 public class CategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
 
