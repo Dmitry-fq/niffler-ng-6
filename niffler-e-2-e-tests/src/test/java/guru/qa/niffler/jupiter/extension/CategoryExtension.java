@@ -1,17 +1,21 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.SpendApiClient;
+import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.model.CategoryJson;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
 import static guru.qa.niffler.utils.Utils.getRandomName;
 
-public class CreateCategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback {
+public class CategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
 
-    public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CreateCategoryExtension.class);
+    public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
 
     private final SpendApiClient spendApiClient = new SpendApiClient();
 
@@ -44,7 +48,7 @@ public class CreateCategoryExtension implements BeforeEachCallback, AfterTestExe
 
     @Override
     public void afterTestExecution(ExtensionContext context) {
-        CategoryJson category = context.getStore(CreateCategoryExtension.NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
+        CategoryJson category = context.getStore(CategoryExtension.NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
         if (!category.archived()) {
             CategoryJson updatedCategory = new CategoryJson(
                     category.id(),
@@ -60,4 +64,15 @@ public class CreateCategoryExtension implements BeforeEachCallback, AfterTestExe
             );
         }
     }
+
+    @Override
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return parameterContext.getParameter().getType().isAssignableFrom(CategoryJson.class);
+    }
+
+    @Override
+    public CategoryJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return extensionContext.getStore(CategoryExtension.NAMESPACE).get(extensionContext.getUniqueId(), CategoryJson.class);
+    }
+
 }
