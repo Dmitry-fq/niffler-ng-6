@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-import static guru.qa.niffler.utils.Utils.getRandomName;
+import static guru.qa.niffler.utils.Utils.getRandomNameIfEmpty;
 
 public class CategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
 
@@ -25,9 +25,9 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                 .ifPresent(annotation -> {
                     CategoryJson category = new CategoryJson(
                             null,
-                            getRandomName(1, 30),
+                            getRandomNameIfEmpty(annotation.name(), 1, 30),
                             annotation.username(),
-                            annotation.archived()
+                            false
                     );
                     CategoryJson createdCategory = spendApiClient.createCategory(category);
                     if (annotation.archived()) {
@@ -49,20 +49,13 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
     @Override
     public void afterTestExecution(ExtensionContext context) {
         CategoryJson category = context.getStore(CategoryExtension.NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-        if (!category.archived()) {
             CategoryJson updatedCategory = new CategoryJson(
                     category.id(),
                     category.name(),
                     category.username(),
                     true
             );
-            updatedCategory = spendApiClient.updateCategory(updatedCategory);
-
-            context.getStore(NAMESPACE).put(
-                    context.getUniqueId(),
-                    updatedCategory
-            );
-        }
+            spendApiClient.updateCategory(updatedCategory);
     }
 
     @Override

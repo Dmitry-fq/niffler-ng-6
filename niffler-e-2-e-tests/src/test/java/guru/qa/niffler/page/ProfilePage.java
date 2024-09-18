@@ -2,10 +2,10 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
 
+import static com.codeborne.selenide.Condition.attribute;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProfilePage implements Header {
 
@@ -14,9 +14,7 @@ public class ProfilePage implements Header {
     private final SelenideElement showArchivedCheckbox = $x("//input[contains(@type, 'checkbox')]");
 
     public void checkUsername(String currentUsername) {
-        assertThat(username.getValue())
-                .as("username некорректный")
-                .isEqualTo(currentUsername);
+        username.shouldHave(attribute("value", currentUsername));
     }
 
     public ProfilePage clickShowArchivedCheckbox() {
@@ -25,17 +23,21 @@ public class ProfilePage implements Header {
         return this;
     }
 
-    public void checkCategoryArchived(boolean archived, String categoryName) {
-        SelenideElement category = $x(String.format("//*[text()='%s']", categoryName));
-        
-        if (archived) {
-            SelenideElement unarchiveButton = category.$x("../..//button[@aria-label='Unarchive category']");
-            unarchiveButton.shouldBe(visible);
-        } else {
-            SelenideElement editCategoryNameButton = category.$x("../..//button[@aria-label='Edit category']");
-            editCategoryNameButton.shouldBe(visible);
-            SelenideElement archiveButton = category.$x("../..//button[@aria-label='Archive category']");
-            archiveButton.shouldBe(visible);
-        }
+    public void checkCategoryArchived(String categoryName) {
+        SelenideElement category = getCategoryByCategoryName(categoryName);
+        SelenideElement unarchiveButton = category.$x("../..//button[@aria-label='Unarchive category']");
+        unarchiveButton.shouldBe(visible);
+    }
+
+    public void checkCategoryActive(String categoryName) {
+        SelenideElement category = getCategoryByCategoryName(categoryName);
+        SelenideElement editCategoryNameButton = category.$x("../..//button[@aria-label='Edit category']");
+        editCategoryNameButton.shouldBe(visible);
+        SelenideElement archiveButton = category.$x("../..//button[@aria-label='Archive category']");
+        archiveButton.shouldBe(visible);
+    }
+
+    private SelenideElement getCategoryByCategoryName(String categoryName) {
+        return $x(String.format("//*[text()='%s']", categoryName));
     }
 }

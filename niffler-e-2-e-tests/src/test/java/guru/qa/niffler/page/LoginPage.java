@@ -2,9 +2,9 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoginPage {
 
@@ -20,7 +20,7 @@ public class LoginPage {
 
     public MainPage login(String username, String password) {
 
-        return this.setUsername(username)
+        return setUsername(username)
                 .setPassword(password)
                 .clickSubmitButton();
     }
@@ -52,9 +52,7 @@ public class LoginPage {
     public LoginPage checkErrorText() {
         String expectedText = "Неверные учетные данные пользователя";
 
-        assertThat(error.getText())
-                .as("Текст ошибки некорректный")
-                .isEqualTo(expectedText);
+        error.shouldHave(text(expectedText));
 
         return this;
     }
