@@ -13,6 +13,8 @@ public interface Header {
 
     int profileIndex = 0;
 
+    int friendsIndex = 1;
+
     default Header clickSettingsButton() {
         settingsButton.click();
 
@@ -23,5 +25,11 @@ public interface Header {
         settingsRows.get(profileIndex).click();
 
         return new ProfilePage();
+    }
+
+    default FriendsPage clickFriends() {
+        settingsRows.get(friendsIndex).click();
+
+        return new FriendsPage();
     }
 }
