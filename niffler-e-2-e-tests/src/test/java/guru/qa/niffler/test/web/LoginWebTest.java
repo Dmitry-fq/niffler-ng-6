@@ -14,6 +14,8 @@ public class LoginWebTest {
 
     private static final Config CFG = Config.getInstance();
 
+    private final LoginPage loginPage = new LoginPage();
+
     @Test
     void shouldShowErrorIfPasswordAndConfirmPasswordNotEqual() {
         final String username = getRandomName(3, 50);
@@ -52,6 +54,6 @@ public class LoginWebTest {
                 .setPassword(incorrectPassword)
                 .clickSubmitButton();
 
-        new LoginPage().checkErrorText();
+        loginPage.checkErrorText();
     }
 }

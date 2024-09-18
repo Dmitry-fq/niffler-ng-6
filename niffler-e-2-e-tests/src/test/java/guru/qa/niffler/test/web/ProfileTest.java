@@ -27,13 +27,14 @@ public class ProfileTest {
     void archivedCategoryShouldPresentInCategoriesList(CategoryJson category) {
         final String username = category.username();
         final String password = "12345";
+        final String categoryName = category.name();
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(username, password)
                 .clickSettingsButton()
                 .clickProfile()
                 .clickShowArchivedCheckbox()
-                .checkCategoryArchived(category.archived(), category.name());
+                .checkCategoryArchived(categoryName);
     }
 
     @User(
@@ -48,12 +49,13 @@ public class ProfileTest {
     void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {
         final String username = category.username();
         final String password = "12345";
+        final String categoryName = category.name();
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(username, password)
                 .clickSettingsButton()
                 .clickProfile()
                 .clickShowArchivedCheckbox()
-                .checkCategoryArchived(category.archived(), category.name());
+                .checkCategoryActive(categoryName);
     }
 }
