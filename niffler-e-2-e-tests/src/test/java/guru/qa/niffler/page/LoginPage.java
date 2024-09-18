@@ -51,7 +51,6 @@ public class LoginPage {
 
     public LoginPage checkErrorText() {
         String expectedText = "Неверные учетные данные пользователя";
-
         error.shouldHave(text(expectedText));
 
         return this;

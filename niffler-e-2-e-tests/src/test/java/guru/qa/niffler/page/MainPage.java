@@ -31,6 +31,7 @@ public class MainPage implements Header {
 
     public EditSpendingPage editSpending(String spendingDescription) {
         tableRows.find(text(spendingDescription)).$$("td").get(5).click();
+
         return new EditSpendingPage();
     }
 
