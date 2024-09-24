@@ -1,14 +1,13 @@
 package guru.qa.niffler.utils;
 
 import com.github.javafaker.Faker;
-import wiremock.org.apache.commons.lang3.RandomStringUtils;
 
 public class RandomDataUtils {
 
     private static final Faker faker = new Faker();
 
-    public static String getRandomName(int min, int max) {
-        return RandomStringUtils.randomAlphabetic(min, max);
+    public static String getRandomCategoryNameIfEmpty(String str) {
+        return str.isEmpty() ? randomCategoryName() : str;
     }
 
     public static String randomUsername() {

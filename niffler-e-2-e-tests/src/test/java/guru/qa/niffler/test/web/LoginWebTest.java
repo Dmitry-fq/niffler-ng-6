@@ -7,7 +7,7 @@ import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static guru.qa.niffler.utils.RandomDataUtils.getRandomName;
+import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 
 @ExtendWith(BrowserExtension.class)
 public class LoginWebTest {
@@ -18,7 +18,7 @@ public class LoginWebTest {
 
     @Test
     void shouldShowErrorIfPasswordAndConfirmPasswordNotEqual() {
-        final String username = getRandomName(3, 50);
+        final String username = randomUsername();
         final String password = "test";
         final String incorrectPassword = "1234";
         final String errorText = "Passwords should be equal";
@@ -34,7 +34,7 @@ public class LoginWebTest {
 
     @Test
     void mainPageShouldBeDisplayedAfterSuccessLogin() {
-        final String username = getRandomName(3, 50);
+        final String username = randomUsername();
         final String password = "test";
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -46,7 +46,7 @@ public class LoginWebTest {
 
     @Test
     void userShouldStayOnLoginPageAfterLoginWithBadCredentials() {
-        final String username = getRandomName(3, 50);
+        final String username = randomUsername();
         final String incorrectPassword = "1234";
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)

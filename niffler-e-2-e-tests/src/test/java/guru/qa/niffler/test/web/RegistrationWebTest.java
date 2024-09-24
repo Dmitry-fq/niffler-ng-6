@@ -7,7 +7,7 @@ import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static guru.qa.niffler.utils.RandomDataUtils.getRandomName;
+import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 
 @ExtendWith(BrowserExtension.class)
 public class RegistrationWebTest {
@@ -16,7 +16,7 @@ public class RegistrationWebTest {
 
     @Test
     void shouldRegisterNewUser() {
-        final String username = getRandomName(3, 50);
+        final String username = randomUsername();
         final String password = "test";
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -30,7 +30,7 @@ public class RegistrationWebTest {
 
     @Test
     void shouldNotRegisterUserWithExistingUsername() {
-        final String username = getRandomName(3, 50);
+        final String username = randomUsername();
         final String password = "test";
         final String errorText = String.format("Username `%s` already exists", username);
 

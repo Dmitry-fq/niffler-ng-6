@@ -14,7 +14,7 @@ import org.junit.platform.commons.support.AnnotationSupport;
 
 import java.util.Objects;
 
-import static guru.qa.niffler.utils.RandomDataUtils.getRandomName;
+import static guru.qa.niffler.utils.RandomDataUtils.getRandomCategoryNameIfEmpty;
 
 public class CategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
 
@@ -31,9 +31,9 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
 
                         CategoryJson categoryJson = new CategoryJson(
                                 null,
-                                getRandomName(1, 30),
+                                getRandomCategoryNameIfEmpty(category.name()),
                                 annotation.username(),
-                                category.archived()
+                                false
                         );
                         CategoryJson createdCategory = spendApiClient.createCategory(categoryJson);
                         if (category.archived()) {
@@ -56,19 +56,14 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
     @Override
     public void afterTestExecution(ExtensionContext context) {
         CategoryJson category = context.getStore(CategoryExtension.NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-        if (!Objects.isNull(category) && !category.archived()) {
+        if (!Objects.isNull(category)) {
             CategoryJson updatedCategory = new CategoryJson(
                     category.id(),
                     category.name(),
                     category.username(),
                     true
             );
-            updatedCategory = spendApiClient.updateCategory(updatedCategory);
-
-            context.getStore(NAMESPACE).put(
-                    context.getUniqueId(),
-                    updatedCategory
-            );
+            spendApiClient.updateCategory(updatedCategory);
         }
     }
 
