@@ -1,6 +1,9 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.api.SpendApiClient;
+import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
+import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
+import guru.qa.niffler.data.entity.spend.CategoryEntity;
+import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
@@ -19,7 +22,9 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
 
-    private final SpendApiClient spendApiClient = new SpendApiClient();
+    private final SpendDaoJdbc spendDaoJdbc = new SpendDaoJdbc();
+
+    private final CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc();
 
     @Override
     public void beforeEach(ExtensionContext context) {
@@ -27,24 +32,33 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                 .ifPresent(annotation -> {
                     if (annotation.spendings().length > 0) {
                         Spending spending = annotation.spendings()[0];
-
+                        CategoryJson categoryJson = new CategoryJson(
+                                null,
+                                spending.category(),
+                                annotation.username(),
+                                false
+                        );
+                        System.out.println(categoryDaoJdbc.findCategoryByUsernameAndCategoryName(
+                                categoryJson.username(), categoryJson.name()
+                        ));
+                        CategoryEntity categoryEntity = categoryDaoJdbc.findCategoryByUsernameAndCategoryName(
+                                categoryJson.username(), categoryJson.name()
+                        ).orElseGet(
+                                () -> categoryDaoJdbc.create(CategoryEntity.fromJson(categoryJson))
+                        );
                         SpendJson spend = new SpendJson(
                                 null,
                                 new Date(),
-                                new CategoryJson(
-                                        null,
-                                        spending.category(),
-                                        annotation.username(),
-                                        false
-                                ),
+                                CategoryJson.fromEntity(categoryEntity),
                                 CurrencyValues.RUB,
                                 spending.amount(),
                                 spending.description(),
                                 annotation.username()
                         );
+                        SpendEntity spendEntity = spendDaoJdbc.create(SpendEntity.fromJson(spend));
                         context.getStore(NAMESPACE).put(
                                 context.getUniqueId(),
-                                spendApiClient.createSpend(spend)
+                                SpendJson.fromEntity(spendEntity)
                         );
                     }
                 });
