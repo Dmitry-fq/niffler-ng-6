@@ -36,7 +36,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                                 annotation.username(),
                                 category.archived()
                         );
-                        CategoryEntity categoryEntity = categoryDaoJdbc.create(CategoryEntity.fromJson(categoryJson));
+                        CategoryEntity categoryEntity = categoryDaoJdbc.createWithoutTransaction(CategoryEntity.fromJson(categoryJson));
                         context.getStore(NAMESPACE).put(
                                 context.getUniqueId(),
                                 CategoryJson.fromEntity(categoryEntity)

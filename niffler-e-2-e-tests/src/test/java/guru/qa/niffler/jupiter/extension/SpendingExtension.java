@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
@@ -38,9 +39,6 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                                 annotation.username(),
                                 false
                         );
-                        System.out.println(categoryDaoJdbc.findCategoryByUsernameAndCategoryName(
-                                categoryJson.username(), categoryJson.name()
-                        ));
                         CategoryEntity categoryEntity = categoryDaoJdbc.findCategoryByUsernameAndCategoryName(
                                 categoryJson.username(), categoryJson.name()
                         ).orElseGet(
@@ -55,7 +53,12 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                                 spending.description(),
                                 annotation.username()
                         );
-                        SpendEntity spendEntity = spendDaoJdbc.create(SpendEntity.fromJson(spend));
+                        SpendEntity spendEntity;
+                        try {
+                            spendEntity = spendDaoJdbc.createWithoutTransaction(SpendEntity.fromJson(spend));
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
                         context.getStore(NAMESPACE).put(
                                 context.getUniqueId(),
                                 SpendJson.fromEntity(spendEntity)
