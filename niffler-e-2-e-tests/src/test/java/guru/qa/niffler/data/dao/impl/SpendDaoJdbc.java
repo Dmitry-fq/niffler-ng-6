@@ -99,8 +99,7 @@ public class SpendDaoJdbc implements SpendDao {
     public Optional<SpendEntity> findSpendById(UUID id) {
         try (Connection connection = Databases.connectionWithoutTransaction(CFG.spendJdbcUrl())) {
             try (PreparedStatement ps = connection.prepareStatement(
-                    "SELECT * FROM spend WHERE id = ?",
-                    Statement.RETURN_GENERATED_KEYS
+                    "SELECT * FROM spend WHERE id = ?"
             )) {
                 ps.setObject(1, id);
                 ps.execute();
@@ -124,8 +123,7 @@ public class SpendDaoJdbc implements SpendDao {
     public List<SpendEntity> findAllByUsername(String username) {
         try (Connection connection = Databases.connectionWithoutTransaction(CFG.spendJdbcUrl())) {
             try (PreparedStatement ps = connection.prepareStatement(
-                    "SELECT * FROM spend WHERE username = ?",
-                    Statement.RETURN_GENERATED_KEYS
+                    "SELECT * FROM spend WHERE username = ?"
             )) {
                 ps.setString(1, username);
                 ps.execute();
