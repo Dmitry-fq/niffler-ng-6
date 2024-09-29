@@ -7,6 +7,9 @@ import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.SpendJson;
 
+import java.sql.SQLException;
+import java.util.Optional;
+
 import static guru.qa.niffler.data.Databases.transaction;
 import static java.sql.Connection.TRANSACTION_REPEATABLE_READ;
 
@@ -29,5 +32,25 @@ public class SpendDbClient {
                 CFG.spendJdbcUrl(),
                 TRANSACTION_REPEATABLE_READ
         );
+    }
+
+    public SpendEntity createSpendWithoutTransaction(SpendEntity spend) throws SQLException {
+        return new SpendDaoJdbc().createWithoutTransaction(spend);
+    }
+
+    public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
+        return new CategoryDaoJdbc().findCategoryByUsernameAndCategoryName(username, categoryName);
+    }
+
+    public CategoryEntity createCategory(CategoryEntity category) {
+        return new CategoryDaoJdbc().create(category);
+    }
+
+    public CategoryEntity createCategoryWithoutTransaction(CategoryEntity category) {
+        return new CategoryDaoJdbc().createWithoutTransaction(category);
+    }
+
+    public void deleteCategory(CategoryEntity category) {
+        new CategoryDaoJdbc().deleteCategory(category);
     }
 }

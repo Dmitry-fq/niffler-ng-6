@@ -5,6 +5,7 @@ import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.service.SpendDbClient;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -21,6 +22,8 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
 
+    private final SpendDbClient spendDbClient = new SpendDbClient();
+
     private final CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc();
 
     @Override
@@ -36,7 +39,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                                 annotation.username(),
                                 category.archived()
                         );
-                        CategoryEntity categoryEntity = categoryDaoJdbc.createWithoutTransaction(CategoryEntity.fromJson(categoryJson));
+                        CategoryEntity categoryEntity = spendDbClient.createCategoryWithoutTransaction(CategoryEntity.fromJson(categoryJson));
                         context.getStore(NAMESPACE).put(
                                 context.getUniqueId(),
                                 CategoryJson.fromEntity(categoryEntity)
@@ -49,7 +52,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
     public void afterTestExecution(ExtensionContext context) {
         CategoryJson categoryJson = context.getStore(CategoryExtension.NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
         if (!Objects.isNull(categoryJson)) {
-            categoryDaoJdbc.deleteCategory(CategoryEntity.fromJson(categoryJson));
+            spendDbClient.deleteCategory(CategoryEntity.fromJson(categoryJson));
         }
     }
 

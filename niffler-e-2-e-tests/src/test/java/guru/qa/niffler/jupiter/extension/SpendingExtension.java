@@ -1,7 +1,5 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
-import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.jupiter.annotation.Spending;
@@ -9,6 +7,7 @@ import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.service.SpendDbClient;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -23,9 +22,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
 
-    private final SpendDaoJdbc spendDaoJdbc = new SpendDaoJdbc();
-
-    private final CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc();
+    private final SpendDbClient spendDbClient = new SpendDbClient();
 
     @Override
     public void beforeEach(ExtensionContext context) {
@@ -39,10 +36,10 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                                 annotation.username(),
                                 false
                         );
-                        CategoryEntity categoryEntity = categoryDaoJdbc.findCategoryByUsernameAndCategoryName(
+                        CategoryEntity categoryEntity = spendDbClient.findCategoryByUsernameAndCategoryName(
                                 categoryJson.username(), categoryJson.name()
                         ).orElseGet(
-                                () -> categoryDaoJdbc.create(CategoryEntity.fromJson(categoryJson))
+                                () -> spendDbClient.createCategory(CategoryEntity.fromJson(categoryJson))
                         );
                         SpendJson spend = new SpendJson(
                                 null,
@@ -55,7 +52,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                         );
                         SpendEntity spendEntity;
                         try {
-                            spendEntity = spendDaoJdbc.createWithoutTransaction(SpendEntity.fromJson(spend));
+                            spendEntity = spendDbClient.createSpendWithoutTransaction(SpendEntity.fromJson(spend));
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
