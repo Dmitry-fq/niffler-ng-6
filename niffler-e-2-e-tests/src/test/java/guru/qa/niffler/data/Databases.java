@@ -25,10 +25,10 @@ public class Databases {
     private Databases() {
     }
 
-    public static <T> T transaction(Function<Connection, T> function, String jdbcUrl) {
+    public static <T> T transaction(Function<Connection, T> function, String jdbcUrl, int transactionIsolation) {
         Connection connection = null;
         try {
-            connection = connection(jdbcUrl);
+            connection = connection(jdbcUrl, transactionIsolation);
             connection.setAutoCommit(false);
             T result = function.apply(connection);
             connection.commit();
@@ -47,13 +47,13 @@ public class Databases {
         }
     }
 
-    public static <T> T xaTransaction(XaFunction<T>... actions) {
+    public static <T> T xaTransaction(int transactionIsolation, XaFunction<T>... actions) {
         UserTransaction ut = new UserTransactionImp();
         try {
             ut.begin();
             T result = null;
             for (XaFunction<T> action : actions) {
-                result = action.function.apply(connection(action.jdbcUrl));
+                result = action.function.apply(connection(action.jdbcUrl, transactionIsolation));
             }
             ut.commit();
             return result;
@@ -67,14 +67,15 @@ public class Databases {
         }
     }
 
-    public static void transaction(Consumer<Connection> consumer, String jdbcUrl) {
+    public static void transaction(Consumer<Connection> consumer, String jdbcUrl, int transactionIsolation) {
         Connection connection = null;
         try {
-            connection = connection(jdbcUrl);
+            connection = connection(jdbcUrl, transactionIsolation);
             connection.setAutoCommit(false);
             consumer.accept(connection);
             connection.commit();
             connection.setAutoCommit(true);
+            connection.setTransactionIsolation(transactionIsolation);
         } catch (Exception e) {
             if (connection != null) {
                 try {
@@ -88,12 +89,12 @@ public class Databases {
         }
     }
 
-    public static void xaTransaction(XaConsumer... actions) {
+    public static void xaTransaction(int transactionIsolation, XaConsumer... actions) {
         UserTransaction ut = new UserTransactionImp();
         try {
             ut.begin();
             for (XaConsumer action : actions) {
-                action.function.accept(connection(action.jdbcUrl));
+                action.function.accept(connection(action.jdbcUrl, transactionIsolation));
             }
             ut.commit();
         } catch (Exception e) {
@@ -142,8 +143,8 @@ public class Databases {
         );
     }
 
-    private static Connection connection(String jdbcUrl) throws SQLException {
-        return threadConnections.computeIfAbsent(
+    private static Connection connection(String jdbcUrl, int transactionIsolation) throws SQLException {
+        Connection connection = threadConnections.computeIfAbsent(
                 Thread.currentThread().threadId(),
                 key -> {
                     try {
@@ -165,6 +166,9 @@ public class Databases {
                     }
                 }
         );
+        connection.setTransactionIsolation(transactionIsolation);
+
+        return connection;
     }
 
     public static void closeAllConnections() {

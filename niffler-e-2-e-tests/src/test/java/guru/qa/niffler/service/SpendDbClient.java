@@ -8,24 +8,26 @@ import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.SpendJson;
 
 import static guru.qa.niffler.data.Databases.transaction;
+import static java.sql.Connection.TRANSACTION_REPEATABLE_READ;
 
 public class SpendDbClient {
 
-  private static final Config CFG = Config.getInstance();
+    private static final Config CFG = Config.getInstance();
 
-  public SpendJson createSpend(SpendJson spend) {
-    return transaction(connection -> {
-          SpendEntity spendEntity = SpendEntity.fromJson(spend);
-          if (spendEntity.getCategory().getId() == null) {
-            CategoryEntity categoryEntity = new CategoryDaoJdbc(connection)
-                .create(spendEntity.getCategory());
-            spendEntity.setCategory(categoryEntity);
-          }
-          return SpendJson.fromEntity(
-              new SpendDaoJdbc(connection).create(spendEntity)
-          );
-        },
-        CFG.spendJdbcUrl()
-    );
-  }
+    public SpendJson createSpend(SpendJson spend) {
+        return transaction(connection -> {
+                    SpendEntity spendEntity = SpendEntity.fromJson(spend);
+                    if (spendEntity.getCategory().getId() == null) {
+                        CategoryEntity categoryEntity = new CategoryDaoJdbc(connection)
+                                .create(spendEntity.getCategory());
+                        spendEntity.setCategory(categoryEntity);
+                    }
+                    return SpendJson.fromEntity(
+                            new SpendDaoJdbc(connection).create(spendEntity)
+                    );
+                },
+                CFG.spendJdbcUrl(),
+                TRANSACTION_REPEATABLE_READ
+        );
+    }
 }
