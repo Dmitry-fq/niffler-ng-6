@@ -1,46 +1,81 @@
 package guru.qa.niffler.data.entity.auth;
 
-import guru.qa.niffler.model.AuthUserJson;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.proxy.HibernateProxy;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+
+import static jakarta.persistence.FetchType.EAGER;
 
 @Getter
 @Setter
-@Builder(setterPrefix = "set")
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@Table(name = "\"user\"")
 public class AuthUserEntity implements Serializable {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
     private UUID id;
 
+    @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false)
     private String password;
 
-    private boolean enabled;
+    @Column(nullable = false)
+    private Boolean enabled;
 
-    private boolean accountNonExpired;
+    @Column(name = "account_non_expired", nullable = false)
+    private Boolean accountNonExpired;
 
-    private boolean accountNonLocked;
+    @Column(name = "account_non_locked", nullable = false)
+    private Boolean accountNonLocked;
 
-    private boolean credentialsNonExpired;
+    @Column(name = "credentials_non_expired", nullable = false)
+    private Boolean credentialsNonExpired;
 
-    public static AuthUserEntity fromJson(AuthUserJson json) {
-        AuthUserEntity authUserEntity = new AuthUserEntity();
-        authUserEntity.setId(json.id());
-        authUserEntity.setUsername(json.username());
-        authUserEntity.setPassword(json.password());
-        authUserEntity.setEnabled(json.enabled());
-        authUserEntity.setAccountNonExpired(json.accountNonExpired());
-        authUserEntity.setAccountNonLocked(json.accountNonLocked());
-        authUserEntity.setCredentialsNonExpired(json.accountNonLocked());
+    @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private List<AuthorityEntity> authorities = new ArrayList<>();
 
-        return authUserEntity;
+    public void addAuthorities(AuthorityEntity... authorities) {
+        for (AuthorityEntity authority : authorities) {
+            this.authorities.add(authority);
+            authority.setUser(this);
+        }
+    }
+
+    public void removeAuthority(AuthorityEntity authority) {
+        this.authorities.remove(authority);
+        authority.setUser(null);
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        AuthUserEntity that = (AuthUserEntity) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 }
