@@ -3,8 +3,8 @@ package guru.qa.niffler.service;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.impl.AuthAuthorityDaoJdbc;
 import guru.qa.niffler.data.dao.impl.AuthUserDaoJdbc;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
-import guru.qa.niffler.data.entity.auth.UserEntity;
 import guru.qa.niffler.model.AuthorityJson;
 
 import static guru.qa.niffler.data.Databases.transaction;
@@ -18,9 +18,9 @@ public class AuthDbClient {
         return transaction(connection -> {
                     AuthorityEntity authorityEntity = AuthorityEntity.fromJson(authority);
                     if (authorityEntity.getUser().getId() == null) {
-                        UserEntity userEntity = new AuthUserDaoJdbc(connection)
+                        AuthUserEntity authUserEntity = new AuthUserDaoJdbc(connection)
                                 .createUser(authorityEntity.getUser());
-                        authorityEntity.setUser(userEntity);
+                        authorityEntity.setUser(authUserEntity);
                     }
                     return AuthorityJson.fromEntity(
                             new AuthAuthorityDaoJdbc(connection).createAuthority(authorityEntity)

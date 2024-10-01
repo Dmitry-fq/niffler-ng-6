@@ -3,7 +3,7 @@ package guru.qa.niffler.data.dao.impl;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.Databases;
 import guru.qa.niffler.data.dao.AuthUserDao;
-import guru.qa.niffler.data.entity.auth.UserEntity;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -28,7 +28,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public UserEntity createUser(UserEntity user) {
+    public AuthUserEntity createUser(AuthUserEntity user) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "INSERT INTO \"user\" (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) " +
                         "VALUES (?, ?, ?, ?, ?, ?)",
@@ -59,7 +59,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public Optional<UserEntity> findById(UUID id) {
+    public Optional<AuthUserEntity> findById(UUID id) {
         try (Connection connection = Databases.connectionWithoutTransaction(CFG.authJdbcUrl())) {
             try (PreparedStatement ps = connection.prepareStatement(
                     "SELECT * FROM \"user\" WHERE id = ?"
@@ -68,9 +68,9 @@ public class AuthUserDaoJdbc implements AuthUserDao {
                 ps.execute();
                 try (ResultSet resultSet = ps.getResultSet()) {
                     if (resultSet.next()) {
-                        UserEntity userEntity = getAuthUserEntity(resultSet);
+                        AuthUserEntity authUserEntity = getAuthUserEntity(resultSet);
 
-                        return Optional.of(userEntity);
+                        return Optional.of(authUserEntity);
                     } else {
                         return Optional.empty();
                     }
@@ -82,7 +82,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public Optional<UserEntity> findByUsername(String username) {
+    public Optional<AuthUserEntity> findByUsername(String username) {
         try (Connection connection = Databases.connectionWithoutTransaction(CFG.authJdbcUrl())) {
             try (PreparedStatement ps = connection.prepareStatement(
                     "SELECT * FROM \"user\" WHERE username = ?"
@@ -91,7 +91,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
                 ps.execute();
                 try (ResultSet resultSet = ps.getResultSet()) {
                     if (resultSet.next()) {
-                        UserEntity categoryEntity = getAuthUserEntity(resultSet);
+                        AuthUserEntity categoryEntity = getAuthUserEntity(resultSet);
 
                         return Optional.of(categoryEntity);
                     } else {
@@ -105,7 +105,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public void delete(UserEntity user) {
+    public void delete(AuthUserEntity user) {
         try (Connection connection = Databases.connectionWithoutTransaction(CFG.authJdbcUrl())) {
             try (PreparedStatement ps = connection.prepareStatement(
                     "DELETE FROM \"user\" WHERE id = ?"
@@ -118,16 +118,16 @@ public class AuthUserDaoJdbc implements AuthUserDao {
         }
     }
 
-    private UserEntity getAuthUserEntity(ResultSet resultSet) throws SQLException {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(resultSet.getObject("id", UUID.class));
-        userEntity.setUsername(resultSet.getString("username"));
-        userEntity.setPassword(resultSet.getString("password"));
-        userEntity.setEnabled(resultSet.getBoolean("enabled"));
-        userEntity.setAccountNonExpired(resultSet.getBoolean("account_non_expired"));
-        userEntity.setAccountNonLocked(resultSet.getBoolean("account_non_locked"));
-        userEntity.setCredentialsNonExpired(resultSet.getBoolean("credentials_non_expired"));
+    private AuthUserEntity getAuthUserEntity(ResultSet resultSet) throws SQLException {
+        AuthUserEntity authUserEntity = new AuthUserEntity();
+        authUserEntity.setId(resultSet.getObject("id", UUID.class));
+        authUserEntity.setUsername(resultSet.getString("username"));
+        authUserEntity.setPassword(resultSet.getString("password"));
+        authUserEntity.setEnabled(resultSet.getBoolean("enabled"));
+        authUserEntity.setAccountNonExpired(resultSet.getBoolean("account_non_expired"));
+        authUserEntity.setAccountNonLocked(resultSet.getBoolean("account_non_locked"));
+        authUserEntity.setCredentialsNonExpired(resultSet.getBoolean("credentials_non_expired"));
 
-        return userEntity;
+        return authUserEntity;
     }
 }

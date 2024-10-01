@@ -1,8 +1,8 @@
 package guru.qa.niffler.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
-import guru.qa.niffler.data.entity.auth.UserEntity;
 
 import java.util.UUID;
 
@@ -16,7 +16,7 @@ public record AuthorityJson(
         String authority) {
 
     public static AuthorityJson fromEntity(AuthorityEntity entity) {
-        final UserEntity user = entity.getUser();
+        final AuthUserEntity user = entity.getUser();
 
         return new AuthorityJson(
                 entity.getId(),
@@ -29,7 +29,7 @@ public record AuthorityJson(
                         user.isAccountNonLocked(),
                         user.isCredentialsNonExpired()
                 ),
-                entity.getAuthority()
+                entity.getAuthority().name()
         );
     }
 }

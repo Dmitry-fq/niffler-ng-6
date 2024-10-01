@@ -3,8 +3,9 @@ package guru.qa.niffler.data.dao.impl;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.Databases;
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
-import guru.qa.niffler.data.entity.auth.UserEntity;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,7 +33,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
                 Statement.RETURN_GENERATED_KEYS
         )) {
             ps.setObject(1, authority.getUser().getId());
-            ps.setString(2, authority.getAuthority());
+            ps.setString(2, authority.getAuthority().name());
 
             ps.executeUpdate();
 
@@ -46,6 +47,24 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
             }
             authority.setId(generatedKey);
             return authority;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void createAuthorities(AuthorityEntity... authority) {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "INSERT INTO authority (user_id, authority) " +
+                        "VALUES (?, ?)",
+                Statement.RETURN_GENERATED_KEYS
+        )) {
+            for (AuthorityEntity a : authority) {
+                ps.setObject(1, a.getUser().getId());
+                ps.setString(2, a.getAuthority().name());
+                ps.addBatch();
+                ps.clearParameters();
+            }
+            ps.executeBatch();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -114,8 +133,8 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     private AuthorityEntity getAuthAuthorityEntity(ResultSet resultSet) throws SQLException {
         AuthorityEntity authorityEntity = new AuthorityEntity();
         authorityEntity.setId(resultSet.getObject("id", UUID.class));
-        authorityEntity.setUser(resultSet.getObject("user_id", UserEntity.class));
-        authorityEntity.setAuthority(resultSet.getString("authority"));
+        authorityEntity.setUser(resultSet.getObject("user_id", AuthUserEntity.class));
+        authorityEntity.setAuthority(resultSet.getObject("authority", Authority.class));
 
         return authorityEntity;
     }

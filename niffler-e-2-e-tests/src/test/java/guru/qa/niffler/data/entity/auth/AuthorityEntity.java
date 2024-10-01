@@ -19,19 +19,19 @@ public class AuthorityEntity implements Serializable {
 
     private UUID id;
 
-    private UserEntity user;
+    private AuthUserEntity user;
 
-    private String authority;
+    private Authority authority;
 
     public static AuthorityEntity fromJson(AuthorityJson json) {
         AuthorityEntity authUserEntity = new AuthorityEntity();
         authUserEntity.setId(json.id());
         authUserEntity.setUser(
-                UserEntity.fromJson(
+                AuthUserEntity.fromJson(
                         json.user()
                 )
         );
-        authUserEntity.setAuthority(json.authority());
+        authUserEntity.setAuthority(Authority.valueOf(json.authority()));
 
         return authUserEntity;
     }
