@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -97,6 +98,15 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
                 "DELETE FROM authority WHERE id = ?",
                 AuthorityEntityRowMapper.instance,
                 user.getUser().getId()
+        );
+    }
+
+    @Override
+    public List<AuthorityEntity> findAll() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        return jdbcTemplate.query(
+                "SELECT * FROM authority",
+                AuthorityEntityRowMapper.instance
         );
     }
 }

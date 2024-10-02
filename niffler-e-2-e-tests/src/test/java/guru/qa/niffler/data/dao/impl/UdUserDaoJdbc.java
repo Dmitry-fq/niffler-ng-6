@@ -11,6 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -118,18 +120,39 @@ public class UdUserDaoJdbc implements UdUserDao {
         }
     }
 
-    private UserEntity getUserEntity(ResultSet resultSet) throws SQLException {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(resultSet.getObject("id", UUID.class));
-        userEntity.setUsername(resultSet.getString("username"));
-        String currency = resultSet.getString("currency");
-        userEntity.setCurrency(CurrencyValues.valueOf(currency));
-        userEntity.setFirstname(resultSet.getString("firstname"));
-        userEntity.setSurname(resultSet.getString("surname"));
-        userEntity.setPhoto(resultSet.getBytes("photo"));
-        userEntity.setPhotoSmall(resultSet.getBytes("photo_small"));
-        userEntity.setFullname(resultSet.getString("full_name"));
+    @Override
+    public List<UserEntity> findAll() {
+        try (Connection connection = Databases.connectionWithoutTransaction(CFG.authJdbcUrl())) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM \"user\""
+            )) {
+                ps.execute();
+                List<UserEntity> resultList = new ArrayList<>();
+                try (ResultSet resultSet = ps.getResultSet()) {
+                    while (resultSet.next()) {
+                        resultList.add(getUserEntity(resultSet));
+                    }
 
-        return userEntity;
+                    return resultList;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private UserEntity getUserEntity(ResultSet resultSet) throws SQLException {
+        String currency = resultSet.getString("currency");
+
+        return new UserEntity(
+                resultSet.getObject("id", UUID.class),
+                resultSet.getString("username"),
+                CurrencyValues.valueOf(currency),
+                resultSet.getString("firstname"),
+                resultSet.getString("surname"),
+                resultSet.getString("full_name"),
+                resultSet.getBytes("photo"),
+                resultSet.getBytes("photo_small")
+        );
     }
 }

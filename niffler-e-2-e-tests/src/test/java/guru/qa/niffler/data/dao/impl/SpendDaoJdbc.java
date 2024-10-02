@@ -157,23 +157,43 @@ public class SpendDaoJdbc implements SpendDao {
         }
     }
 
+    @Override
+    public List<SpendEntity> findAll() {
+        try (Connection connection = Databases.connectionWithoutTransaction(CFG.authJdbcUrl())) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM spend"
+            )) {
+                ps.execute();
+                List<SpendEntity> resultList = new ArrayList<>();
+                try (ResultSet resultSet = ps.getResultSet()) {
+                    while (resultSet.next()) {
+                        resultList.add(getSpendEntity(resultSet));
+                    }
+
+                    return resultList;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private SpendEntity getSpendEntity(ResultSet rs) throws SQLException {
-        SpendEntity spendEntity = new SpendEntity();
-        spendEntity.setId(rs.getObject("id", UUID.class));
-        spendEntity.setUsername(rs.getString("username"));
-        spendEntity.setSpendDate(rs.getDate("spend_date"));
         String currency = rs.getString("currency");
-        spendEntity.setCurrency(CurrencyValues.valueOf(currency));
-        spendEntity.setAmount(rs.getDouble("amount"));
-        spendEntity.setDescription(rs.getString("description"));
         CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc();
         CategoryEntity categoryEntity = categoryDaoJdbc.findCategoryById(
-                        (UUID) rs.getObject("category_id"))
+                        rs.getObject("category_id", UUID.class))
                 .orElseThrow(
                         () -> new SQLException("category not found")
                 );
-        spendEntity.setCategory(categoryEntity);
 
-        return spendEntity;
+        return new SpendEntity(rs.getObject("id", UUID.class),
+                rs.getString("username"),
+                CurrencyValues.valueOf(currency),
+                rs.getDate("spend_date"),
+                rs.getDouble("amount"),
+                rs.getString("description"),
+                categoryEntity
+        );
     }
 }

@@ -3,6 +3,7 @@ package guru.qa.niffler.data.dao;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,4 +15,6 @@ public interface AuthAuthorityDao {
     Optional<AuthorityEntity> findByUserId(UUID userId);
 
     void delete(AuthorityEntity user);
+
+    List<AuthorityEntity> findAll();
 }

@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -130,12 +132,32 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
         }
     }
 
-    private AuthorityEntity getAuthAuthorityEntity(ResultSet resultSet) throws SQLException {
-        AuthorityEntity authorityEntity = new AuthorityEntity();
-        authorityEntity.setId(resultSet.getObject("id", UUID.class));
-        authorityEntity.setUser(resultSet.getObject("user_id", AuthUserEntity.class));
-        authorityEntity.setAuthority(resultSet.getObject("authority", Authority.class));
+    @Override
+    public List<AuthorityEntity> findAll() {
+        try (Connection connection = Databases.connectionWithoutTransaction(CFG.authJdbcUrl())) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM authority"
+            )) {
+                ps.execute();
+                List<AuthorityEntity> resultList = new ArrayList<>();
+                try (ResultSet resultSet = ps.getResultSet()) {
+                    while (resultSet.next()) {
+                        resultList.add(getAuthAuthorityEntity(resultSet));
+                    }
 
-        return authorityEntity;
+                    return resultList;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private AuthorityEntity getAuthAuthorityEntity(ResultSet resultSet) throws SQLException {
+        return new AuthorityEntity(
+                resultSet.getObject("id", UUID.class),
+                resultSet.getObject("user_id", AuthUserEntity.class),
+                resultSet.getObject("authority", Authority.class)
+        );
     }
 }

@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -118,16 +120,36 @@ public class AuthUserDaoJdbc implements AuthUserDao {
         }
     }
 
-    private AuthUserEntity getAuthUserEntity(ResultSet resultSet) throws SQLException {
-        AuthUserEntity authUserEntity = new AuthUserEntity();
-        authUserEntity.setId(resultSet.getObject("id", UUID.class));
-        authUserEntity.setUsername(resultSet.getString("username"));
-        authUserEntity.setPassword(resultSet.getString("password"));
-        authUserEntity.setEnabled(resultSet.getBoolean("enabled"));
-        authUserEntity.setAccountNonExpired(resultSet.getBoolean("account_non_expired"));
-        authUserEntity.setAccountNonLocked(resultSet.getBoolean("account_non_locked"));
-        authUserEntity.setCredentialsNonExpired(resultSet.getBoolean("credentials_non_expired"));
+    @Override
+    public List<AuthUserEntity> findAll() {
+        try (Connection connection = Databases.connectionWithoutTransaction(CFG.authJdbcUrl())) {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM \"user\""
+            )) {
+                ps.execute();
+                List<AuthUserEntity> resultList = new ArrayList<>();
+                try (ResultSet resultSet = ps.getResultSet()) {
+                    while (resultSet.next()) {
+                        resultList.add(getAuthUserEntity(resultSet));
+                    }
 
-        return authUserEntity;
+                    return resultList;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private AuthUserEntity getAuthUserEntity(ResultSet resultSet) throws SQLException {
+        return new AuthUserEntity(
+                resultSet.getObject("id", UUID.class),
+                resultSet.getString("username"),
+                resultSet.getString("password"),
+                resultSet.getBoolean("enabled"),
+                resultSet.getBoolean("account_non_expired"),
+                resultSet.getBoolean("account_non_locked"),
+                resultSet.getBoolean("credentials_non_expired")
+        );
     }
 }
