@@ -59,7 +59,7 @@ public class UdUserDaoJdbc implements UdUserDao {
             ps.execute();
             ResultSet resultSet = ps.getResultSet();
             if (resultSet.next()) {
-                UserEntity userEntity = getUserEntity(resultSet);
+                UserEntity userEntity = convertToEntity(resultSet);
 
                 return Optional.of(userEntity);
             } else {
@@ -79,7 +79,7 @@ public class UdUserDaoJdbc implements UdUserDao {
             ps.execute();
             try (ResultSet resultSet = ps.getResultSet()) {
                 if (resultSet.next()) {
-                    UserEntity categoryEntity = getUserEntity(resultSet);
+                    UserEntity categoryEntity = convertToEntity(resultSet);
 
                     return Optional.of(categoryEntity);
                 } else {
@@ -112,7 +112,7 @@ public class UdUserDaoJdbc implements UdUserDao {
             List<UserEntity> resultList = new ArrayList<>();
             try (ResultSet resultSet = ps.getResultSet()) {
                 while (resultSet.next()) {
-                    resultList.add(getUserEntity(resultSet));
+                    resultList.add(convertToEntity(resultSet));
                 }
 
                 return resultList;
@@ -122,7 +122,7 @@ public class UdUserDaoJdbc implements UdUserDao {
         }
     }
 
-    private UserEntity getUserEntity(ResultSet resultSet) throws SQLException {
+    private UserEntity convertToEntity(ResultSet resultSet) throws SQLException {
         String currency = resultSet.getString("currency");
 
         return new UserEntity(

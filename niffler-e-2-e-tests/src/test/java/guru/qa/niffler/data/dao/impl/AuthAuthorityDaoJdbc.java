@@ -20,33 +20,6 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 
     private static final Config CFG = Config.getInstance();
 
-//    @Override
-//    public AuthorityEntity createAuthority(AuthorityEntity authority) {
-//        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-//                "INSERT INTO authority (user_id, authority) " +
-//                        "VALUES (?, ?)",
-//                Statement.RETURN_GENERATED_KEYS
-//        )) {
-//            ps.setObject(1, authority.getUser().getId());
-//            ps.setString(2, authority.getAuthority().name());
-//
-//            ps.executeUpdate();
-//
-//            final UUID generatedKey;
-//            try (ResultSet resultSet = ps.getGeneratedKeys()) {
-//                if (resultSet.next()) {
-//                    generatedKey = resultSet.getObject("id", UUID.class);
-//                } else {
-//                    throw new SQLException("Can`t find id in ResultSet");
-//                }
-//            }
-//            authority.setId(generatedKey);
-//            return authority;
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
     @Override
     public void createAuthority(AuthorityEntity... authority) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
@@ -73,7 +46,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
             ps.execute();
             try (ResultSet resultSet = ps.getResultSet()) {
                 if (resultSet.next()) {
-                    AuthorityEntity authorityEntity = getAuthAuthorityEntity(resultSet);
+                    AuthorityEntity authorityEntity = convertToEntity(resultSet);
 
                     return Optional.of(authorityEntity);
                 } else {
@@ -96,7 +69,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
             List<AuthorityEntity> authorityEntityList = new ArrayList<>();
             try (ResultSet resultSet = ps.getResultSet()) {
                 while (resultSet.next()) {
-                    AuthorityEntity authorityEntity = getAuthAuthorityEntity(resultSet);
+                    AuthorityEntity authorityEntity = convertToEntity(resultSet);
                     authorityEntityList.add(authorityEntity);
                 }
 
@@ -108,11 +81,11 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public void deleteAuthority(AuthorityEntity user) {
+    public void deleteAuthority(AuthorityEntity authority) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "DELETE FROM authority WHERE id = ?"
         )) {
-            ps.setObject(1, user.getId());
+            ps.setObject(1, authority.getId());
             ps.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -128,7 +101,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
             List<AuthorityEntity> resultList = new ArrayList<>();
             try (ResultSet resultSet = ps.getResultSet()) {
                 while (resultSet.next()) {
-                    resultList.add(getAuthAuthorityEntity(resultSet));
+                    resultList.add(convertToEntity(resultSet));
                 }
 
                 return resultList;
@@ -138,7 +111,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
         }
     }
 
-    private AuthorityEntity getAuthAuthorityEntity(ResultSet resultSet) throws SQLException {
+    private AuthorityEntity convertToEntity(ResultSet resultSet) throws SQLException {
         return new AuthorityEntity(
                 resultSet.getObject("id", UUID.class),
                 resultSet.getObject("user_id", AuthUserEntity.class),

@@ -61,7 +61,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 
             try (ResultSet resultSet = ps.getResultSet()) {
                 if (resultSet.next()) {
-                    AuthUserEntity authUserEntity = getAuthUserEntity(resultSet);
+                    AuthUserEntity authUserEntity = convertToEntity(resultSet);
 
                     return Optional.of(authUserEntity);
                 } else {
@@ -82,7 +82,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
             ps.execute();
             try (ResultSet resultSet = ps.getResultSet()) {
                 if (resultSet.next()) {
-                    AuthUserEntity categoryEntity = getAuthUserEntity(resultSet);
+                    AuthUserEntity categoryEntity = convertToEntity(resultSet);
 
                     return Optional.of(categoryEntity);
                 } else {
@@ -115,7 +115,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
             List<AuthUserEntity> resultList = new ArrayList<>();
             try (ResultSet resultSet = ps.getResultSet()) {
                 while (resultSet.next()) {
-                    resultList.add(getAuthUserEntity(resultSet));
+                    resultList.add(convertToEntity(resultSet));
                 }
 
                 return resultList;
@@ -125,7 +125,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
         }
     }
 
-    private AuthUserEntity getAuthUserEntity(ResultSet resultSet) throws SQLException {
+    private AuthUserEntity convertToEntity(ResultSet resultSet) throws SQLException {
         return new AuthUserEntity(
                 resultSet.getObject("id", UUID.class),
                 resultSet.getString("username"),

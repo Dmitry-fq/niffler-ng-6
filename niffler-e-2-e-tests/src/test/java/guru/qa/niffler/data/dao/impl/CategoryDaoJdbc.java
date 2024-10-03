@@ -86,7 +86,7 @@ public class CategoryDaoJdbc implements CategoryDao {
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 if (rs.next()) {
-                    CategoryEntity categoryEntity = getCategoryEntity(rs);
+                    CategoryEntity categoryEntity = convertToEntity(rs);
 
                     return Optional.of(categoryEntity);
                 } else {
@@ -108,7 +108,7 @@ public class CategoryDaoJdbc implements CategoryDao {
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 if (rs.next()) {
-                    CategoryEntity categoryEntity = getCategoryEntity(rs);
+                    CategoryEntity categoryEntity = convertToEntity(rs);
 
                     return Optional.of(categoryEntity);
                 } else {
@@ -131,7 +131,7 @@ public class CategoryDaoJdbc implements CategoryDao {
             List<CategoryEntity> categoryEntityList = new ArrayList<>();
             try (ResultSet rs = ps.getResultSet()) {
                 while (rs.next()) {
-                    CategoryEntity categoryEntity = getCategoryEntity(rs);
+                    CategoryEntity categoryEntity = convertToEntity(rs);
                     categoryEntityList.add(categoryEntity);
                 }
                 return categoryEntityList;
@@ -162,7 +162,7 @@ public class CategoryDaoJdbc implements CategoryDao {
             List<CategoryEntity> resultList = new ArrayList<>();
             try (ResultSet resultSet = ps.getResultSet()) {
                 while (resultSet.next()) {
-                    resultList.add(getCategoryEntity(resultSet));
+                    resultList.add(convertToEntity(resultSet));
                 }
 
                 return resultList;
@@ -172,7 +172,7 @@ public class CategoryDaoJdbc implements CategoryDao {
         }
     }
 
-    private CategoryEntity getCategoryEntity(ResultSet rs) throws SQLException {
+    private CategoryEntity convertToEntity(ResultSet rs) throws SQLException {
         return new CategoryEntity(
                 rs.getObject("id", UUID.class),
                 rs.getString("username"),
