@@ -72,7 +72,7 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
     public void deleteUser(UserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
         jdbcTemplate.queryForObject(
-                "SELECT * FROM \"user\" WHERE id = ?",
+                "DELETE FROM \"user\" WHERE id = ?",
                 UdUserEntityRowMapper.instance,
                 user.getId()
         );

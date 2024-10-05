@@ -22,7 +22,7 @@ public class AuthDbClient {
 
     private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc();
 
-    private final XaTransactionTemplate xaTransactionTemplate = new XaTransactionTemplate(
+    private final XaTransactionTemplate xaTransactionTeaumplate = new XaTransactionTemplate(
             CFG.authJdbcUrl(),
             CFG.userdataJdbcUrl()
     );
@@ -39,8 +39,8 @@ public class AuthDbClient {
         return authAuthorityDao.findAuthoritiesByUserId(userId);
     }
 
-    public void deleteAuthority(AuthorityEntity user) {
-        authAuthorityDao.deleteAuthority(user);
+    public void deleteAuthority(AuthorityEntity authority) {
+        authAuthorityDao.deleteAuthority(authority);
     }
 
     public List<AuthorityEntity> findAllAuthorities() {
