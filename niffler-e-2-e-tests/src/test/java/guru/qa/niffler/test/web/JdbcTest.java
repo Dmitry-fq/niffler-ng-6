@@ -7,9 +7,7 @@ import guru.qa.niffler.data.repository.impl.UdUserRepositoryJdbc;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
-import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendDbClient;
-import guru.qa.niffler.service.UsersDbClient;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -41,25 +39,6 @@ public class JdbcTest {
         );
 
         System.out.println(spend);
-    }
-
-    @Test
-    void springJdbcTest() {
-        UsersDbClient usersDbClient = new UsersDbClient();
-        UserJson user = usersDbClient.createUser(
-                new UserJson(
-                        null,
-                        "valentin-6",
-                        null,
-                        null,
-                        null,
-                        CurrencyValues.RUB,
-                        null,
-                        null,
-                        null
-                )
-        );
-        System.out.println(user);
     }
 
     @Test
