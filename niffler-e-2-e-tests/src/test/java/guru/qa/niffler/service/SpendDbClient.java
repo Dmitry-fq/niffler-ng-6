@@ -1,9 +1,11 @@
 package guru.qa.niffler.service;
 
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.repository.SpendRepository;
 import guru.qa.niffler.data.repository.impl.SpendRepositoryHibernate;
+import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 
@@ -12,11 +14,19 @@ import java.util.UUID;
 
 public class SpendDbClient implements SpendClient {
 
+    private static final Config CFG = Config.getInstance();
+
     private final SpendRepository spendRepository = new SpendRepositoryHibernate();
 
+    private final XaTransactionTemplate xaTransactionTemplate = new XaTransactionTemplate(
+            CFG.spendJdbcUrl()
+    );
+
     public SpendJson createSpend(SpendJson spend) {
-        SpendEntity spendEntity = spendRepository.create(SpendEntity.fromJson(spend));
-        return SpendJson.fromEntity(spendEntity);
+        return xaTransactionTemplate.execute(() -> SpendJson.fromEntity(
+                        spendRepository.create(SpendEntity.fromJson(spend))
+                )
+        );
     }
 
     public SpendJson updateSpend(SpendJson spend) {
@@ -25,8 +35,10 @@ public class SpendDbClient implements SpendClient {
     }
 
     public CategoryJson createCategory(CategoryJson category) {
-        CategoryEntity categoryEntity = spendRepository.createCategory(CategoryEntity.fromJson(category));
-        return CategoryJson.fromEntity(categoryEntity);
+        return xaTransactionTemplate.execute(() -> CategoryJson.fromEntity(
+                        spendRepository.createCategory(CategoryEntity.fromJson(category))
+                )
+        );
     }
 
     public Optional<CategoryJson> findCategoryById(UUID id) {
@@ -50,6 +62,9 @@ public class SpendDbClient implements SpendClient {
     }
 
     public void removeCategory(CategoryJson category) {
-        spendRepository.removeCategory(CategoryEntity.fromJson(category));
+        xaTransactionTemplate.execute(() -> {
+            spendRepository.removeCategory(CategoryEntity.fromJson(category));
+            return null;
+        });
     }
 }

@@ -67,15 +67,41 @@ public class UsersDbClient implements UsersClient {
             for (int i = 0; i < count; i++) {
                 xaTransactionTemplate.execute(() -> {
                             String username = randomUsername();
-                            AuthUserEntity authUser = authUserEntity(username, "12345");
-                            authUserRepository.create(authUser);
-                            UserEntity adressee = userdataUserRepository.create(userEntity(username));
-                            userdataUserRepository.addInvitation(targetEntity, adressee);
+                            userdataUserRepository.addFriend(
+                                    targetEntity,
+                                    createNewUser(username, "12345")
+                            );
                             return null;
                         }
                 );
             }
         }
+    }
+
+    public void addFriend(UserJson targetUser, int count) {
+        if (count > 0) {
+            UserEntity targetEntity = userdataUserRepository.findById(
+                    targetUser.id()
+            ).orElseThrow();
+
+            for (int i = 0; i < count; i++) {
+                xaTransactionTemplate.execute(() -> {
+                            String username = randomUsername();
+                            userdataUserRepository.addFriend(
+                                    targetEntity,
+                                    createNewUser(username, "12345")
+                            );
+                            return null;
+                        }
+                );
+            }
+        }
+    }
+
+    private UserEntity createNewUser(String username, String password) {
+        AuthUserEntity authUser = authUserEntity(username, password);
+        authUserRepository.create(authUser);
+        return userdataUserRepository.create(userEntity(username));
     }
 
     private UserEntity userEntity(String username) {

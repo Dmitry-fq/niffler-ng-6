@@ -23,5 +23,4 @@ public interface SpendClient {
     Optional<SpendJson> findByUsernameAndDescription(String username, String description);
 
     void removeCategory(CategoryJson category);
-
 }

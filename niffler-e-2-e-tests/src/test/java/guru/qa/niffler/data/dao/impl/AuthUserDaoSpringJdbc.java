@@ -6,6 +6,7 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.mapper.AuthUserEntityExtractor;
 import guru.qa.niffler.data.mapper.AuthUserEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -48,13 +49,18 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
     @Override
     public Optional<AuthUserEntity> findUserById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject(
-                        "SELECT * FROM \"user\" WHERE id = ?",
-                        AuthUserEntityRowMapper.instance,
-                        id
-                )
-        );
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(
+                            "SELECT * FROM \"user\" WHERE id = ?",
+                            AuthUserEntityRowMapper.instance,
+                            id
+                    )
+            );
+        } catch (
+                EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public Optional<AuthUserEntity> findUserWithAuthorityByUserId(UUID userId) {
@@ -84,13 +90,17 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
     @Override
     public Optional<AuthUserEntity> findUserByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject(
-                        "SELECT * FROM \"user\" WHERE username = ?",
-                        AuthUserEntityRowMapper.instance,
-                        username
-                )
-        );
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(
+                            "SELECT * FROM \"user\" WHERE username = ?",
+                            AuthUserEntityRowMapper.instance,
+                            username
+                    )
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

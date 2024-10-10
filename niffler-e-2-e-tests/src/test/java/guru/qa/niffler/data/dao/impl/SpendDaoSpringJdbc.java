@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.SpendDao;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.mapper.SpendEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -51,13 +52,18 @@ public class SpendDaoSpringJdbc implements SpendDao {
     @Override
     public Optional<SpendEntity> findSpendById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject(
-                        "SELECT * FROM spend WHERE id = ?",
-                        SpendEntityRowMapper.instance,
-                        id
-                )
-        );
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(
+                            "SELECT * FROM spend WHERE id = ?",
+                            SpendEntityRowMapper.instance,
+                            id
+                    )
+            );
+        } catch (
+                EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -86,5 +92,24 @@ public class SpendDaoSpringJdbc implements SpendDao {
                 "SELECT * FROM spend",
                 SpendEntityRowMapper.instance
         );
+    }
+
+    public SpendEntity update(SpendEntity spend) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+        jdbcTemplate.update("""
+                          UPDATE "spend"
+                            SET spend_date  = ?,
+                                currency    = ?,
+                                amount      = ?,
+                                description = ?
+                            WHERE id = ?
+                        """,
+                new java.sql.Date(spend.getSpendDate().getTime()),
+                spend.getCurrency().name(),
+                spend.getAmount(),
+                spend.getDescription(),
+                spend.getId()
+        );
+        return spend;
     }
 }

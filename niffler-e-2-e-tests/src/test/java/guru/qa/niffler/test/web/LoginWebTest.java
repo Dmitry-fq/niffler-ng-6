@@ -2,7 +2,11 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.Spending;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,14 +36,28 @@ public class LoginWebTest {
                 .checkErrorText(errorText);
     }
 
+    @User(
+            categories = {
+                    @Category(name = "cat_1", archived = false),
+                    @Category(name = "cat_2", archived = true),
+            },
+            spendings = {
+                    @Spending(
+                            category = "cat_3",
+                            description = "test_spend",
+                            amount = 100
+                    )
+            }
+    )
     @Test
-    void mainPageShouldBeDisplayedAfterSuccessLogin() {
-        final String username = randomUsername();
-        final String password = "test";
+    void mainPageShouldBeDisplayedAfterSuccessLogin(UserJson user) {
+        final String username = user.username();
+        final String password = user.testData().password();
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .clickCreateNewAccount()
-                .register(username, password)
+//TODO закомментил, чтобы поддержать экстеншены
+//                .clickCreateNewAccount()
+//                .register(username, password)
                 .login(username, password)
                 .checkElementsMainPage();
     }

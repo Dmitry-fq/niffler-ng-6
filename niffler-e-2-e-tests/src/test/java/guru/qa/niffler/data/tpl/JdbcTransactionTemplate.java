@@ -1,5 +1,7 @@
 package guru.qa.niffler.data.tpl;
 
+import guru.qa.niffler.data.jpa.Connections;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
