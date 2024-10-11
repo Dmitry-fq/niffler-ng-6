@@ -18,8 +18,9 @@ import static guru.qa.niffler.data.tpl.Connections.holder;
 
 public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 
-  private static final Config CFG = Config.getInstance();
-  private final String url = CFG.authJdbcUrl();
+    private static final Config CFG = Config.getInstance();
+
+    private final String url = CFG.authJdbcUrl();
 
     @Override
     public void createAuthority(AuthorityEntity... authority) {

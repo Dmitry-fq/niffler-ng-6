@@ -133,7 +133,9 @@ public class UdUserDaoJdbc implements UdUserDao {
                 resultSet.getString("surname"),
                 resultSet.getString("full_name"),
                 resultSet.getBytes("photo"),
-                resultSet.getBytes("photo_small")
+                resultSet.getBytes("photo_small"),
+                new ArrayList<>(),
+                new ArrayList<>()
         );
     }
 }

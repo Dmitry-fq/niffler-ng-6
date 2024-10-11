@@ -10,7 +10,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -20,6 +22,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "authority")
 public class AuthorityEntity implements Serializable {
@@ -28,13 +32,13 @@ public class AuthorityEntity implements Serializable {
     @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
     private UUID id;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Authority authority;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private AuthUserEntity user;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
     @Override
     public final boolean equals(Object o) {

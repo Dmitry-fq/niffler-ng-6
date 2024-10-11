@@ -3,6 +3,7 @@ package guru.qa.niffler.data.dao.impl;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.AuthUserDao;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.mapper.AuthUserEntityExtractor;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -29,10 +30,10 @@ public class AuthUserDaoJdbc implements AuthUserDao {
                         "VALUES (?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getUsername());
             ps.setString(2, passwordEncoder.encode(user.getPassword()));
-            ps.setBoolean(3, user.isEnabled());
-            ps.setBoolean(4, user.isAccountNonExpired());
-            ps.setBoolean(5, user.isAccountNonLocked());
-            ps.setBoolean(6, user.isCredentialsNonExpired());
+            ps.setBoolean(3, user.getEnabled());
+            ps.setBoolean(4, user.getAccountNonExpired());
+            ps.setBoolean(5, user.getAccountNonLocked());
+            ps.setBoolean(6, user.getCredentialsNonExpired());
 
             ps.executeUpdate();
 
@@ -125,6 +126,35 @@ public class AuthUserDaoJdbc implements AuthUserDao {
         }
     }
 
+    public Optional<AuthUserEntity> findUserWithAuthorityByUserId(UUID userId) throws SQLException {
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
+                """
+                        SELECT a.id as authority_id,
+                            authority,
+                            user_id as id,
+                            u.username,
+                            u.password,
+                            u.enabled,
+                            u.account_non_expired,
+                            u.account_non_locked,
+                            u.credentials_non_expired
+                        FROM "user" u
+                        JOIN public.authority a on u.id = a.user_id
+                        WHERE u.id = ?
+                        """
+        )) {
+            ps.setObject(1, userId);
+            ps.execute();
+            AuthUserEntity authUserEntity;
+            try (ResultSet resultSet = ps.getResultSet()) {
+                authUserEntity = AuthUserEntityExtractor.instance.extractData(resultSet);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return Optional.ofNullable(authUserEntity);
+        }
+    }
+
     private AuthUserEntity convertToEntity(ResultSet resultSet) throws SQLException {
         return new AuthUserEntity(
                 resultSet.getObject("id", UUID.class),
@@ -133,7 +163,8 @@ public class AuthUserDaoJdbc implements AuthUserDao {
                 resultSet.getBoolean("enabled"),
                 resultSet.getBoolean("account_non_expired"),
                 resultSet.getBoolean("account_non_locked"),
-                resultSet.getBoolean("credentials_non_expired")
+                resultSet.getBoolean("credentials_non_expired"),
+                new ArrayList<>()
         );
     }
 }

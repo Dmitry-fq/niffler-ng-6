@@ -4,6 +4,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
+import guru.qa.niffler.data.mapper.AuthUserEntityExtractor;
 import guru.qa.niffler.data.mapper.AuthUserEntityRowMapper;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 
@@ -66,7 +67,6 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
                 "select * from \"user\" u join authority a on u.id = a.user_id where u.id = ?"
         )) {
             ps.setObject(1, id);
-
             ps.execute();
 
             try (ResultSet rs = ps.getResultSet()) {
@@ -101,6 +101,36 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public Optional<AuthUserEntity> findUserWithAuthorityByUserId(UUID userId) throws SQLException {
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
+                """
+                        SELECT a.id as authority_id,
+                            authority,
+                            user_id as id,
+                            u.username,
+                            u.password,
+                            u.enabled,
+                            u.account_non_expired,
+                            u.account_non_locked,
+                            u.credentials_non_expired
+                        FROM "user" u
+                        JOIN public.authority a on u.id = a.user_id
+                        WHERE u.id = ?
+                        """
+        )) {
+            ps.setObject(1, userId);
+            ps.execute();
+
+            AuthUserEntity authUserEntity;
+            try (ResultSet resultSet = ps.getResultSet()) {
+                authUserEntity = AuthUserEntityExtractor.instance.extractData(resultSet);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return Optional.ofNullable(authUserEntity);
         }
     }
 }
