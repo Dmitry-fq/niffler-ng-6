@@ -11,7 +11,7 @@ public interface UdUserRepository {
 
     Optional<UserEntity> findUserById(UUID id);
 
-    void addIncomeInvitation(UserEntity requester, UserEntity addressee);
+    void addInvitation(UserEntity requester, UserEntity addressee);
 
     void addFriend(UserEntity requester, UserEntity addressee);
 }

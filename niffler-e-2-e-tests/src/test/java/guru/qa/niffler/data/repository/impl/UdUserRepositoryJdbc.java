@@ -88,7 +88,7 @@ public class UdUserRepositoryJdbc implements UdUserRepository {
     }
 
     @Override
-    public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
+    public void addInvitation(UserEntity requester, UserEntity addressee) {
         requester = getUserOrCreateIfAbsent(requester);
         addressee = getUserOrCreateIfAbsent(addressee);
 
@@ -112,8 +112,6 @@ public class UdUserRepositoryJdbc implements UdUserRepository {
 
         try (
                 PreparedStatement outgoingRequestPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-                        "INSERT INTO friendship (requester_id, addressee_id, status) VALUES (?, ?, ?)");
-                PreparedStatement incomingRequestPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                         "INSERT INTO friendship (requester_id, addressee_id, status) VALUES (?, ?, ?)")
         ) {
             outgoingRequestPs.setObject(1, requesterId);
@@ -121,10 +119,10 @@ public class UdUserRepositoryJdbc implements UdUserRepository {
             outgoingRequestPs.setString(3, acceptedFriendshipStatus);
             outgoingRequestPs.executeUpdate();
 
-            incomingRequestPs.setObject(1, addresseeId);
-            incomingRequestPs.setObject(2, requesterId);
-            incomingRequestPs.setString(3, acceptedFriendshipStatus);
-            incomingRequestPs.executeUpdate();
+            outgoingRequestPs.setObject(1, addresseeId);
+            outgoingRequestPs.setObject(2, requesterId);
+            outgoingRequestPs.setString(3, acceptedFriendshipStatus);
+            outgoingRequestPs.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
