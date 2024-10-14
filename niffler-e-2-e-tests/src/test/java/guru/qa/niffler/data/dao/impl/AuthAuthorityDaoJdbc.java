@@ -20,11 +20,12 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 
     private static final Config CFG = Config.getInstance();
 
+    private final String url = CFG.authJdbcUrl();
+
     @Override
     public void createAuthority(AuthorityEntity... authority) {
-        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-                "INSERT INTO \"authority\" (user_id, authority) VALUES (?, ?)",
-                PreparedStatement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
+                "INSERT INTO \"authority\" (user_id, authority) VALUES (?, ?)")) {
             for (AuthorityEntity a : authority) {
                 ps.setObject(1, a.getUser().getId());
                 ps.setString(2, a.getAuthority().name());
@@ -94,7 +95,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 
     @Override
     public List<AuthorityEntity> findAllAuthorities() {
-        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 "SELECT * FROM authority"
         )) {
             ps.execute();

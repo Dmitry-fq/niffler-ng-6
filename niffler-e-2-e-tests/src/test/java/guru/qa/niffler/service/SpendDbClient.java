@@ -41,8 +41,8 @@ public class SpendDbClient {
         );
     }
 
-    public SpendEntity createSpendWithoutTransaction(SpendEntity spend) throws SQLException {
-        return new SpendDaoJdbc().createWithoutTransaction(spend);
+    public SpendEntity createSpend(SpendEntity spend) throws SQLException {
+        return new SpendDaoJdbc().create(spend);
     }
 
     public Optional<SpendEntity> findSpendById(UUID id) {

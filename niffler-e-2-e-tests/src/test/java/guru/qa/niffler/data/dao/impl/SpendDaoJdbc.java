@@ -21,9 +21,6 @@ public class SpendDaoJdbc implements SpendDao {
 
     private static final Config CFG = Config.getInstance();
 
-    public SpendDaoJdbc() {
-    }
-
     @Override
     public SpendEntity create(SpendEntity spend) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -32,38 +29,7 @@ public class SpendDaoJdbc implements SpendDao {
                 Statement.RETURN_GENERATED_KEYS
         )) {
             ps.setString(1, spend.getUsername());
-            ps.setDate(2, spend.getSpendDate());
-            ps.setString(3, spend.getCurrency().name());
-            ps.setDouble(4, spend.getAmount());
-            ps.setString(5, spend.getDescription());
-            ps.setObject(6, spend.getCategory().getId());
-
-            ps.executeUpdate();
-
-            final UUID generatedKey;
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    generatedKey = rs.getObject("id", UUID.class);
-                } else {
-                    throw new SQLException("Can`t find id in ResultSet");
-                }
-            }
-            spend.setId(generatedKey);
-
-            return spend;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public SpendEntity createWithoutTransaction(SpendEntity spend) throws SQLException {
-        try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
-                "INSERT INTO spend (username, spend_date, currency, amount, description, category_id) " +
-                        "VALUES ( ?, ?, ?, ?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS
-        )) {
-            ps.setString(1, spend.getUsername());
-            ps.setDate(2, spend.getSpendDate());
+            ps.setDate(2, new java.sql.Date(spend.getSpendDate().getTime()));
             ps.setString(3, spend.getCurrency().name());
             ps.setDouble(4, spend.getAmount());
             ps.setString(5, spend.getDescription());

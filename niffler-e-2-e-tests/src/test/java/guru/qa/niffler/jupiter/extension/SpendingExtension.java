@@ -52,7 +52,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                         );
                         SpendEntity spendEntity;
                         try {
-                            spendEntity = spendDbClient.createSpendWithoutTransaction(SpendEntity.fromJson(spend));
+                            spendEntity = spendDbClient.createSpend(SpendEntity.fromJson(spend));
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }

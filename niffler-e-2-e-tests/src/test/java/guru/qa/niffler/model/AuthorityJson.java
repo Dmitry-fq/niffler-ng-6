@@ -24,10 +24,10 @@ public record AuthorityJson(
                         user.getId(),
                         user.getUsername(),
                         user.getPassword(),
-                        user.isEnabled(),
-                        user.isAccountNonExpired(),
-                        user.isAccountNonLocked(),
-                        user.isCredentialsNonExpired()
+                        user.getEnabled(),
+                        user.getAccountNonExpired(),
+                        user.getAccountNonLocked(),
+                        user.getCredentialsNonExpired()
                 ),
                 entity.getAuthority().name()
         );

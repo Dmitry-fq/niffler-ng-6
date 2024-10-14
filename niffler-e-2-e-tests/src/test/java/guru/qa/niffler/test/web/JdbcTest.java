@@ -1,17 +1,22 @@
 package guru.qa.niffler.test.web;
 
+import guru.qa.niffler.data.dao.impl.AuthUserDaoJdbc;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.data.repository.impl.UdUserRepositoryJdbc;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UsersDbClient;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.Optional;
+import java.util.UUID;
 
-@Disabled
 public class JdbcTest {
 
     @Test
@@ -24,37 +29,18 @@ public class JdbcTest {
                         new Date(),
                         new CategoryJson(
                                 null,
-                                "cat-name-tx-2",
+                                "cat-name-tx-3",
                                 "duck",
                                 false
                         ),
                         CurrencyValues.RUB,
                         1000.0,
-                        "spend-name-tx",
-                        null
+                        "spend-name-tx-3",
+                        "duck"
                 )
         );
 
         System.out.println(spend);
-    }
-
-    @Test
-    void xaTxTest() {
-        UsersDbClient usersDbClient = new UsersDbClient();
-        UserJson user = usersDbClient.createUser(
-                new UserJson(
-                        null,
-                        "valentin-4",
-                        null,
-                        null,
-                        null,
-                        CurrencyValues.RUB,
-                        null,
-                        null,
-                        null
-                )
-        );
-        System.out.println(user);
     }
 
     @Test
@@ -63,7 +49,7 @@ public class JdbcTest {
         UserJson user = usersDbClient.createUser(
                 new UserJson(
                         null,
-                        "valentin-5",
+                        "valentin-6",
                         null,
                         null,
                         null,
@@ -74,5 +60,47 @@ public class JdbcTest {
                 )
         );
         System.out.println(user);
+    }
+
+    @Test
+    void test() {
+        UserEntity requester = new UserEntity(
+                null,
+                "banana",
+                CurrencyValues.RUB,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+
+        );
+        UserEntity addressee = new UserEntity(
+                null,
+                "apelsina",
+                CurrencyValues.RUB,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+
+        );
+
+        UdUserRepositoryJdbc udUserRepositoryJdbc = new UdUserRepositoryJdbc();
+        udUserRepositoryJdbc.addFriend(requester, addressee);
+    }
+
+    @Test
+    void test2() throws SQLException {
+        AuthUserDaoJdbc authUserDaoJdbc = new AuthUserDaoJdbc();
+
+        Optional<AuthUserEntity> authUserEntity = authUserDaoJdbc.findUserWithAuthorityByUserId(UUID.fromString("ce7365c2-f6b7-49cd-b67e-480190a390ed"));
+
+        System.out.println(authUserEntity);
     }
 }
