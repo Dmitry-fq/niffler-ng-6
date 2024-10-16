@@ -26,11 +26,6 @@ public class UdUserDaoJdbc implements UdUserDao {
                 PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getCurrency().toString());
-            ps.setString(3, user.getFirstname());
-            ps.setString(4, user.getSurname());
-            ps.setBytes(5, user.getPhoto());
-            ps.setBytes(6, user.getPhotoSmall());
-            ps.setString(7, user.getFullname());
 
             ps.executeUpdate();
 

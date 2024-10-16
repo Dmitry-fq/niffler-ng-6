@@ -1,7 +1,5 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
-import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
@@ -24,8 +22,6 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
 
     private final SpendDbClient spendDbClient = new SpendDbClient();
 
-    private final CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc();
-
     @Override
     public void beforeEach(ExtensionContext context) {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
@@ -39,10 +35,10 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                                 annotation.username(),
                                 category.archived()
                         );
-                        CategoryEntity categoryEntity = spendDbClient.createCategoryWithoutTransaction(CategoryEntity.fromJson(categoryJson));
+                        CategoryJson createdCategoryJson = spendDbClient.createCategory(categoryJson);
                         context.getStore(NAMESPACE).put(
                                 context.getUniqueId(),
-                                CategoryJson.fromEntity(categoryEntity)
+                                createdCategoryJson
                         );
                     }
                 });
@@ -52,7 +48,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
     public void afterTestExecution(ExtensionContext context) {
         CategoryJson categoryJson = context.getStore(CategoryExtension.NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
         if (!Objects.isNull(categoryJson)) {
-            spendDbClient.deleteCategory(CategoryEntity.fromJson(categoryJson));
+            spendDbClient.removeCategory(categoryJson);
         }
     }
 
