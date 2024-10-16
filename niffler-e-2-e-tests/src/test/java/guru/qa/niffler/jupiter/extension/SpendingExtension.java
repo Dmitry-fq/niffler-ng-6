@@ -1,7 +1,5 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.data.entity.spend.CategoryEntity;
-import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
@@ -15,7 +13,6 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-import java.sql.SQLException;
 import java.util.Date;
 
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
@@ -36,29 +33,25 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                                 annotation.username(),
                                 false
                         );
-                        CategoryEntity categoryEntity = spendDbClient.findCategoryByUsernameAndCategoryName(
+                        CategoryJson findedOrCreatedCategoryJson = spendDbClient.findCategoryByUsernameAndSpendName(
                                 categoryJson.username(), categoryJson.name()
                         ).orElseGet(
-                                () -> spendDbClient.createCategory(CategoryEntity.fromJson(categoryJson))
+                                () -> spendDbClient.createCategory(categoryJson)
                         );
                         SpendJson spend = new SpendJson(
                                 null,
                                 new Date(),
-                                CategoryJson.fromEntity(categoryEntity),
+                                findedOrCreatedCategoryJson,
                                 CurrencyValues.RUB,
                                 spending.amount(),
                                 spending.description(),
                                 annotation.username()
                         );
-                        SpendEntity spendEntity;
-                        try {
-                            spendEntity = spendDbClient.createSpend(SpendEntity.fromJson(spend));
-                        } catch (SQLException e) {
-                            throw new RuntimeException(e);
-                        }
+                        SpendJson createdSpendJson;
+                        createdSpendJson = spendDbClient.createSpend(spend);
                         context.getStore(NAMESPACE).put(
                                 context.getUniqueId(),
-                                SpendJson.fromEntity(spendEntity)
+                                createdSpendJson
                         );
                     }
                 });

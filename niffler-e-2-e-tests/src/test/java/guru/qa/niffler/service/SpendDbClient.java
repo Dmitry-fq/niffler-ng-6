@@ -1,91 +1,55 @@
 package guru.qa.niffler.service;
 
-import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.CategoryDao;
-import guru.qa.niffler.data.dao.SpendDao;
-import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
-import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
-import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
+import guru.qa.niffler.data.repository.SpendRepository;
+import guru.qa.niffler.data.repository.impl.SpendRepositoryHibernate;
+import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 
-import java.sql.SQLException;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SpendDbClient {
+public class SpendDbClient implements SpendClient {
 
-    private static final Config CFG = Config.getInstance();
-
-    private final SpendDao spendDao = new SpendDaoJdbc();
-
-    private final CategoryDao categoryDao = new CategoryDaoJdbc();
-
-    private final JdbcTransactionTemplate jdbcTxTemplate = new JdbcTransactionTemplate(
-            CFG.spendJdbcUrl()
-    );
+    private final SpendRepository spendRepository = new SpendRepositoryHibernate();
 
     public SpendJson createSpend(SpendJson spend) {
-        return jdbcTxTemplate.execute(() -> {
-                    SpendEntity spendEntity = SpendEntity.fromJson(spend);
-                    if (spendEntity.getCategory().getId() == null) {
-                        CategoryEntity categoryEntity = categoryDao.createCategory(spendEntity.getCategory());
-                        spendEntity.setCategory(categoryEntity);
-                    }
-                    return SpendJson.fromEntity(
-                            spendDao.create(spendEntity)
-                    );
-                }
-        );
+        SpendEntity spendEntity = spendRepository.create(SpendEntity.fromJson(spend));
+        return SpendJson.fromEntity(spendEntity);
     }
 
-    public SpendEntity createSpend(SpendEntity spend) throws SQLException {
-        return new SpendDaoJdbc().create(spend);
+    public SpendJson updateSpend(SpendJson spend) {
+        SpendEntity spendEntity = spendRepository.update(SpendEntity.fromJson(spend));
+        return SpendJson.fromEntity(spendEntity);
     }
 
-    public Optional<SpendEntity> findSpendById(UUID id) {
-        return spendDao.findSpendById(id);
+    public CategoryJson createCategory(CategoryJson category) {
+        CategoryEntity categoryEntity = spendRepository.createCategory(CategoryEntity.fromJson(category));
+        return CategoryJson.fromEntity(categoryEntity);
     }
 
-    public List<SpendEntity> findAllSpendsByUsername(String username) {
-        return spendDao.findAllSpendsByUsername(username);
+    public Optional<CategoryJson> findCategoryById(UUID id) {
+        return spendRepository.findCategoryById(id)
+                .map(CategoryJson::fromEntity);
     }
 
-    public void deleteSpend(SpendEntity spend) {
-        spendDao.deleteSpend(spend);
+    public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name) {
+        return spendRepository.findCategoryByUsernameAndSpendName(username, name)
+                .map(CategoryJson::fromEntity);
     }
 
-    public List<SpendEntity> findAllSpends() {
-        return spendDao.findAllSpends();
+    public Optional<SpendJson> findSpendById(UUID id) {
+        return spendRepository.findById(id)
+                .map(SpendJson::fromEntity);
     }
 
-    public CategoryEntity createCategory(CategoryEntity category) {
-        return categoryDao.createCategory(category);
+    public Optional<SpendJson> findByUsernameAndDescription(String username, String description) {
+        return spendRepository.findByUsernameAndDescription(username, description)
+                .map(SpendJson::fromEntity);
     }
 
-    public CategoryEntity createCategoryWithoutTransaction(CategoryEntity category) {
-        return new CategoryDaoJdbc().createWithoutTransaction(category);
-    }
-
-    public Optional<CategoryEntity> findCategoryById(UUID id) {
-        return categoryDao.findCategoryById(id);
-    }
-
-    public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
-        return categoryDao.findCategoryByUsernameAndCategoryName(username, categoryName);
-    }
-
-    public List<CategoryEntity> findAllCategoriesByUsername(String username) {
-        return categoryDao.findAllCategoriesByUsername(username);
-    }
-
-    public void deleteCategory(CategoryEntity category) {
-        categoryDao.deleteCategory(category);
-    }
-
-    public List<CategoryEntity> findAllCategories() {
-        return categoryDao.findAllCategories();
+    public void removeCategory(CategoryJson category) {
+        spendRepository.removeCategory(CategoryEntity.fromJson(category));
     }
 }

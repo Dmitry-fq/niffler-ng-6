@@ -1,10 +1,10 @@
 package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.dao.impl.AuthUserDaoJdbc;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
-import guru.qa.niffler.data.mapper.AuthUserEntityExtractor;
 import guru.qa.niffler.data.mapper.AuthUserEntityRowMapper;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 
@@ -21,6 +21,8 @@ import static guru.qa.niffler.data.tpl.Connections.holder;
 public class AuthUserRepositoryJdbc implements AuthUserRepository {
 
     private static final Config CFG = Config.getInstance();
+
+    private final AuthUserDaoJdbc authUserDaoJdbc = new AuthUserDaoJdbc();
 
     @Override
     public AuthUserEntity create(AuthUserEntity user) {
@@ -59,6 +61,11 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public AuthUserEntity update(AuthUserEntity user) {
+        return null;
     }
 
     @Override
@@ -104,33 +111,13 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
         }
     }
 
-    public Optional<AuthUserEntity> findUserWithAuthorityByUserId(UUID userId) throws SQLException {
-        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-                """
-                        SELECT a.id as authority_id,
-                            authority,
-                            user_id as id,
-                            u.username,
-                            u.password,
-                            u.enabled,
-                            u.account_non_expired,
-                            u.account_non_locked,
-                            u.credentials_non_expired
-                        FROM "user" u
-                        JOIN public.authority a on u.id = a.user_id
-                        WHERE u.id = ?
-                        """
-        )) {
-            ps.setObject(1, userId);
-            ps.execute();
+    @Override
+    public Optional<AuthUserEntity> findByUsername(String username) {
+        return authUserDaoJdbc.findUserByUsername(username);
+    }
 
-            AuthUserEntity authUserEntity;
-            try (ResultSet resultSet = ps.getResultSet()) {
-                authUserEntity = AuthUserEntityExtractor.instance.extractData(resultSet);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            return Optional.ofNullable(authUserEntity);
-        }
+    @Override
+    public void remove(AuthUserEntity user) {
+        authUserDaoJdbc.deleteUser(user);
     }
 }

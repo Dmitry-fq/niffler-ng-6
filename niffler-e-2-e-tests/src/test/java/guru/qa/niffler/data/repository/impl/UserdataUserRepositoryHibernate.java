@@ -22,6 +22,7 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
     public UserEntity create(UserEntity user) {
         entityManager.joinTransaction();
         entityManager.persist(user);
+
         return user;
     }
 
@@ -46,6 +47,14 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
     }
 
     @Override
+    public UserEntity update(UserEntity user) {
+        entityManager.joinTransaction();
+        entityManager.merge(user);
+
+        return user;
+    }
+
+    @Override
     public void addInvitation(UserEntity requester, UserEntity addressee) {
         entityManager.joinTransaction();
         addressee.addFriends(FriendshipStatus.PENDING, requester);
@@ -56,5 +65,11 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
         entityManager.joinTransaction();
         requester.addFriends(FriendshipStatus.ACCEPTED, addressee);
         addressee.addFriends(FriendshipStatus.ACCEPTED, requester);
+    }
+
+    @Override
+    public void remove(UserEntity user) {
+        entityManager.joinTransaction();
+        entityManager.remove(user);
     }
 }

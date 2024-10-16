@@ -1,48 +1,18 @@
 package guru.qa.niffler.test.web;
 
-import guru.qa.niffler.data.dao.impl.AuthUserDaoJdbc;
-import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
-import guru.qa.niffler.data.repository.impl.UdUserRepositoryJdbc;
-import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.data.repository.impl.UserdataUserRepositorySpringJdbc;
 import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.SpendJson;
-import guru.qa.niffler.service.SpendDbClient;
+import guru.qa.niffler.service.UsersDbClient;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 
 public class JdbcTest {
 
     @Test
-    void txTest() {
-        SpendDbClient spendDbClient = new SpendDbClient();
-
-        SpendJson spend = spendDbClient.createSpend(
-                new SpendJson(
-                        null,
-                        new Date(),
-                        new CategoryJson(
-                                null,
-                                "cat-name-tx-3",
-                                "duck",
-                                false
-                        ),
-                        CurrencyValues.RUB,
-                        1000.0,
-                        "spend-name-tx-3",
-                        "duck"
-                )
-        );
-
-        System.out.println(spend);
-    }
-
-    @Test
-    void test() {
+    void test1() {
         UserEntity requester = new UserEntity(
                 null,
                 "banana",
@@ -70,16 +40,26 @@ public class JdbcTest {
 
         );
 
-        UdUserRepositoryJdbc udUserRepositoryJdbc = new UdUserRepositoryJdbc();
-        udUserRepositoryJdbc.addFriend(requester, addressee);
+        UserdataUserRepositorySpringJdbc userdataUserRepositorySpringJdbc = new UserdataUserRepositorySpringJdbc();
+        userdataUserRepositorySpringJdbc.addFriend(requester, addressee);
     }
 
     @Test
     void test2() throws SQLException {
-        AuthUserDaoJdbc authUserDaoJdbc = new AuthUserDaoJdbc();
+        UsersDbClient usersDbClient = new UsersDbClient();
+//        AuthUserEntity authUserEntity = new AuthUserEntity(
+//                null,
+//                "mandarina",
+//                "12345",
+//                true,
+//                true,
+//                true,
+//                true,
+//                new ArrayList<>()
+//        );
 
-        Optional<AuthUserEntity> authUserEntity = authUserDaoJdbc.findUserWithAuthorityByUserId(UUID.fromString("ce7365c2-f6b7-49cd-b67e-480190a390ed"));
-
-        System.out.println(authUserEntity);
+        System.out.println(
+                usersDbClient.findUserById(UUID.fromString("95397424-f5b8-4457-9ab4-a45995cd0bda")).toString()
+        );
     }
 }
