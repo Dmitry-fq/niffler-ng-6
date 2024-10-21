@@ -5,6 +5,8 @@ import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +18,7 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.jpa.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class CategoryDaoJdbc implements CategoryDao {
 
     private static final Config CFG = Config.getInstance();
@@ -23,7 +26,8 @@ public class CategoryDaoJdbc implements CategoryDao {
     public CategoryDaoJdbc() {
     }
 
-    @NotNull
+    @SuppressWarnings("resource")
+    @Nonnull
     @Override
     public CategoryEntity createCategory(CategoryEntity category) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -79,7 +83,8 @@ public class CategoryDaoJdbc implements CategoryDao {
         }
     }
 
-    @NotNull
+    @SuppressWarnings("resource")
+    @Nonnull
     @Override
     public Optional<CategoryEntity> findCategoryById(UUID id) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -101,7 +106,8 @@ public class CategoryDaoJdbc implements CategoryDao {
         }
     }
 
-    @NotNull
+    @SuppressWarnings("resource")
+    @Nonnull
     @Override
     public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -124,7 +130,8 @@ public class CategoryDaoJdbc implements CategoryDao {
         }
     }
 
-    @NotNull
+    @SuppressWarnings("resource")
+    @Nonnull
     @Override
     public List<CategoryEntity> findAllCategoriesByUsername(String username) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -158,7 +165,8 @@ public class CategoryDaoJdbc implements CategoryDao {
         }
     }
 
-    @NotNull
+    @SuppressWarnings("resource")
+    @Nonnull
     @Override
     public List<CategoryEntity> findAllCategories() {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(

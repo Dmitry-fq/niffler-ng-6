@@ -8,18 +8,21 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 
 import static guru.qa.niffler.data.jpa.EntityManagers.em;
 
+@ParametersAreNonnullByDefault
 public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
 
     private static final Config CFG = Config.getInstance();
 
     private final EntityManager entityManager = em(CFG.userdataJdbcUrl());
 
-    @NotNull
+    @Nonnull
     @Override
     public UserEntity create(UserEntity user) {
         entityManager.joinTransaction();
@@ -28,7 +31,16 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
         return user;
     }
 
-    @NotNull
+    @Nonnull
+    @Override
+    public UserEntity update(UserEntity user) {
+        entityManager.joinTransaction();
+        entityManager.merge(user);
+
+        return user;
+    }
+
+    @Nonnull
     @Override
     public Optional<UserEntity> findById(UUID id) {
         return Optional.ofNullable(
@@ -36,7 +48,7 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
         );
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Optional<UserEntity> findByUsername(String username) {
         try {
@@ -50,17 +62,8 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
         }
     }
 
-    @NotNull
     @Override
-    public UserEntity update(UserEntity user) {
-        entityManager.joinTransaction();
-        entityManager.merge(user);
-
-        return user;
-    }
-
-    @Override
-    public void addInvitation(UserEntity requester, UserEntity addressee) {
+    public void addFriendshipRequest(UserEntity requester, UserEntity addressee) {
         entityManager.joinTransaction();
         addressee.addInvitations(requester);
     }

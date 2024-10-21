@@ -7,27 +7,31 @@ import lombok.NonNull;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public interface SpendClient {
 
-    @NonNull
+    @Nonnull
     SpendJson createSpend(SpendJson spend);
 
-    @NonNull
+    @Nonnull
     SpendJson updateSpend(SpendJson spend);
 
-    @NonNull
+    @Nonnull
     CategoryJson createCategory(CategoryJson category);
 
-    @NonNull
+    @Nonnull
     Optional<CategoryJson> findCategoryById(UUID id);
 
-    @NonNull
+    @Nonnull
     Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name);
 
-    @NonNull
+    @Nonnull
     Optional<SpendJson> findSpendById(UUID id);
 
-    @NonNull
+    @Nonnull
     Optional<SpendJson> findByUsernameAndDescription(String username, String description);
 
     void removeCategory(CategoryJson category);

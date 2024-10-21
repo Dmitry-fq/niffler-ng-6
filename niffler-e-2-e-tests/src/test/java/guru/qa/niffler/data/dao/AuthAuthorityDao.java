@@ -4,10 +4,13 @@ import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import lombok.NonNull;
 
 import java.sql.SQLException;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public interface AuthAuthorityDao {
 
     void createAuthority(AuthorityEntity... authority) throws SQLException;

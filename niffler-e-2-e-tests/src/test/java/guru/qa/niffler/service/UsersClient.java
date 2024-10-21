@@ -7,23 +7,27 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public interface UsersClient {
 
-    @NonNull
+    @Nonnull
     UserJson createUser(String username, String password);
 
-    @NonNull
+    @Nonnull
     Optional<UserJson> findUserById(UUID id);
 
-    @NonNull
+    @Nonnull
     Optional<UserJson> findUserByUsername(String username);
 
-    @NonNull
+    @Nonnull
     List<UserJson> addIncomeInvitation(UserJson targetUser, int count);
 
-    @NonNull
+    @Nonnull
     List<UserJson> addOutcomeInvitation(UserJson targetUser, int count);
 
-    @NonNull
+    @Nonnull
     List<UserJson> addFriends(UserJson targetUser, int count);
 }

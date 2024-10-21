@@ -9,6 +9,8 @@ import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.repository.SpendRepository;
 import guru.qa.niffler.model.CurrencyValues;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,6 +19,7 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.jpa.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class SpendRepositorySpringJdbc implements SpendRepository {
 
     private static final Config CFG = Config.getInstance();
@@ -25,38 +28,45 @@ public class SpendRepositorySpringJdbc implements SpendRepository {
 
     private final CategoryDaoSpringJdbc categoryDaoSpringJdbc = new CategoryDaoSpringJdbc();
 
+    @Nonnull
     @Override
     public SpendEntity create(SpendEntity spend) {
         return spendDaoSpringJdbc.create(spend);
     }
 
+    @Nonnull
     @Override
     public SpendEntity update(SpendEntity spend) {
         return null;
     }
 
+    @Nonnull
     @Override
     public CategoryEntity createCategory(CategoryEntity category) {
         return categoryDaoSpringJdbc.createCategory(category);
     }
 
+    @Nonnull
     @Override
     public Optional<CategoryEntity> findCategoryById(UUID id) {
         return categoryDaoSpringJdbc.findCategoryById(id);
     }
 
+    @Nonnull
     @Override
-    public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username, String name) {
+    public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String name) {
         return categoryDaoSpringJdbc.findCategoryByUsernameAndCategoryName(username, name);
     }
 
+    @Nonnull
     @Override
     public Optional<SpendEntity> findById(UUID id) {
         return spendDaoSpringJdbc.findSpendById(id);
     }
 
+    @Nonnull
     @Override
-    public Optional<SpendEntity> findByUsernameAndDescription(String username, String description) {
+    public Optional<SpendEntity> findByUsernameAndSpendDescription(String username, String description) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
                 "SELECT * FROM spend WHERE username = ? AND  description = ?"
         )) {

@@ -12,11 +12,11 @@ import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryHibernate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
-import lombok.NonNull;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 
+@ParametersAreNonnullByDefault
 public class UsersDbClient implements UsersClient {
 
     private static final Config CFG = Config.getInstance();
@@ -40,8 +41,8 @@ public class UsersDbClient implements UsersClient {
             CFG.userdataJdbcUrl()
     );
 
-    @NotNull
-    @NonNull
+    @Nonnull
+    @Override
     public UserJson createUser(String username, String password) {
         return xaTransactionTemplate.execute(() -> {
                     AuthUserEntity authUser = authUserEntity(username, password);
@@ -54,19 +55,19 @@ public class UsersDbClient implements UsersClient {
         );
     }
 
-    @NotNull
+    @Nonnull
     public Optional<UserJson> findUserById(UUID id) {
         return userdataUserRepository.findById(id)
                 .map(userEntity -> UserJson.fromEntity(userEntity, null));
     }
 
-    @NotNull
+    @Nonnull
     public Optional<UserJson> findUserByUsername(String username) {
         return userdataUserRepository.findByUsername(username)
                 .map(userEntity -> UserJson.fromEntity(userEntity, null));
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<UserJson> addIncomeInvitation(UserJson targetUser, int count) {
         List<UserJson> incomeInvitations = new ArrayList<>();
@@ -79,7 +80,7 @@ public class UsersDbClient implements UsersClient {
             for (int i = 0; i < count; i++) {
                 xaTransactionTemplate.execute(() -> {
                             UserEntity user = createNewUser(randomUsername(), "12345");
-                            userdataUserRepository.addInvitation(
+                            userdataUserRepository.addFriendshipRequest(
                                     user,
                                     targetEntity
                             );
@@ -93,7 +94,7 @@ public class UsersDbClient implements UsersClient {
         return incomeInvitations;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<UserJson> addOutcomeInvitation(UserJson targetUser, int count) {
         List<UserJson> outcomeInvitations = new ArrayList<>();
@@ -106,7 +107,7 @@ public class UsersDbClient implements UsersClient {
             for (int i = 0; i < count; i++) {
                 xaTransactionTemplate.execute(() -> {
                             UserEntity user = createNewUser(randomUsername(), "12345");
-                            userdataUserRepository.addInvitation(
+                            userdataUserRepository.addFriendshipRequest(
                                     targetEntity,
                                     user
                             );
@@ -120,7 +121,7 @@ public class UsersDbClient implements UsersClient {
         return outcomeInvitations;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<UserJson> addFriends(UserJson targetUser, int count) {
         List<UserJson> friends = new ArrayList<>();
@@ -148,12 +149,14 @@ public class UsersDbClient implements UsersClient {
         return friends;
     }
 
+    @Nonnull
     private UserEntity createNewUser(String username, String password) {
         AuthUserEntity authUser = authUserEntity(username, password);
         authUserRepository.create(authUser);
         return userdataUserRepository.create(userEntity(username));
     }
 
+    @Nonnull
     private UserEntity userEntity(String username) {
         UserEntity ue = new UserEntity();
         ue.setUsername(username);
@@ -161,6 +164,7 @@ public class UsersDbClient implements UsersClient {
         return ue;
     }
 
+    @Nonnull
     private AuthUserEntity authUserEntity(String username, String password) {
         AuthUserEntity authUser = new AuthUserEntity();
         authUser.setUsername(username);

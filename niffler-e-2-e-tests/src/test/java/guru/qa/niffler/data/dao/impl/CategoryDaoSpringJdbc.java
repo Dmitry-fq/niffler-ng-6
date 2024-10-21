@@ -11,6 +11,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -18,13 +20,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class CategoryDaoSpringJdbc implements CategoryDao {
 
     private static final Config CFG = Config.getInstance();
 
     private final String url = CFG.spendJdbcUrl();
 
-    @NotNull
+    @Nonnull
     @Override
     public CategoryEntity createCategory(CategoryEntity category) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -48,7 +51,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         return category;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Optional<CategoryEntity> findCategoryById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -65,7 +68,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -77,7 +80,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         );
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<CategoryEntity> findAllCategoriesByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -97,7 +100,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         );
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<CategoryEntity> findAllCategories() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));

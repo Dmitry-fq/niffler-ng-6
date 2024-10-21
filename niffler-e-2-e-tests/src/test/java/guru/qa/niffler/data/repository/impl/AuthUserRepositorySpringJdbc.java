@@ -11,9 +11,13 @@ import guru.qa.niffler.data.tpl.DataSources;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 
     private static final Config CFG = Config.getInstance();
@@ -22,7 +26,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 
     private final AuthAuthorityDaoSpringJdbc authAuthorityDaoSpringJdbc = new AuthAuthorityDaoSpringJdbc();
 
-    @NotNull
+    @Nonnull
     @Override
     public AuthUserEntity create(AuthUserEntity user) {
         AuthUserEntity authUserEntity = authUserDaoSpringJdbc.createUser(user);
@@ -31,13 +35,13 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
         return authUserEntity;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public AuthUserEntity update(AuthUserEntity user) {
         return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Optional<AuthUserEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -50,7 +54,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
         );
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Optional<AuthUserEntity> findByUsername(String username) {
         return authUserDaoSpringJdbc.findUserByUsername(username);

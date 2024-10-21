@@ -3,21 +3,24 @@ package guru.qa.niffler.data.repository;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import lombok.NonNull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public interface AuthUserRepository {
 
-    @NonNull
+    @Nonnull
     AuthUserEntity create(AuthUserEntity user);
 
-    @NonNull
+    @Nonnull
     AuthUserEntity update(AuthUserEntity user);
 
-    @NonNull
+    @Nonnull
     Optional<AuthUserEntity> findById(UUID id);
 
-    @NonNull
+    @Nonnull
     Optional<AuthUserEntity> findByUsername(String username);
 
     void remove(AuthUserEntity user);

@@ -1,14 +1,15 @@
 package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.impl.UdUserDaoSpringJdbc;
+import guru.qa.niffler.data.dao.impl.UserdataUserDaoSpringJdbc;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.data.tpl.DataSources;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -17,37 +18,39 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.jpa.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository {
 
     private static final Config CFG = Config.getInstance();
 
-    private final UdUserDaoSpringJdbc udUserDaoSpringJdbc = new UdUserDaoSpringJdbc();
+    private final UserdataUserDaoSpringJdbc udUserDaoSpringJdbc = new UserdataUserDaoSpringJdbc();
 
-    @NotNull
-    public UserEntity create(UserEntity user) {
-        return udUserDaoSpringJdbc.createUser(user);
-    }
-
-    @NotNull
+    @Nonnull
     @Override
-    public Optional<UserEntity> findByUsername(String username) {
-        return udUserDaoSpringJdbc.findUserByUsername(username);
+    public UserEntity create(UserEntity user) {
+        return udUserDaoSpringJdbc.create(user);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public UserEntity update(UserEntity user) {
         return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Optional<UserEntity> findById(UUID id) {
-        return udUserDaoSpringJdbc.findUserById(id);
+        return udUserDaoSpringJdbc.findById(id);
+    }
+
+    @Nonnull
+    @Override
+    public Optional<UserEntity> findByUsername(String username) {
+        return udUserDaoSpringJdbc.findByUsername(username);
     }
 
     @Override
-    public void addInvitation(UserEntity requester, UserEntity addressee) {
+    public void addFriendshipRequest(UserEntity requester, UserEntity addressee) {
         requester = getUserOrCreateIfAbsent(requester);
         addressee = getUserOrCreateIfAbsent(addressee);
 

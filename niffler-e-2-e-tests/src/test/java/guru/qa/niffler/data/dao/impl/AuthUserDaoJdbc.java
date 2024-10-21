@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Nonnull;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,12 +25,14 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 
     private static final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    @NotNull
+    @SuppressWarnings("resource")
+    @Nonnull
     @Override
     public AuthUserEntity createUser(AuthUserEntity user) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "INSERT INTO \"user\" (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) " +
-                        "VALUES (?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+                        "VALUES (?, ?, ?, ?, ?, ?)",
+                PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getUsername());
             ps.setString(2, passwordEncoder.encode(user.getPassword()));
             ps.setBoolean(3, user.getEnabled());
@@ -54,7 +57,8 @@ public class AuthUserDaoJdbc implements AuthUserDao {
         }
     }
 
-    @NotNull
+    @SuppressWarnings("resource")
+    @Nonnull
     @Override
     public Optional<AuthUserEntity> findUserById(UUID id) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
@@ -77,7 +81,8 @@ public class AuthUserDaoJdbc implements AuthUserDao {
         }
     }
 
-    @NotNull
+    @SuppressWarnings("resource")
+    @Nonnull
     @Override
     public Optional<AuthUserEntity> findUserByUsername(String username) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
@@ -111,7 +116,8 @@ public class AuthUserDaoJdbc implements AuthUserDao {
         }
     }
 
-    @NotNull
+    @SuppressWarnings("resource")
+    @Nonnull
     @Override
     public List<AuthUserEntity> findAllUsers() {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(

@@ -1,7 +1,7 @@
 package guru.qa.niffler.data.dao.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.UdUserDao;
+import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.mapper.UdUserEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -20,15 +21,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class UdUserDaoSpringJdbc implements UdUserDao {
+@ParametersAreNonnullByDefault
+public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
 
     private static final Config CFG = Config.getInstance();
 
     private final String url = CFG.userdataJdbcUrl();
 
-    @NotNull
+    @Nonnull
     @Override
-    public UserEntity createUser(UserEntity user) {
+    public UserEntity create(UserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
         KeyHolder kh = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
@@ -52,9 +54,9 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
         return user;
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Optional<UserEntity> findUserById(UUID id) {
+    public Optional<UserEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
         try {
             return Optional.ofNullable(
@@ -72,7 +74,7 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
 
     @NotNull
     @Override
-    public Optional<UserEntity> findUserByUsername(String username) {
+    public Optional<UserEntity> findByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
         try {
             return Optional.ofNullable(
@@ -97,7 +99,7 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
         );
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<UserEntity> findAllUsers() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -107,6 +109,7 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
         );
     }
 
+    @Nonnull
     public UserEntity update(UserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
         jdbcTemplate.update("""

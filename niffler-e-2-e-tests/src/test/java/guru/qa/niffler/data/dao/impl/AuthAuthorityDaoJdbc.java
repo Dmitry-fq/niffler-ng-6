@@ -7,6 +7,8 @@ import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,12 +19,14 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.jpa.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 
     private static final Config CFG = Config.getInstance();
 
     private final String url = CFG.authJdbcUrl();
 
+    @SuppressWarnings("resource")
     @Override
     public void createAuthority(AuthorityEntity... authority) {
         try (PreparedStatement ps = holder(url).connection().prepareStatement(
@@ -39,7 +43,8 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
         }
     }
 
-    @NotNull
+    @SuppressWarnings("resource")
+    @Nonnull
     @Override
     public Optional<AuthorityEntity> findAuthorityById(UUID id) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
@@ -61,7 +66,8 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
         }
     }
 
-    @NotNull
+    @SuppressWarnings("resource")
+    @Nonnull
     @Override
     public List<AuthorityEntity> findAuthoritiesByUserId(UUID userId) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(

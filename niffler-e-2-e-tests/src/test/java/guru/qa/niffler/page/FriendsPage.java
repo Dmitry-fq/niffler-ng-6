@@ -6,10 +6,14 @@ import guru.qa.niffler.page.component.FriendsTable;
 import io.qameta.allure.Step;
 import lombok.NonNull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$x;
 
+@ParametersAreNonnullByDefault
 public class FriendsPage {
 
     private final SelenideElement friendsTab = $x("//h2[text()='Friends']");
@@ -32,7 +36,7 @@ public class FriendsPage {
 
     private final FriendsTable friendsTable = new FriendsTable();
 
-    @NonNull
+    @Nonnull
     @Step("Проверка, что друг присутствует по имени")
     public FriendsPage checkFriends(String friendName) {
         SelenideElement friend = friends.find(text(friendName));
@@ -42,7 +46,7 @@ public class FriendsPage {
         return this;
     }
 
-    @NonNull
+    @Nonnull
     @Step("Проверка, что список друзей пуст")
     public FriendsPage checkFriendsListEmpty() {
         noUserText.shouldBe(visible);
@@ -50,7 +54,7 @@ public class FriendsPage {
         return this;
     }
 
-    @NonNull
+    @Nonnull
     @Step("Проверка входящего запроса дружбы")
     public FriendsPage checkIncomeInvitation(String username) {
         SelenideElement incomeInvitation = friends.find(text(username));
@@ -60,7 +64,7 @@ public class FriendsPage {
         return this;
     }
 
-    @NonNull
+    @Nonnull
     @Step("Проверка исходящего запроса дружбы")
     public FriendsPage checkOutcomeFriendRequest(String username) {
         SelenideElement friendRow = friendOutcomeRequests.find(text(username));
@@ -69,7 +73,7 @@ public class FriendsPage {
         return this;
     }
 
-    @NonNull
+    @Nonnull
     @Step("Нажатие на вкладку All People")
     public FriendsPage clickAllPeopleTab() {
         allPeopleTab.click();
@@ -83,7 +87,7 @@ public class FriendsPage {
         searchInput.pressEnter();
     }
 
-    @NonNull
+    @Nonnull
     @Step("Принятие запроса дружбы по логину или имени")
     public FriendsPage acceptFriendRequestByLoginOrName(String loginOrName) {
         friendsTable.acceptFriendRequestByLoginOrName(loginOrName);
@@ -91,7 +95,7 @@ public class FriendsPage {
         return this;
     }
 
-    @NonNull
+    @Nonnull
     @Step("Отклонение запроса дружбы по логину или имени")
     public FriendsPage declineFriendRequestByLoginOrName(String loginOrName) {
         friendsTable.declineFriendRequestByLoginOrName(loginOrName);

@@ -1,12 +1,13 @@
 package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.impl.UdUserDaoJdbc;
+import guru.qa.niffler.data.dao.impl.UserdataUserDaoJdbc;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Optional;
@@ -14,37 +15,39 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.jpa.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
 
     private static final Config CFG = Config.getInstance();
 
-    private final UdUserDaoJdbc udUserDaoJdbc = new UdUserDaoJdbc();
+    private final UserdataUserDaoJdbc udUserDaoJdbc = new UserdataUserDaoJdbc();
 
-    @NotNull
-    public UserEntity create(UserEntity user) {
-        return udUserDaoJdbc.createUser(user);
-    }
-
-    @NotNull
+    @Nonnull
     @Override
-    public Optional<UserEntity> findByUsername(String username) {
-        return udUserDaoJdbc.findUserByUsername(username);
+    public UserEntity create(UserEntity user) {
+        return udUserDaoJdbc.create(user);
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public UserEntity update(UserEntity user) {
         return null;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Optional<UserEntity> findById(UUID id) {
-        return udUserDaoJdbc.findUserById(id);
+        return udUserDaoJdbc.findById(id);
+    }
+
+    @Nonnull
+    @Override
+    public Optional<UserEntity> findByUsername(String username) {
+        return udUserDaoJdbc.findByUsername(username);
     }
 
     @Override
-    public void addInvitation(UserEntity requester, UserEntity addressee) {
+    public void addFriendshipRequest(UserEntity requester, UserEntity addressee) {
         requester = getUserOrCreateIfAbsent(requester);
         addressee = getUserOrCreateIfAbsent(addressee);
 

@@ -10,9 +10,12 @@ import guru.qa.niffler.page.PeoplePage;
 import guru.qa.niffler.page.ProfilePage;
 import io.qameta.allure.Step;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$x;
 
+@ParametersAreNonnullByDefault
 public class Header {
 
     private static final String PROFILE_BUTTON_TEXT = "Profile";

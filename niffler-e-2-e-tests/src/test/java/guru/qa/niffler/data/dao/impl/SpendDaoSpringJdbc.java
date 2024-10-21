@@ -11,6 +11,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -18,13 +20,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class SpendDaoSpringJdbc implements SpendDao {
 
     private static final Config CFG = Config.getInstance();
 
     private final String url = CFG.spendJdbcUrl();
 
-    @NotNull
+    @Nonnull
     @Override
     public SpendEntity create(SpendEntity spend) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -51,7 +54,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
         return spend;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Optional<SpendEntity> findSpendById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -69,7 +72,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<SpendEntity> findAllSpendsByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -89,7 +92,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
         );
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<SpendEntity> findAllSpends() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));

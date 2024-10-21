@@ -3,22 +3,25 @@ package guru.qa.niffler.data.dao;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import lombok.NonNull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public interface SpendDao {
-    @NonNull
+    @Nonnull
     SpendEntity create(SpendEntity spend);
 
-    @NonNull
+    @Nonnull
     Optional<SpendEntity> findSpendById(UUID id);
 
-    @NonNull
+    @Nonnull
     List<SpendEntity> findAllSpendsByUsername(String username);
 
     void deleteSpend(SpendEntity spend);
 
-    @NonNull
+    @Nonnull
     List<SpendEntity> findAllSpends();
 }

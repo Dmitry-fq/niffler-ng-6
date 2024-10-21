@@ -1,14 +1,20 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.config.Config;
 import io.qameta.allure.Step;
-import lombok.NonNull;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.Condition.attribute;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$x;
 
-public class ProfilePage {
+@ParametersAreNonnullByDefault
+public class ProfilePage extends BasePage<ProfilePage> {
+
+    public static String url = Config.getInstance().frontUrl() + "profile";
 
     private final SelenideElement usernameInput = $x("//input[@id='username']");
 
@@ -22,7 +28,7 @@ public class ProfilePage {
         usernameInput.shouldHave(attribute("value", currentUsername));
     }
 
-    @NonNull
+    @Nonnull
     @Step("Установка нового имени")
     public ProfilePage setNewName(String newName) {
         nameInput.setValue(newName);
@@ -30,7 +36,7 @@ public class ProfilePage {
         return this;
     }
 
-    @NonNull
+    @Nonnull
     @Step("Проверка имени")
     public ProfilePage checkName(String name) {
         nameInput.shouldHave(attribute("value", name));
@@ -38,7 +44,7 @@ public class ProfilePage {
         return this;
     }
 
-    @NonNull
+    @Nonnull
     @Step("нажатие на кнопку Save Changes")
     public ProfilePage clickSaveChangesButton() {
         saveChangesButton.click();
@@ -46,7 +52,7 @@ public class ProfilePage {
         return this;
     }
 
-    @NonNull
+    @Nonnull
     @Step("Нажатие на радиобаттон Show Archived")
     public ProfilePage clickShowArchivedCheckbox() {
         showArchivedCheckbox.click();
@@ -70,7 +76,7 @@ public class ProfilePage {
         archiveButton.shouldBe(visible);
     }
 
-    @NonNull
+    @Nonnull
     @Step("Получение элемента категории по имени категории")
     private SelenideElement getCategoryByCategoryName(String categoryName) {
         return $x(String.format("//*[text()='%s']", categoryName));

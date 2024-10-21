@@ -8,12 +8,13 @@ import guru.qa.niffler.data.repository.impl.SpendRepositoryHibernate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
-import lombok.NonNull;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class SpendDbClient implements SpendClient {
 
     private static final Config CFG = Config.getInstance();
@@ -24,9 +25,9 @@ public class SpendDbClient implements SpendClient {
             CFG.spendJdbcUrl()
     );
 
-    @NonNull
+    @Nonnull
     public SpendJson createSpend(SpendJson spend) {
-        Optional<CategoryEntity> category = spendRepository.findCategoryByUsernameAndSpendName(
+        Optional<CategoryEntity> category = spendRepository.findCategoryByUsernameAndCategoryName(
                 spend.username(), spend.category().name()
         );
         if (category.isEmpty()) {
@@ -35,7 +36,7 @@ public class SpendDbClient implements SpendClient {
                     )
             );
         } else {
-            SpendEntity spendEntity = spendRepository.findByUsernameAndDescription(
+            SpendEntity spendEntity = spendRepository.findByUsernameAndSpendDescription(
                     spend.username(), spend.description()
             ).orElseThrow();
 
@@ -43,13 +44,13 @@ public class SpendDbClient implements SpendClient {
         }
     }
 
-    @NotNull
+    @Nonnull
     public SpendJson updateSpend(SpendJson spend) {
         SpendEntity spendEntity = spendRepository.update(SpendEntity.fromJson(spend));
         return SpendJson.fromEntity(spendEntity);
     }
 
-    @NotNull
+    @Nonnull
     public CategoryJson createCategory(CategoryJson category) {
         return xaTransactionTemplate.execute(() -> CategoryJson.fromEntity(
                         spendRepository.createCategory(CategoryEntity.fromJson(category))
@@ -57,27 +58,27 @@ public class SpendDbClient implements SpendClient {
         );
     }
 
-    @NotNull
+    @Nonnull
     public Optional<CategoryJson> findCategoryById(UUID id) {
         return spendRepository.findCategoryById(id)
                 .map(CategoryJson::fromEntity);
     }
 
-    @NotNull
+    @Nonnull
     public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name) {
-        return spendRepository.findCategoryByUsernameAndSpendName(username, name)
+        return spendRepository.findCategoryByUsernameAndCategoryName(username, name)
                 .map(CategoryJson::fromEntity);
     }
 
-    @NotNull
+    @Nonnull
     public Optional<SpendJson> findSpendById(UUID id) {
         return spendRepository.findById(id)
                 .map(SpendJson::fromEntity);
     }
 
-    @NotNull
+    @Nonnull
     public Optional<SpendJson> findByUsernameAndDescription(String username, String description) {
-        return spendRepository.findByUsernameAndDescription(username, description)
+        return spendRepository.findByUsernameAndSpendDescription(username, description)
                 .map(SpendJson::fromEntity);
     }
 

@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import lombok.NonNull;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,7 +16,8 @@ public class EntityManagers {
     private EntityManagers() {
     }
 
-    @NonNull
+    @SuppressWarnings("resource")
+    @Nonnull
     public static EntityManager em(String jdbcUrl) {
         return new ThreadSafeEntityManager(
                 emfs.computeIfAbsent(

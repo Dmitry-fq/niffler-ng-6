@@ -16,22 +16,23 @@ import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.metamodel.Metamodel;
 import lombok.NonNull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("resource")
 public class ThreadSafeEntityManager implements EntityManager {
 
     private final ThreadLocal<EntityManager> threadEm = new ThreadLocal<>();
 
     private final EntityManagerFactory emf;
 
-    @NonNull
-    public ThreadSafeEntityManager(EntityManager delegate) {
+
+    public ThreadSafeEntityManager(@NonNull EntityManager delegate) {
         threadEm.set(delegate);
         emf = delegate.getEntityManagerFactory();
     }
 
-    @NonNull
     private EntityManager threadEm() {
         if (threadEm.get() == null || !threadEm.get().isOpen()) {
             threadEm.set(emf.createEntityManager());
@@ -52,7 +53,6 @@ public class ThreadSafeEntityManager implements EntityManager {
         threadEm().persist(entity);
     }
 
-    @NonNull
     @Override
     public <T> T merge(T entity) {
         return threadEm().merge(entity);
@@ -63,31 +63,26 @@ public class ThreadSafeEntityManager implements EntityManager {
         threadEm().remove(entity);
     }
 
-    @NonNull
     @Override
     public <T> T find(Class<T> entityClass, Object primaryKey) {
         return threadEm().find(entityClass, primaryKey);
     }
 
-    @NonNull
     @Override
     public <T> T find(Class<T> entityClass, Object primaryKey, Map<String, Object> properties) {
         return threadEm().find(entityClass, primaryKey, properties);
     }
 
-    @NonNull
     @Override
     public <T> T find(Class<T> entityClass, Object primaryKey, LockModeType lockMode) {
         return threadEm().find(entityClass, primaryKey, lockMode);
     }
 
-    @NonNull
     @Override
     public <T> T find(Class<T> entityClass, Object primaryKey, LockModeType lockMode, Map<String, Object> properties) {
         return threadEm().find(entityClass, primaryKey, lockMode, properties);
     }
 
-    @NonNull
     @Override
     public <T> T getReference(Class<T> entityClass, Object primaryKey) {
         return threadEm().getReference(entityClass, primaryKey);
@@ -97,8 +92,6 @@ public class ThreadSafeEntityManager implements EntityManager {
     public void flush() {
         threadEm().flush();
     }
-
-    @NonNull
 
     @Override
     public FlushModeType getFlushMode() {

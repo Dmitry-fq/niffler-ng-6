@@ -40,6 +40,9 @@ public class AuthorityEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    public <T> AuthorityEntity(T authorityId) {
+    }
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

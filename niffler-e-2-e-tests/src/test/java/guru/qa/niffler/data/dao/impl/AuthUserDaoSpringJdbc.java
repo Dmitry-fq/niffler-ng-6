@@ -12,6 +12,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -19,11 +21,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
     private static final Config CFG = Config.getInstance();
 
-    @NotNull
+    @Nonnull
     @Override
     public AuthUserEntity createUser(AuthUserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -48,7 +51,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         return user;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Optional<AuthUserEntity> findUserById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -66,6 +69,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         }
     }
 
+    @Nonnull
     public Optional<AuthUserEntity> findUserWithAuthorityByUserId(UUID userId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
         return Optional.ofNullable(
@@ -90,7 +94,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         );
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Optional<AuthUserEntity> findUserByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -117,7 +121,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         );
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<AuthUserEntity> findAllUsers() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));

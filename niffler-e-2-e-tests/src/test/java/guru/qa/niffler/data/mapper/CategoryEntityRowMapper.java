@@ -4,6 +4,7 @@ import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import lombok.NonNull;
 import org.springframework.jdbc.core.RowMapper;
 
+import javax.annotation.Nonnull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -15,7 +16,7 @@ public class CategoryEntityRowMapper implements RowMapper<CategoryEntity> {
     private CategoryEntityRowMapper() {
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public CategoryEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
         CategoryEntity result = new CategoryEntity();
