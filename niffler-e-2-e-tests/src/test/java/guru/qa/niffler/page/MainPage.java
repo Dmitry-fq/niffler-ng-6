@@ -10,6 +10,8 @@ import static com.codeborne.selenide.Selenide.$x;
 
 public class MainPage implements Header {
 
+    private final SelenideElement searchInput = $x("//input[@aria-label= 'search']");
+
     private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
 
     private final SelenideElement statisticText = $x("//h2[text()='Statistics']");
@@ -30,7 +32,14 @@ public class MainPage implements Header {
     }
 
     public EditSpendingPage editSpending(String spendingDescription) {
+        SelenideElement spending = tableRows.find(text(spendingDescription));
+
+        if (!spending.exists()) {
+            searchInput.sendKeys(spendingDescription);
+            searchInput.pressEnter();
+        }
         tableRows.find(text(spendingDescription)).$$("td").get(5).click();
+
         return new EditSpendingPage();
     }
 

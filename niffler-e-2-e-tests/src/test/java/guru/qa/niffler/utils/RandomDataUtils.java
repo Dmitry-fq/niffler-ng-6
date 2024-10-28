@@ -2,13 +2,13 @@ package guru.qa.niffler.utils;
 
 import com.github.javafaker.Faker;
 
+import java.util.Random;
+
 public class RandomDataUtils {
 
     private static final Faker faker = new Faker();
 
-    public static String getRandomCategoryNameIfEmpty(String str) {
-        return str.isEmpty() ? randomCategoryName() : str;
-    }
+    private static final Random random = new Random();
 
     public static String randomUsername() {
         return faker.name().username();
@@ -23,7 +23,8 @@ public class RandomDataUtils {
     }
 
     public static String randomCategoryName() {
-        return faker.commerce().material();
+        String categoryName = faker.commerce().material();
+        return categoryName + random.nextInt();
     }
 
     public static String randomSentence(int wordsCount) {

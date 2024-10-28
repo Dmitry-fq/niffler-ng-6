@@ -15,14 +15,26 @@ public class FriendsPage implements Header {
 
     private final ElementsCollection friends = $x("//tbody['friends']").$$x("tr");
 
+    private final SelenideElement searchInput = $x("//input[@aria-label= 'search']");
+
     private final ElementsCollection friendIncomeRequests = $x("//tbody['requests']").$$x("tr");
 
     private final ElementsCollection friendOutcomeRequests = $x("//tbody['all']").$$x("tr");
 
     private final SelenideElement noUserText = $x("//p[text()='There are no users yet']");
 
-    public FriendsPage checkFriends(String friend) {
-        friends.get(0).shouldBe(visible).shouldHave(text(friend));
+    private final SelenideElement previousButton = $x("//button[text()='Previous']");
+
+    private final SelenideElement NextButton = $x("//button[text()='Next']");
+
+    public FriendsPage checkFriends(String friendName) {
+        SelenideElement friend = friends.find(text(friendName));
+
+        if (!friend.exists()) {
+            searchUserByText(friendName);
+        }
+
+        friends.find(text(friendName)).shouldBe(visible);
 
         return this;
     }
@@ -33,8 +45,14 @@ public class FriendsPage implements Header {
         return this;
     }
 
-    public FriendsPage checkIncomeFriendRequest(String username) {
-        friendIncomeRequests.get(0).shouldHave(text(username));
+    public FriendsPage checkIncomeInvitation(String username) {
+        SelenideElement incomeInvitation = friends.find(text(username));
+
+        if (!incomeInvitation.exists()) {
+            searchUserByText(username);
+        }
+
+        friends.find(text(username)).shouldBe(visible);
 
         return this;
     }
@@ -50,5 +68,10 @@ public class FriendsPage implements Header {
         allPeopleTab.click();
 
         return this;
+    }
+
+    private void searchUserByText(String text) {
+        searchInput.sendKeys(text);
+        searchInput.pressEnter();
     }
 }

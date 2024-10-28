@@ -24,10 +24,10 @@ public class ProfileWebTest {
             }
     )
     @Test
-    void archivedCategoryShouldPresentInCategoriesList(CategoryJson category) {
-        final String username = category.username();
+    void archivedCategoryShouldPresentInCategoriesList(CategoryJson[] category) {
+        final String username = category[0].username();
         final String password = "12345";
-        final String categoryName = category.name();
+        final String categoryName = category[0].name();
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(username, password)
@@ -46,10 +46,10 @@ public class ProfileWebTest {
             }
     )
     @Test
-    void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {
-        final String username = category.username();
+    void activeCategoryShouldPresentInCategoriesList(CategoryJson[] category) {
+        final String username = category[0].username();
         final String password = "12345";
-        final String categoryName = category.name();
+        final String categoryName = category[0].name();
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(username, password)

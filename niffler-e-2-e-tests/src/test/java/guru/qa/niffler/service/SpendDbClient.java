@@ -23,10 +23,21 @@ public class SpendDbClient implements SpendClient {
     );
 
     public SpendJson createSpend(SpendJson spend) {
-        return xaTransactionTemplate.execute(() -> SpendJson.fromEntity(
-                        spendRepository.create(SpendEntity.fromJson(spend))
-                )
+        Optional<CategoryEntity> category = spendRepository.findCategoryByUsernameAndSpendName(
+                spend.username(), spend.category().name()
         );
+        if (category.isEmpty()) {
+            return xaTransactionTemplate.execute(() -> SpendJson.fromEntity(
+                            spendRepository.create(SpendEntity.fromJson(spend))
+                    )
+            );
+        } else {
+            SpendEntity spendEntity = spendRepository.findByUsernameAndDescription(
+                    spend.username(), spend.description()
+            ).orElseThrow();
+
+            return SpendJson.fromEntity(spendEntity);
+        }
     }
 
     public SpendJson updateSpend(SpendJson spend) {

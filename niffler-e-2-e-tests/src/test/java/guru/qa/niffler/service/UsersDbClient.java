@@ -15,7 +15,9 @@ import guru.qa.niffler.model.UserJson;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -58,7 +60,10 @@ public class UsersDbClient implements UsersClient {
                 .map(userEntity -> UserJson.fromEntity(userEntity, null));
     }
 
-    public void addInvitation(UserJson targetUser, int count) {
+    @Override
+    public List<UserJson> addIncomeInvitation(UserJson targetUser, int count) {
+        List<UserJson> incomeInvitations = new ArrayList<>();
+
         if (count > 0) {
             UserEntity targetEntity = userdataUserRepository.findById(
                     targetUser.id()
@@ -66,19 +71,25 @@ public class UsersDbClient implements UsersClient {
 
             for (int i = 0; i < count; i++) {
                 xaTransactionTemplate.execute(() -> {
-                            String username = randomUsername();
-                            userdataUserRepository.addFriend(
-                                    targetEntity,
-                                    createNewUser(username, "12345")
+                            UserEntity user = createNewUser(randomUsername(), "12345");
+                            userdataUserRepository.addInvitation(
+                                    user,
+                                    targetEntity
                             );
+                            incomeInvitations.add(UserJson.fromEntity(user, null));
+
                             return null;
                         }
                 );
             }
         }
+        return incomeInvitations;
     }
 
-    public void addFriend(UserJson targetUser, int count) {
+    @Override
+    public List<UserJson> addOutcomeInvitation(UserJson targetUser, int count) {
+        List<UserJson> outcomeInvitations = new ArrayList<>();
+
         if (count > 0) {
             UserEntity targetEntity = userdataUserRepository.findById(
                     targetUser.id()
@@ -86,16 +97,46 @@ public class UsersDbClient implements UsersClient {
 
             for (int i = 0; i < count; i++) {
                 xaTransactionTemplate.execute(() -> {
-                            String username = randomUsername();
-                            userdataUserRepository.addFriend(
+                            UserEntity user = createNewUser(randomUsername(), "12345");
+                            userdataUserRepository.addInvitation(
                                     targetEntity,
-                                    createNewUser(username, "12345")
+                                    user
                             );
+                            outcomeInvitations.add(UserJson.fromEntity(user, null));
+
                             return null;
                         }
                 );
             }
         }
+        return outcomeInvitations;
+    }
+
+    @Override
+    public List<UserJson> addFriends(UserJson targetUser, int count) {
+        List<UserJson> friends = new ArrayList<>();
+
+        if (count > 0) {
+            UserEntity targetEntity = userdataUserRepository.findById(
+                    targetUser.id()
+            ).orElseThrow();
+
+            for (int i = 0; i < count; i++) {
+                xaTransactionTemplate.execute(() -> {
+                            UserEntity friend = createNewUser(randomUsername(), "12345");
+                            userdataUserRepository.addFriend(
+                                    targetEntity,
+                                    friend
+                            );
+                            friends.add(UserJson.fromEntity(friend, null));
+
+                            return null;
+                        }
+                );
+            }
+        }
+
+        return friends;
     }
 
     private UserEntity createNewUser(String username, String password) {

@@ -19,11 +19,11 @@ public class SpendRepositoryHibernate implements SpendRepository {
     private final EntityManager entityManager = em(CFG.spendJdbcUrl());
 
     @Override
-    public SpendEntity create(SpendEntity user) {
+    public SpendEntity create(SpendEntity spend) {
         entityManager.joinTransaction();
-        entityManager.persist(user);
+        entityManager.persist(spend);
 
-        return user;
+        return spend;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class SpendRepositoryHibernate implements SpendRepository {
 
                             .setParameter("username", username)
                             .setParameter("description", description)
-                            .getSingleResult()
+                            .getResultList().get(0)
             );
         } catch (NoResultException e) {
             return Optional.empty();
@@ -99,13 +99,13 @@ public class SpendRepositoryHibernate implements SpendRepository {
     @Override
     public void remove(SpendEntity spend) {
         entityManager.joinTransaction();
-        entityManager.remove(spend);
+        entityManager.remove(entityManager.contains(spend) ? spend : entityManager.merge(spend));
     }
 
     @Override
     public void removeCategory(CategoryEntity category) {
         entityManager.joinTransaction();
-        entityManager.remove(category);
+        entityManager.remove(entityManager.contains(category) ? category : entityManager.merge(category));
     }
 
 }

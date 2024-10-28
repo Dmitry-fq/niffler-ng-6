@@ -42,3 +42,4 @@ out/
 /niffler-grpc-common/src/generated/**
 /niffler-e-2-e-tests/tmlog.lck
 /niffler-e-2-e-tests/tmlog10.log
+/niffler-e-2-e-tests/tmlog25.log
