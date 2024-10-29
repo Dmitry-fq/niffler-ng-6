@@ -32,12 +32,8 @@ public class MainPage implements Header {
     }
 
     public EditSpendingPage editSpending(String spendingDescription) {
-        SelenideElement spending = tableRows.find(text(spendingDescription));
-
-        if (!spending.exists()) {
-            searchInput.sendKeys(spendingDescription);
-            searchInput.pressEnter();
-        }
+        searchInput.setValue(spendingDescription)
+                .pressEnter();
         tableRows.find(text(spendingDescription)).$$("td").get(5).click();
 
         return new EditSpendingPage();

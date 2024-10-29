@@ -28,12 +28,7 @@ public class FriendsPage implements Header {
     private final SelenideElement NextButton = $x("//button[text()='Next']");
 
     public FriendsPage checkFriends(String friendName) {
-        SelenideElement friend = friends.find(text(friendName));
-
-        if (!friend.exists()) {
-            searchUserByText(friendName);
-        }
-
+        searchUserByText(friendName);
         friends.find(text(friendName)).shouldBe(visible);
 
         return this;
@@ -46,12 +41,7 @@ public class FriendsPage implements Header {
     }
 
     public FriendsPage checkIncomeInvitation(String username) {
-        SelenideElement incomeInvitation = friends.find(text(username));
-
-        if (!incomeInvitation.exists()) {
-            searchUserByText(username);
-        }
-
+        searchUserByText(username);
         friends.find(text(username)).shouldBe(visible);
 
         return this;
@@ -71,7 +61,7 @@ public class FriendsPage implements Header {
     }
 
     private void searchUserByText(String text) {
-        searchInput.sendKeys(text);
-        searchInput.pressEnter();
+        searchInput.setValue(text)
+                .pressEnter();
     }
 }
