@@ -4,6 +4,7 @@ import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.component.Header;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -14,6 +15,8 @@ public class RegistrationWebTest {
 
     private static final Config CFG = Config.getInstance();
 
+    private final Header header = new Header();
+
     @Test
     void shouldRegisterNewUser() {
         final String username = randomUsername();
@@ -22,9 +25,9 @@ public class RegistrationWebTest {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .clickCreateNewAccount()
                 .register(username, password)
-                .login(username, password)
-                .clickSettingsButton()
-                .clickProfile()
+                .login(username, password);
+
+        header.toProfilePage()
                 .checkUsername(username);
     }
 

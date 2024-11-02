@@ -1,18 +1,15 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.Header;
+import guru.qa.niffler.page.component.SpendingTable;
 
-import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
-public class MainPage implements Header {
+public class MainPage {
 
-    private final SelenideElement searchInput = $x("//input[@aria-label= 'search']");
-
-    private final ElementsCollection tableRows = $("#spendings tbody").$$("tr");
+    private final Header header = new Header();
 
     private final SelenideElement statisticText = $x("//h2[text()='Statistics']");
 
@@ -20,30 +17,29 @@ public class MainPage implements Header {
 
     private final SelenideElement historyOfSpendingsText = $x("//h2[text()='History of Spendings']");
 
-    private final SelenideElement historyOfSpendingsTable = $x("//div[contains(@class, 'MuiTableContainer-root')]");
+    private final SpendingTable spendingTable = new SpendingTable();
 
     public MainPage checkElementsMainPage() {
         statisticText.shouldBe(visible);
         historyOfSpendingsText.shouldBe(visible);
         statisticsDiagram.shouldBe(visible);
-        historyOfSpendingsTable.shouldBe(visible);
 
         return this;
     }
 
     public EditSpendingPage editSpending(String spendingDescription) {
-        SelenideElement spending = tableRows.find(text(spendingDescription));
-
-        if (!spending.exists()) {
-            searchInput.sendKeys(spendingDescription);
-            searchInput.pressEnter();
-        }
-        tableRows.find(text(spendingDescription)).$$("td").get(5).click();
+        spendingTable.editSpending(spendingDescription);
 
         return new EditSpendingPage();
     }
 
+    public AddNewSpendingPage toAddSpendingPage() {
+        header.toAddSpendingPage();
+
+        return new AddNewSpendingPage();
+    }
+
     public void checkThatTableContainsSpending(String spendingDescription) {
-        tableRows.find(text(spendingDescription)).should(visible);
+        spendingTable.checkTableContains(spendingDescription);
     }
 }

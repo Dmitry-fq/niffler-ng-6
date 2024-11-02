@@ -2,12 +2,13 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.FriendsTable;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$x;
 
-public class FriendsPage implements Header {
+public class FriendsPage {
 
     private final SelenideElement friendsTab = $x("//h2[text()='Friends']");
 
@@ -26,6 +27,8 @@ public class FriendsPage implements Header {
     private final SelenideElement previousButton = $x("//button[text()='Previous']");
 
     private final SelenideElement NextButton = $x("//button[text()='Next']");
+
+    private final FriendsTable friendsTable = new FriendsTable();
 
     public FriendsPage checkFriends(String friendName) {
         SelenideElement friend = friends.find(text(friendName));
@@ -73,5 +76,23 @@ public class FriendsPage implements Header {
     private void searchUserByText(String text) {
         searchInput.sendKeys(text);
         searchInput.pressEnter();
+    }
+
+    public FriendsPage acceptFriendRequestByLoginOrName(String loginOrName) {
+        friendsTable.acceptFriendRequestByLoginOrName(loginOrName);
+
+        return new FriendsPage();
+    }
+
+    public FriendsPage declineFriendRequestByLoginOrName(String loginOrName) {
+        friendsTable.declineFriendRequestByLoginOrName(loginOrName);
+
+        return new FriendsPage();
+    }
+
+    public FriendsPage userIsFriend(String loginOrName) {
+        friendsTable.userIsFriend(loginOrName);
+
+        return new FriendsPage();
     }
 }

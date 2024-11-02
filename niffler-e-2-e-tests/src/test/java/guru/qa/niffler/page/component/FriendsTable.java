@@ -1,0 +1,59 @@
+package guru.qa.niffler.page.component;
+
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
+
+import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selenide.$$x;
+import static com.codeborne.selenide.Selenide.$x;
+
+public class FriendsTable {
+
+    private final SelenideElement searchInput = $x("//input[@aria-label= 'search']");
+
+    private final SelenideElement inputClearButton = $x("//button[@id = 'input-clear']");
+
+    private final ElementsCollection tableRows = $$x("//tbody[@id='requests']/tr");
+
+    private final SelenideElement acceptButton = $x("//button[text() = 'Accept']");
+
+    private final SelenideElement declineButton = $x("//button[text() = 'Decline']");
+
+    private final SelenideElement declineOnDialogButton = $x("//div[contains(@role, \"dialog\")]//button[text() = 'Decline']");
+
+    private final SelenideElement unfriendButton = $x("//button[text() = 'Unfriend']");
+
+    private final SelenideElement deleteButton = $x("//button[text() = 'Delete']");
+
+    private FriendsTable searchFriendByLoginOrName(String loginOrName) {
+        searchInput.setValue(loginOrName)
+                .pressEnter();
+
+        return new FriendsTable();
+    }
+
+    public FriendsTable acceptFriendRequestByLoginOrName(String loginOrName) {
+        searchFriendByLoginOrName(loginOrName);
+        acceptButton.click();
+        inputClearButton.click();
+
+        return new FriendsTable();
+    }
+
+    public FriendsTable declineFriendRequestByLoginOrName(String loginOrName) {
+        searchFriendByLoginOrName(loginOrName);
+        declineButton.click();
+        declineOnDialogButton.click();
+        inputClearButton.click();
+
+        return new FriendsTable();
+    }
+
+    public FriendsTable userIsFriend(String loginOrName) {
+        searchFriendByLoginOrName(loginOrName);
+        unfriendButton.shouldBe(visible);
+        inputClearButton.click();
+
+        return new FriendsTable();
+    }
+}

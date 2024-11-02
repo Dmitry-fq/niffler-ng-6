@@ -30,4 +30,8 @@ public class RandomDataUtils {
     public static String randomSentence(int wordsCount) {
         return faker.lorem().sentence(wordsCount);
     }
+
+    public static double randomAmount() {
+        return faker.number().randomDouble(2, 1, 10000);
+    }
 }

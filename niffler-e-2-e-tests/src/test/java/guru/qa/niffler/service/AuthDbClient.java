@@ -14,6 +14,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Не используется вроде как
+ */
+@Deprecated
 public class AuthDbClient {
 
     private static final Config CFG = Config.getInstance();

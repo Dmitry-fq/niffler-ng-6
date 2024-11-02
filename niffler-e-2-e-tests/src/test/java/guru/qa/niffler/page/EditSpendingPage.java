@@ -3,8 +3,11 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$x;
 
 public class EditSpendingPage {
+
+    private final SelenideElement title = $x("//h2[contains(text(), 'spending')]");
 
     private final SelenideElement descriptionInput = $("#description");
 
