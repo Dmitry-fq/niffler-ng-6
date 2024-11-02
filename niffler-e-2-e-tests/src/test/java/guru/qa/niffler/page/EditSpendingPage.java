@@ -1,6 +1,8 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
+import lombok.NonNull;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
@@ -13,12 +15,15 @@ public class EditSpendingPage {
 
     private final SelenideElement saveBtn = $("#save");
 
-    public EditSpendingPage setNewSpendingDescription(String description) {
+    @NonNull
+    @Step("Установка описания трате")
+    public EditSpendingPage setSpendingDescription(String description) {
         descriptionInput.setValue(description);
 
         return this;
     }
 
+    @Step("Нажатие на кнопку Сохранить")
     public void save() {
         saveBtn.click();
     }

@@ -6,6 +6,7 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.mapper.AuthUserEntityExtractor;
 import guru.qa.niffler.data.mapper.AuthUserEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -22,6 +23,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
     private static final Config CFG = Config.getInstance();
 
+    @NotNull
     @Override
     public AuthUserEntity createUser(AuthUserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -46,6 +48,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         return user;
     }
 
+    @NotNull
     @Override
     public Optional<AuthUserEntity> findUserById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -87,6 +90,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         );
     }
 
+    @NotNull
     @Override
     public Optional<AuthUserEntity> findUserByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -113,6 +117,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
         );
     }
 
+    @NotNull
     @Override
     public List<AuthUserEntity> findAllUsers() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));

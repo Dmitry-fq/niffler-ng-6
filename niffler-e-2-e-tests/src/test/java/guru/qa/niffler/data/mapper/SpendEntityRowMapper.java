@@ -2,6 +2,7 @@ package guru.qa.niffler.data.mapper;
 
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.CurrencyValues;
+import lombok.NonNull;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -15,6 +16,7 @@ public class SpendEntityRowMapper implements RowMapper<SpendEntity> {
     private SpendEntityRowMapper() {
     }
 
+    @NonNull
     @Override
     public SpendEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
         SpendEntity result = new SpendEntity();

@@ -2,6 +2,8 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.CurrencyValues;
+import io.qameta.allure.Step;
+import lombok.NonNull;
 
 import java.time.LocalDate;
 
@@ -29,36 +31,32 @@ public class AddNewSpendingPage {
 
     private final SelenideElement addButton = $x("//button[text() = 'Add']");
 
-    public AddNewSpendingPage setNewSpendingDescription(String description) {
-        descriptionInput.setValue(description);
-
-        return this;
-    }
-
-    public AddNewSpendingPage addNewSpending(double amount, CurrencyValues currency, String categoryName,
-                                             LocalDate date, String description) {
-
-        return new AddNewSpendingPage();
-    }
-
+    @NonNull
+    @Step("Добавление суммы")
     public AddNewSpendingPage addAmount(Double amount) {
         amountInput.setValue(amount.toString());
 
         return new AddNewSpendingPage();
     }
 
+    @NonNull
+    @Step("Добавление валюты")
     public AddNewSpendingPage addCurrency(CurrencyValues currency) {
         currencyDropdown.selectOptionByValue(currency.name());
 
         return new AddNewSpendingPage();
     }
 
+    @NonNull
+    @Step("Добавление категории")
     public AddNewSpendingPage addCategory(String categoryName) {
         categoryInput.setValue(categoryName);
 
         return new AddNewSpendingPage();
     }
 
+    @NonNull
+    @Step("Добавление даты")
     public AddNewSpendingPage addDate(LocalDate date) {
         dateInput.setValue(String.valueOf(date.getDayOfMonth()));
         dateInput.setValue(String.valueOf(date.getMonthValue()));
@@ -67,12 +65,15 @@ public class AddNewSpendingPage {
         return new AddNewSpendingPage();
     }
 
+    @NonNull
+    @Step("Добавление описания")
     public AddNewSpendingPage addDescription(String description) {
         descriptionInput.setValue(description);
 
         return new AddNewSpendingPage();
     }
 
+    @Step("Нажатие на кнопку Добавить")
     public void clickAddButton() {
         addButton.click();
     }

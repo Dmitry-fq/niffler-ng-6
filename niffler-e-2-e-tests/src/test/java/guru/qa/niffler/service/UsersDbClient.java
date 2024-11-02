@@ -12,6 +12,8 @@ import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryHibernate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
+import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -38,6 +40,8 @@ public class UsersDbClient implements UsersClient {
             CFG.userdataJdbcUrl()
     );
 
+    @NotNull
+    @NonNull
     public UserJson createUser(String username, String password) {
         return xaTransactionTemplate.execute(() -> {
                     AuthUserEntity authUser = authUserEntity(username, password);
@@ -50,16 +54,19 @@ public class UsersDbClient implements UsersClient {
         );
     }
 
+    @NotNull
     public Optional<UserJson> findUserById(UUID id) {
         return userdataUserRepository.findById(id)
                 .map(userEntity -> UserJson.fromEntity(userEntity, null));
     }
 
+    @NotNull
     public Optional<UserJson> findUserByUsername(String username) {
         return userdataUserRepository.findByUsername(username)
                 .map(userEntity -> UserJson.fromEntity(userEntity, null));
     }
 
+    @NotNull
     @Override
     public List<UserJson> addIncomeInvitation(UserJson targetUser, int count) {
         List<UserJson> incomeInvitations = new ArrayList<>();
@@ -86,6 +93,7 @@ public class UsersDbClient implements UsersClient {
         return incomeInvitations;
     }
 
+    @NotNull
     @Override
     public List<UserJson> addOutcomeInvitation(UserJson targetUser, int count) {
         List<UserJson> outcomeInvitations = new ArrayList<>();
@@ -112,6 +120,7 @@ public class UsersDbClient implements UsersClient {
         return outcomeInvitations;
     }
 
+    @NotNull
     @Override
     public List<UserJson> addFriends(UserJson targetUser, int count) {
         List<UserJson> friends = new ArrayList<>();

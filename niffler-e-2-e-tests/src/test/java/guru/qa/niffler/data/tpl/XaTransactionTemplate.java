@@ -4,6 +4,7 @@ import com.atomikos.icatch.jta.UserTransactionImp;
 import guru.qa.niffler.data.jpa.Connections;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
+import lombok.NonNull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
@@ -23,6 +24,7 @@ public class XaTransactionTemplate {
         return this;
     }
 
+    @NonNull
     public <T> T execute(Supplier<T>... actions) {
         UserTransaction ut = new UserTransactionImp();
         try {

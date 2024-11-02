@@ -2,6 +2,7 @@ package guru.qa.niffler.data.mapper;
 
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
+import lombok.NonNull;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -15,6 +16,7 @@ public class UdUserEntityRowMapper implements RowMapper<UserEntity> {
     private UdUserEntityRowMapper() {
     }
 
+    @NonNull
     @Override
     public UserEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
         UserEntity result = new UserEntity();

@@ -1,6 +1,7 @@
 package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -18,6 +19,7 @@ public class Calendar {
 
     private final SelenideElement arrowRightButton = $x("//*[@data-testid = 'ArrowRightIcon']");
 
+    @Step("Установка даты")
     public Calendar selectDateInCalendar(LocalDate date) {
         setYear(date.getYear());
         setMonth(date.getMonth());
@@ -26,6 +28,7 @@ public class Calendar {
         return new Calendar();
     }
 
+    @Step("Установка года")
     private void setYear(int year) {
         monthAndYearButton.click();
         String yearXpath = ".//button";
@@ -34,6 +37,7 @@ public class Calendar {
                 .click();
     }
 
+    @Step("Установка месяца")
     private void setMonth(Month month) {
         while (true) {
             String currentMonthText = monthAndYearButton.getText().toLowerCase();
@@ -46,6 +50,7 @@ public class Calendar {
         }
     }
 
+    @Step("Установка дня")
     private void setDay(int day) {
         String dayXpath = ".//button";
         calendarBody.$$x(dayXpath)

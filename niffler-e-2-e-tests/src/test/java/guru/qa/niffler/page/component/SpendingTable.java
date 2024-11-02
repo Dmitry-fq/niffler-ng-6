@@ -3,6 +3,7 @@ package guru.qa.niffler.page.component;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.EditSpendingPage;
+import io.qameta.allure.Step;
 
 import java.util.Arrays;
 
@@ -22,12 +23,14 @@ public class SpendingTable {
 
     private final ElementsCollection tableRows = $$x("//div[@id='spendings']//tbody/tr");
 
+    @Step("Выбор периода")
     public SpendingTable selectPeriod(DataFilterValues period) {
         periodDropdown.selectOption(period.value);
 
         return new SpendingTable();
     }
 
+    @Step("Редактирование траты")
     public EditSpendingPage editSpending(String description) {
         searchSpendingByDescription(description);
 
@@ -39,6 +42,7 @@ public class SpendingTable {
         return new EditSpendingPage();
     }
 
+    @Step("Удаление траты")
     public SpendingTable deleteSpending(String description) {
         searchSpendingByDescription(description);
 
@@ -50,6 +54,7 @@ public class SpendingTable {
         return new SpendingTable();
     }
 
+    @Step("Поиск траты по описанию")
     private SpendingTable searchSpendingByDescription(String description) {
         searchInput.setValue(description)
                 .pressEnter();
@@ -57,6 +62,7 @@ public class SpendingTable {
         return new SpendingTable();
     }
 
+    @Step("Проверка, что таблица трат содержит траты")
     public SpendingTable checkTableContains(String... expectedSpends) {
         Arrays.stream(expectedSpends)
                 .forEach(
@@ -70,6 +76,7 @@ public class SpendingTable {
         return new SpendingTable();
     }
 
+    @Step("Проверка размера таблицы трат")
     public SpendingTable checkTableSize(int expectedSize) {
         tableRows.shouldHave(size(expectedSize));
 

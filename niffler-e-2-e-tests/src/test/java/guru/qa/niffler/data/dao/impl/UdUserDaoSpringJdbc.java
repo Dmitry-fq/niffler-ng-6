@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.UdUserDao;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.mapper.UdUserEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,6 +26,7 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
 
     private final String url = CFG.userdataJdbcUrl();
 
+    @NotNull
     @Override
     public UserEntity createUser(UserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -50,6 +52,7 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
         return user;
     }
 
+    @NotNull
     @Override
     public Optional<UserEntity> findUserById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -67,6 +70,7 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
         }
     }
 
+    @NotNull
     @Override
     public Optional<UserEntity> findUserByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -93,6 +97,7 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
         );
     }
 
+    @NotNull
     @Override
     public List<UserEntity> findAllUsers() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));

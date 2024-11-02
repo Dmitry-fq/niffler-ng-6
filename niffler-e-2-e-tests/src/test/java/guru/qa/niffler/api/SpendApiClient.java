@@ -5,6 +5,8 @@ import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.SpendClient;
+import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -27,6 +29,7 @@ public class SpendApiClient implements SpendClient {
 
     private final SpendApi spendApi = retrofit.create(SpendApi.class);
 
+    @NonNull
     public SpendJson createSpend(SpendJson spend) {
         final Response<SpendJson> response;
         try {
@@ -40,6 +43,8 @@ public class SpendApiClient implements SpendClient {
         return response.body();
     }
 
+    @NotNull
+    @NonNull
     public SpendJson updateSpend(SpendJson spend) {
         final Response<SpendJson> response;
         try {
@@ -53,6 +58,7 @@ public class SpendApiClient implements SpendClient {
         return response.body();
     }
 
+    @NonNull
     public SpendJson getSpend(String id, String username) {
         final Response<SpendJson> response;
         try {
@@ -66,6 +72,7 @@ public class SpendApiClient implements SpendClient {
         return response.body();
     }
 
+    @NonNull
     public List<SpendJson> getSpends(String username, CurrencyValues currency, Date from, Date to) {
         final Response<List<SpendJson>> response;
         try {
@@ -79,6 +86,7 @@ public class SpendApiClient implements SpendClient {
         return response.body();
     }
 
+    @NonNull
     public SpendJson deleteSpends(String username, List<String> ids) {
         final Response<SpendJson> response;
         try {
@@ -92,6 +100,8 @@ public class SpendApiClient implements SpendClient {
         return response.body();
     }
 
+    @NotNull
+    @NonNull
     public CategoryJson createCategory(CategoryJson category) {
         final Response<CategoryJson> response;
         try {
@@ -105,11 +115,13 @@ public class SpendApiClient implements SpendClient {
         return response.body();
     }
 
+    @NotNull
     @Override
     public Optional<CategoryJson> findCategoryById(UUID id) {
         throw new UnsupportedOperationException("Действие не поддерживается в API");
     }
 
+    @NotNull
     @Override
     public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name) {
         final Response<List<CategoryJson>> response;
@@ -132,11 +144,13 @@ public class SpendApiClient implements SpendClient {
         }
     }
 
+    @NotNull
     @Override
     public Optional<SpendJson> findSpendById(UUID id) {
         throw new UnsupportedOperationException("Действие не поддерживается в API");
     }
 
+    @NotNull
     @Override
     public Optional<SpendJson> findByUsernameAndDescription(String username, String description) {
         final Response<List<SpendJson>> response;
@@ -164,6 +178,7 @@ public class SpendApiClient implements SpendClient {
         throw new UnsupportedOperationException("Действие не поддерживается в API");
     }
 
+    @NonNull
     public CategoryJson updateCategory(CategoryJson category) {
         final Response<CategoryJson> response;
         try {
@@ -177,6 +192,7 @@ public class SpendApiClient implements SpendClient {
         return response.body();
     }
 
+    @NonNull
     public List<CategoryJson> getCategories(String username, boolean excludeArchived) {
         final Response<List<CategoryJson>> response;
         try {

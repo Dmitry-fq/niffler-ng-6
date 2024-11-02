@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.mapper.AuthorityEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -38,6 +39,7 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
         );
     }
 
+    @NotNull
     @Override
     public Optional<AuthorityEntity> findAuthorityById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -51,6 +53,7 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
 
     }
 
+    @NotNull
     @Override
     public List<AuthorityEntity> findAuthoritiesByUserId(UUID userId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -71,6 +74,7 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
         );
     }
 
+    @NotNull
     @Override
     public List<AuthorityEntity> findAllAuthorities() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));

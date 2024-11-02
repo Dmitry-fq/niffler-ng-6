@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.SpendDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.CurrencyValues;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,6 +22,7 @@ public class SpendDaoJdbc implements SpendDao {
 
     private static final Config CFG = Config.getInstance();
 
+    @NotNull
     @Override
     public SpendEntity create(SpendEntity spend) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -53,6 +55,7 @@ public class SpendDaoJdbc implements SpendDao {
         }
     }
 
+    @NotNull
     @Override
     public Optional<SpendEntity> findSpendById(UUID id) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -75,6 +78,7 @@ public class SpendDaoJdbc implements SpendDao {
         }
     }
 
+    @NotNull
     @Override
     public List<SpendEntity> findAllSpendsByUsername(String username) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -109,6 +113,7 @@ public class SpendDaoJdbc implements SpendDao {
         }
     }
 
+    @NotNull
     @Override
     public List<SpendEntity> findAllSpends() {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(

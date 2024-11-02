@@ -6,6 +6,7 @@ import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -18,6 +19,7 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
 
     private final EntityManager entityManager = em(CFG.userdataJdbcUrl());
 
+    @NotNull
     @Override
     public UserEntity create(UserEntity user) {
         entityManager.joinTransaction();
@@ -26,6 +28,7 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
         return user;
     }
 
+    @NotNull
     @Override
     public Optional<UserEntity> findById(UUID id) {
         return Optional.ofNullable(
@@ -33,6 +36,7 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
         );
     }
 
+    @NotNull
     @Override
     public Optional<UserEntity> findByUsername(String username) {
         try {
@@ -46,6 +50,7 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
         }
     }
 
+    @NotNull
     @Override
     public UserEntity update(UserEntity user) {
         entityManager.joinTransaction();

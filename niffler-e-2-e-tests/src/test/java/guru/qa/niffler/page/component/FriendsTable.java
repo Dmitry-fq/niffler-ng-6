@@ -2,6 +2,7 @@ package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$$x;
@@ -25,6 +26,7 @@ public class FriendsTable {
 
     private final SelenideElement deleteButton = $x("//button[text() = 'Delete']");
 
+    @Step("Поиск друзей по логину или имени")
     private FriendsTable searchFriendByLoginOrName(String loginOrName) {
         searchInput.setValue(loginOrName)
                 .pressEnter();
@@ -32,6 +34,7 @@ public class FriendsTable {
         return new FriendsTable();
     }
 
+    @Step("Принятие запроса дружбы по логину или имени")
     public FriendsTable acceptFriendRequestByLoginOrName(String loginOrName) {
         searchFriendByLoginOrName(loginOrName);
         acceptButton.click();
@@ -40,6 +43,7 @@ public class FriendsTable {
         return new FriendsTable();
     }
 
+    @Step("Отклонение запроса дружбы по логину или имени")
     public FriendsTable declineFriendRequestByLoginOrName(String loginOrName) {
         searchFriendByLoginOrName(loginOrName);
         declineButton.click();
@@ -49,6 +53,7 @@ public class FriendsTable {
         return new FriendsTable();
     }
 
+    @Step("Проверка, что друг существует по логину или имени")
     public FriendsTable userIsFriend(String loginOrName) {
         searchFriendByLoginOrName(loginOrName);
         unfriendButton.shouldBe(visible);

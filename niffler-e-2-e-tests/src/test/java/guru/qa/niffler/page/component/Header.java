@@ -8,6 +8,7 @@ import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.PeoplePage;
 import guru.qa.niffler.page.ProfilePage;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$x;
@@ -30,6 +31,7 @@ public class Header {
 
     private final ElementsCollection settingsRows = $x("//ul[@role ='menu']").$$x("li");
 
+    @Step("Переход на страницу друзей")
     public FriendsPage toFriendsPage() {
         settingsButton.click();
         settingsRows.find(text(FRIENDS_BUTTON_TEXT))
@@ -38,6 +40,7 @@ public class Header {
         return new FriendsPage();
     }
 
+    @Step("Переход на вкладку All Peoples")
     public PeoplePage toAllPeoplesPage() {
         settingsButton.click();
         settingsRows.find(text(ALL_PEOPLE_BUTTON_TEXT))
@@ -46,6 +49,7 @@ public class Header {
         return new PeoplePage();
     }
 
+    @Step("Переход на страницу профиля")
     public ProfilePage toProfilePage() {
         settingsButton.click();
         settingsRows.find(text(PROFILE_BUTTON_TEXT))
@@ -54,6 +58,7 @@ public class Header {
         return new ProfilePage();
     }
 
+    @Step("Разлогин")
     public LoginPage signOut() {
         settingsButton.click();
         settingsRows.find(text(SIGN_OUT_BUTTON_TEXT))
@@ -62,12 +67,14 @@ public class Header {
         return new LoginPage();
     }
 
+    @Step("Переход на страницу добавления траты")
     public EditSpendingPage toAddSpendingPage() {
         newSpendingsButton.click();
 
         return new EditSpendingPage();
     }
 
+    @Step("Переход на главную страницу")
     public MainPage toMainPage() {
         mainPageButton.click();
 

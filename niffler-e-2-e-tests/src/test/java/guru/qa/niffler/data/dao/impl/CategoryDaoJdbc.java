@@ -3,6 +3,7 @@ package guru.qa.niffler.data.dao.impl;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,6 +23,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     public CategoryDaoJdbc() {
     }
 
+    @NotNull
     @Override
     public CategoryEntity createCategory(CategoryEntity category) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -77,6 +79,7 @@ public class CategoryDaoJdbc implements CategoryDao {
         }
     }
 
+    @NotNull
     @Override
     public Optional<CategoryEntity> findCategoryById(UUID id) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -98,6 +101,7 @@ public class CategoryDaoJdbc implements CategoryDao {
         }
     }
 
+    @NotNull
     @Override
     public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -120,6 +124,7 @@ public class CategoryDaoJdbc implements CategoryDao {
         }
     }
 
+    @NotNull
     @Override
     public List<CategoryEntity> findAllCategoriesByUsername(String username) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
@@ -153,6 +158,7 @@ public class CategoryDaoJdbc implements CategoryDao {
         }
     }
 
+    @NotNull
     @Override
     public List<CategoryEntity> findAllCategories() {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(

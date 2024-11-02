@@ -1,18 +1,23 @@
 package guru.qa.niffler.data.repository;
 
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import lombok.NonNull;
 
 import java.util.Optional;
 import java.util.UUID;
 
 public interface UserdataUserRepository {
 
+    @NonNull
     UserEntity create(UserEntity user);
 
+    @NonNull
     Optional<UserEntity> findById(UUID id);
 
+    @NonNull
     Optional<UserEntity> findByUsername(String username);
 
+    @NonNull
     UserEntity update(UserEntity user);
 
     void addInvitation(UserEntity requester, UserEntity addressee);

@@ -1,6 +1,8 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
+import lombok.NonNull;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
@@ -19,6 +21,8 @@ public class RegisterPage {
 
     private final SelenideElement signInButton = $(".form_sign-in");
 
+    @NonNull
+    @Step("Регистрация пользователя")
     public LoginPage register(String username, String password) {
 
         return this.setUsername(username)
@@ -28,36 +32,48 @@ public class RegisterPage {
                 .signIn();
     }
 
+    @NonNull
+    @Step("Установка username")
     public RegisterPage setUsername(String username) {
         usernameInput.setValue(username);
 
         return this;
     }
 
+    @NonNull
+    @Step("Установка пароля")
     public RegisterPage setPassword(String password) {
         passwordInput.setValue(password);
 
         return this;
     }
 
+    @NonNull
+    @Step("Нажатие на кнопку Submit")
     public RegisterPage setPasswordSubmit(String passwordSubmit) {
         passwordSubmitInput.setValue(passwordSubmit);
 
         return this;
     }
 
+    @NonNull
+    @Step("Нажатие на кнопку Submit Registration")
     public RegisterPage submitRegistration() {
         submitRegistrationButton.click();
 
         return this;
     }
 
+    @NonNull
+    @Step("Нажатие на кнопку Sign In")
     public LoginPage signIn() {
         signInButton.click();
 
         return new LoginPage();
     }
 
+    @NonNull
+    @Step("Проверка, что ошибка содержит текст")
     public RegisterPage checkErrorText(String expectedText) {
         error.shouldHave(text(expectedText));
 
