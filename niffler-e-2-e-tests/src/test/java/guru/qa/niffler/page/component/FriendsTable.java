@@ -31,7 +31,7 @@ public class FriendsTable {
         searchInput.setValue(loginOrName)
                 .pressEnter();
 
-        return new FriendsTable();
+        return this;
     }
 
     @Step("Принятие запроса дружбы по логину или имени")
@@ -40,7 +40,7 @@ public class FriendsTable {
         acceptButton.click();
         inputClearButton.click();
 
-        return new FriendsTable();
+        return this;
     }
 
     @Step("Отклонение запроса дружбы по логину или имени")
@@ -50,7 +50,7 @@ public class FriendsTable {
         declineOnDialogButton.click();
         inputClearButton.click();
 
-        return new FriendsTable();
+        return this;
     }
 
     @Step("Проверка, что друг существует по логину или имени")
@@ -59,6 +59,6 @@ public class FriendsTable {
         unfriendButton.shouldBe(visible);
         inputClearButton.click();
 
-        return new FriendsTable();
+        return this;
     }
 }

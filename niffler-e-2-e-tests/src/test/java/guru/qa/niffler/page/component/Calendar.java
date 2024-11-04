@@ -25,7 +25,7 @@ public class Calendar {
         setMonth(date.getMonth());
         setDay(date.getDayOfMonth());
 
-        return new Calendar();
+        return this;
     }
 
     @Step("Установка года")

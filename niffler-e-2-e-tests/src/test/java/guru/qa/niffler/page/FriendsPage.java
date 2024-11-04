@@ -36,11 +36,7 @@ public class FriendsPage {
     @Step("Проверка, что друг присутствует по имени")
     public FriendsPage checkFriends(String friendName) {
         SelenideElement friend = friends.find(text(friendName));
-
-        if (!friend.exists()) {
-            searchUserByText(friendName);
-        }
-
+        searchUserByText(friendName);
         friends.find(text(friendName)).shouldBe(visible);
 
         return this;
@@ -58,11 +54,7 @@ public class FriendsPage {
     @Step("Проверка входящего запроса дружбы")
     public FriendsPage checkIncomeInvitation(String username) {
         SelenideElement incomeInvitation = friends.find(text(username));
-
-        if (!incomeInvitation.exists()) {
-            searchUserByText(username);
-        }
-
+        searchUserByText(username);
         friends.find(text(username)).shouldBe(visible);
 
         return this;

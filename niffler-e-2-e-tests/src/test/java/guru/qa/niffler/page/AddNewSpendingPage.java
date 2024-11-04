@@ -36,7 +36,7 @@ public class AddNewSpendingPage {
     public AddNewSpendingPage addAmount(Double amount) {
         amountInput.setValue(amount.toString());
 
-        return new AddNewSpendingPage();
+        return this;
     }
 
     @NonNull
@@ -44,7 +44,7 @@ public class AddNewSpendingPage {
     public AddNewSpendingPage addCurrency(CurrencyValues currency) {
         currencyDropdown.selectOptionByValue(currency.name());
 
-        return new AddNewSpendingPage();
+        return this;
     }
 
     @NonNull
@@ -52,7 +52,7 @@ public class AddNewSpendingPage {
     public AddNewSpendingPage addCategory(String categoryName) {
         categoryInput.setValue(categoryName);
 
-        return new AddNewSpendingPage();
+        return this;
     }
 
     @NonNull
@@ -62,7 +62,7 @@ public class AddNewSpendingPage {
         dateInput.setValue(String.valueOf(date.getMonthValue()));
         dateInput.setValue(String.valueOf(date.getYear()));
 
-        return new AddNewSpendingPage();
+        return this;
     }
 
     @NonNull
@@ -70,7 +70,7 @@ public class AddNewSpendingPage {
     public AddNewSpendingPage addDescription(String description) {
         descriptionInput.setValue(description);
 
-        return new AddNewSpendingPage();
+        return this;
     }
 
     @Step("Нажатие на кнопку Добавить")
