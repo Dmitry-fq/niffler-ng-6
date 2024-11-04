@@ -6,8 +6,10 @@ import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
+import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -34,10 +36,30 @@ public class SpendingWebTest {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login("duck", "12345")
                 .editSpending(spend.description())
-                .setNewSpendingDescription(newDescription)
+                .setSpendingDescription(newDescription)
                 .save();
 
         new MainPage().checkThatTableContainsSpending(newDescription);
+    }
+
+    @User
+    @Test
+    void newSpendingShouldBeCreated(UserJson user) {
+        String username = user.username();
+        String password = "12345";
+        Double amount = RandomDataUtils.randomAmount();
+        String categoryName = RandomDataUtils.randomCategoryName();
+        String description = RandomDataUtils.randomSentence(2);
+
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .login(username, password)
+                .toAddSpendingPage()
+                .addAmount(amount)
+                .addCategory(categoryName)
+                .addDescription(description)
+                .clickAddButton();
+
+        new MainPage().checkThatTableContainsSpending(description);
     }
 }
 

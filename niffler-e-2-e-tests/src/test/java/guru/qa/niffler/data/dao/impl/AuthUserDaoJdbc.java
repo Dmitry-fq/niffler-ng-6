@@ -4,6 +4,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.AuthUserDao;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.mapper.AuthUserEntityExtractor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -23,6 +24,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 
     private static final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
+    @NotNull
     @Override
     public AuthUserEntity createUser(AuthUserEntity user) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
@@ -52,6 +54,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
         }
     }
 
+    @NotNull
     @Override
     public Optional<AuthUserEntity> findUserById(UUID id) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
@@ -74,6 +77,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
         }
     }
 
+    @NotNull
     @Override
     public Optional<AuthUserEntity> findUserByUsername(String username) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
@@ -107,6 +111,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
         }
     }
 
+    @NotNull
     @Override
     public List<AuthUserEntity> findAllUsers() {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(

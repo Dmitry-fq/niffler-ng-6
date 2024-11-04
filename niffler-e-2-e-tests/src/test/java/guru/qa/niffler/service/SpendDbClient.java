@@ -8,6 +8,8 @@ import guru.qa.niffler.data.repository.impl.SpendRepositoryHibernate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
+import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -22,6 +24,7 @@ public class SpendDbClient implements SpendClient {
             CFG.spendJdbcUrl()
     );
 
+    @NonNull
     public SpendJson createSpend(SpendJson spend) {
         Optional<CategoryEntity> category = spendRepository.findCategoryByUsernameAndSpendName(
                 spend.username(), spend.category().name()
@@ -40,11 +43,13 @@ public class SpendDbClient implements SpendClient {
         }
     }
 
+    @NotNull
     public SpendJson updateSpend(SpendJson spend) {
         SpendEntity spendEntity = spendRepository.update(SpendEntity.fromJson(spend));
         return SpendJson.fromEntity(spendEntity);
     }
 
+    @NotNull
     public CategoryJson createCategory(CategoryJson category) {
         return xaTransactionTemplate.execute(() -> CategoryJson.fromEntity(
                         spendRepository.createCategory(CategoryEntity.fromJson(category))
@@ -52,21 +57,25 @@ public class SpendDbClient implements SpendClient {
         );
     }
 
+    @NotNull
     public Optional<CategoryJson> findCategoryById(UUID id) {
         return spendRepository.findCategoryById(id)
                 .map(CategoryJson::fromEntity);
     }
 
+    @NotNull
     public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name) {
         return spendRepository.findCategoryByUsernameAndSpendName(username, name)
                 .map(CategoryJson::fromEntity);
     }
 
+    @NotNull
     public Optional<SpendJson> findSpendById(UUID id) {
         return spendRepository.findById(id)
                 .map(SpendJson::fromEntity);
     }
 
+    @NotNull
     public Optional<SpendJson> findByUsernameAndDescription(String username, String description) {
         return spendRepository.findByUsernameAndDescription(username, description)
                 .map(SpendJson::fromEntity);

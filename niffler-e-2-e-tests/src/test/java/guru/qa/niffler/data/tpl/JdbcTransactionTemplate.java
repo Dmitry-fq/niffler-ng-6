@@ -1,6 +1,7 @@
 package guru.qa.niffler.data.tpl;
 
 import guru.qa.niffler.data.jpa.Connections;
+import lombok.NonNull;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -24,6 +25,7 @@ public class JdbcTransactionTemplate {
         return this;
     }
 
+    @NonNull
     public <T> T execute(Supplier<T> action, int isolationLvl) {
         Connection connection = null;
         try {
@@ -51,6 +53,7 @@ public class JdbcTransactionTemplate {
         }
     }
 
+    @NonNull
     public <T> T execute(Supplier<T> action) {
         return execute(action, TRANSACTION_READ_COMMITTED);
     }

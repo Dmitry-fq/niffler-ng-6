@@ -1,6 +1,8 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
+import lombok.NonNull;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
@@ -25,30 +27,40 @@ public class LoginPage {
                 .clickSubmitButton();
     }
 
+    @NonNull
+    @Step("Установка username")
     public LoginPage setUsername(String username) {
         usernameInput.setValue(username);
 
         return this;
     }
 
+    @NonNull
+    @Step("Установка пароля")
     public LoginPage setPassword(String password) {
         passwordInput.setValue(password);
 
         return this;
     }
 
+    @NonNull
+    @Step("Нажатие на кнопку Submit")
     public MainPage clickSubmitButton() {
         submitButton.click();
 
         return new MainPage();
     }
 
+    @NonNull
+    @Step("Нажатие на кнопку Create new account")
     public RegisterPage clickCreateNewAccount() {
         registerButton.click();
 
         return new RegisterPage();
     }
 
+    @NonNull
+    @Step("Проверка сообщения об ошибке")
     public LoginPage checkErrorText() {
         String expectedText = "Неверные учетные данные пользователя";
 

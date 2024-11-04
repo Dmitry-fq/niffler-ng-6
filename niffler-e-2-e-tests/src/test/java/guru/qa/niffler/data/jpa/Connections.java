@@ -3,6 +3,7 @@ package guru.qa.niffler.data.jpa;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.data.tpl.JdbcConnectionHolder;
 import guru.qa.niffler.data.tpl.JdbcConnectionHolders;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class Connections {
     private Connections() {
     }
 
+    @NonNull
     public static JdbcConnectionHolder holder(String jdbcUrl) {
         return holders.computeIfAbsent(
                 jdbcUrl,
@@ -24,6 +26,7 @@ public class Connections {
         );
     }
 
+    @NonNull
     public static JdbcConnectionHolders holders(String... jdbcUrl) {
         List<JdbcConnectionHolder> result = new ArrayList<>();
         for (String url : jdbcUrl) {

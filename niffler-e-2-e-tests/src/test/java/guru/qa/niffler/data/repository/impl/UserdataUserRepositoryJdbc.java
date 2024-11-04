@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.impl.UdUserDaoJdbc;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -19,20 +20,24 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
 
     private final UdUserDaoJdbc udUserDaoJdbc = new UdUserDaoJdbc();
 
+    @NotNull
     public UserEntity create(UserEntity user) {
         return udUserDaoJdbc.createUser(user);
     }
 
+    @NotNull
     @Override
     public Optional<UserEntity> findByUsername(String username) {
         return udUserDaoJdbc.findUserByUsername(username);
     }
 
+    @NotNull
     @Override
     public UserEntity update(UserEntity user) {
         return null;
     }
 
+    @NotNull
     @Override
     public Optional<UserEntity> findById(UUID id) {
         return udUserDaoJdbc.findUserById(id);

@@ -1,6 +1,7 @@
 package guru.qa.niffler.data.mapper;
 
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
+import lombok.NonNull;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -14,6 +15,7 @@ public class CategoryEntityRowMapper implements RowMapper<CategoryEntity> {
     private CategoryEntityRowMapper() {
     }
 
+    @NonNull
     @Override
     public CategoryEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
         CategoryEntity result = new CategoryEntity();

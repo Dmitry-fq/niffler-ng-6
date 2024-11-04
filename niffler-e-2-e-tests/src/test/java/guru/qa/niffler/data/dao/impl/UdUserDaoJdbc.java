@@ -4,6 +4,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UdUserDao;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,6 +20,7 @@ public class UdUserDaoJdbc implements UdUserDao {
 
     private static final Config CFG = Config.getInstance();
 
+    @NotNull
     @Override
     public UserEntity createUser(UserEntity user) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
@@ -45,6 +47,7 @@ public class UdUserDaoJdbc implements UdUserDao {
         }
     }
 
+    @NotNull
     @Override
     public Optional<UserEntity> findUserById(UUID id) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
@@ -65,6 +68,7 @@ public class UdUserDaoJdbc implements UdUserDao {
         }
     }
 
+    @NotNull
     @Override
     public Optional<UserEntity> findUserByUsername(String username) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
@@ -98,6 +102,7 @@ public class UdUserDaoJdbc implements UdUserDao {
         }
     }
 
+    @NotNull
     @Override
     public List<UserEntity> findAllUsers() {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(

@@ -3,6 +3,7 @@ package guru.qa.niffler.api;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UsersClient;
+import org.jetbrains.annotations.NotNull;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -23,16 +24,19 @@ public class UsersApiClient implements UsersClient {
 
     private final UsersApi usersApi = retrofit.create(UsersApi.class);
 
+    @NotNull
     @Override
     public UserJson createUser(String username, String password) {
         throw new UnsupportedOperationException("Действие не поддерживается в API");
     }
 
+    @NotNull
     @Override
     public Optional<UserJson> findUserById(UUID id) {
         throw new UnsupportedOperationException("Действие не поддерживается в API");
     }
 
+    @NotNull
     @Override
     public Optional<UserJson> findUserByUsername(String username) {
         final Response<UserJson> response;
@@ -47,16 +51,19 @@ public class UsersApiClient implements UsersClient {
         return Optional.ofNullable(response.body());
     }
 
+    @NotNull
     @Override
     public List<UserJson> addIncomeInvitation(UserJson targetUser, int count) {
         throw new UnsupportedOperationException("Действие не поддерживается в API, т.к. невозможно создать юзера");
     }
 
+    @NotNull
     @Override
     public List<UserJson> addOutcomeInvitation(UserJson targetUser, int count) {
         throw new UnsupportedOperationException("Действие не поддерживается в API, т.к. невозможно создать юзера");
     }
 
+    @NotNull
     @Override
     public List<UserJson> addFriends(UserJson targetUser, int count) {
         throw new UnsupportedOperationException("Действие не поддерживается в API, т.к. невозможно создать юзера");

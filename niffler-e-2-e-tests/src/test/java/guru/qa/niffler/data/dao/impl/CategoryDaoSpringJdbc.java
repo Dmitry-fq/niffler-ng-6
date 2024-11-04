@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.mapper.CategoryEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -23,6 +24,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
 
     private final String url = CFG.spendJdbcUrl();
 
+    @NotNull
     @Override
     public CategoryEntity createCategory(CategoryEntity category) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -46,6 +48,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         return category;
     }
 
+    @NotNull
     @Override
     public Optional<CategoryEntity> findCategoryById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -62,6 +65,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         }
     }
 
+    @NotNull
     @Override
     public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -73,6 +77,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         );
     }
 
+    @NotNull
     @Override
     public List<CategoryEntity> findAllCategoriesByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -92,6 +97,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         );
     }
 
+    @NotNull
     @Override
     public List<CategoryEntity> findAllCategories() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));

@@ -2,10 +2,12 @@ package guru.qa.niffler.data.repository;
 
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
+import lombok.NonNull;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@NonNull
 public interface SpendRepository {
     SpendEntity create(SpendEntity spend);
 
@@ -20,7 +22,7 @@ public interface SpendRepository {
     Optional<SpendEntity> findById(UUID id);
 
     Optional<SpendEntity> findByUsernameAndDescription(String username, String description);
-    
+
     void remove(SpendEntity spend);
 
     void removeCategory(CategoryEntity spend);

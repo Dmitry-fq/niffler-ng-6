@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.SpendDao;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.mapper.SpendEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -23,6 +24,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
 
     private final String url = CFG.spendJdbcUrl();
 
+    @NotNull
     @Override
     public SpendEntity create(SpendEntity spend) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -49,6 +51,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
         return spend;
     }
 
+    @NotNull
     @Override
     public Optional<SpendEntity> findSpendById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -66,6 +69,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
         }
     }
 
+    @NotNull
     @Override
     public List<SpendEntity> findAllSpendsByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -85,6 +89,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
         );
     }
 
+    @NotNull
     @Override
     public List<SpendEntity> findAllSpends() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));

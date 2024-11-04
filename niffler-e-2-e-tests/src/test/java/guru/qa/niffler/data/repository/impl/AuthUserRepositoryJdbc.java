@@ -7,6 +7,7 @@ import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.mapper.AuthUserEntityRowMapper;
 import guru.qa.niffler.data.repository.AuthUserRepository;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,6 +25,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
 
     private final AuthUserDaoJdbc authUserDaoJdbc = new AuthUserDaoJdbc();
 
+    @NotNull
     @Override
     public AuthUserEntity create(AuthUserEntity user) {
         try (PreparedStatement userPs = holder(CFG.authJdbcUrl()).connection().prepareStatement(
@@ -63,11 +65,13 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
         }
     }
 
+    @NotNull
     @Override
     public AuthUserEntity update(AuthUserEntity user) {
         return null;
     }
 
+    @NotNull
     @Override
     public Optional<AuthUserEntity> findById(UUID id) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
@@ -111,6 +115,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
         }
     }
 
+    @NotNull
     @Override
     public Optional<AuthUserEntity> findByUsername(String username) {
         return authUserDaoJdbc.findUserByUsername(username);
