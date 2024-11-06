@@ -77,6 +77,7 @@ public class ProfileWebTest {
         header.toProfilePage()
                 .setNewName(newName)
                 .clickSaveChangesButton()
+                .checkAlert("Profile successfully updated")
                 .checkName(newName);
     }
 }

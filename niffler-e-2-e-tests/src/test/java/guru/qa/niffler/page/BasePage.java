@@ -4,16 +4,17 @@ import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.component.Header;
 
 import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$x;
 
 public abstract class BasePage<T extends BasePage<?>> {
 
-  protected final Header header = new Header();
-  protected final SelenideElement alert = $("");
+    protected final Header header = new Header();
 
-  @SuppressWarnings("unchecked")
-  public T checkAlert(String message) {
-    alert.shouldHave(text(message));
-    return (T) this;
-  }
+    protected final SelenideElement alert = $x("//div[div[@role = 'alert']]");
+
+    @SuppressWarnings("unchecked")
+    public T checkAlert(String message) {
+        alert.shouldHave(text(message));
+        return (T) this;
+    }
 }
