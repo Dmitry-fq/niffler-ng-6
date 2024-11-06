@@ -28,29 +28,11 @@ public class SearchField extends BaseComponent<SearchField> {
         return this;
     }
 
-    @Step("Perform search for query {query}")
-    @Nonnull
-    public SearchField search(String query) {
-        clearIfNotEmpty();
-        self.setValue(query).pressEnter();
-        return this;
-    }
-
     @Step("Поиск")
     public SearchField search(String query) {
         searchInput.setValue(query)
                 .pressEnter();
 
-        return this;
-    }
-
-    @Step("Try to clear search field")
-    @Nonnull
-    public SearchField clearIfNotEmpty() {
-        if (self.is(not(empty))) {
-            clearSearchInputBtn.click();
-            self.should(empty);
-        }
         return this;
     }
 }

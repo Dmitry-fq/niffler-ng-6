@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import static com.codeborne.selenide.Condition.exactText;
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$x;
 import static guru.qa.niffler.utils.ScreenshotAssertions.imagesShouldBeEquals;
@@ -111,7 +112,6 @@ public class MainPage extends BasePage<MainPage> {
     }
 
     @Step("Check that page is loaded")
-    @Override
     @Nonnull
     public MainPage checkThatPageLoaded() {
         header.getSelf().should(visible).shouldHave(text("Niffler"));

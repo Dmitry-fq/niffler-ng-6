@@ -1,8 +1,8 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.config.Config;
 import guru.qa.niffler.condition.Color;
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
@@ -10,11 +10,15 @@ import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
+import guru.qa.niffler.page.component.StatComponent;
 import guru.qa.niffler.utils.RandomDataUtils;
+import guru.qa.niffler.utils.ScreenDiffResult;
 import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @WebTest
 public class SpendingWebTest {
@@ -79,7 +83,9 @@ public class SpendingWebTest {
         Selenide.open(LoginPage.URL, LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .checkStatDiagramByScreenshot(expected)
-                .checkStatisticChartBars("Обучение 79990 ₽");
+                .checkStatisticChartBars("Обучение 79990 ₽")
+                .getStatComponent()
+                .checkBubbles(Color.yellow);
     }
 
     @User(
@@ -119,10 +125,9 @@ public class SpendingWebTest {
     }
 
     @ScreenShotTest("img/expected-stat.png")
-    void checkStatComponentTest(UserJson user, BufferedImage expected) throws IOException, InterruptedException {
+    void checkStatComponentTest2(UserJson user, BufferedImage expected) throws IOException, InterruptedException {
         StatComponent statComponent = Selenide.open(LoginPage.URL, LoginPage.class)
-                .fillLoginPage(user.username(), user.testData().password())
-                .submit(new MainPage())
+                .login(user.username(), user.testData().password())
                 .getStatComponent();
 
         Thread.sleep(3000);
