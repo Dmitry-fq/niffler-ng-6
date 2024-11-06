@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 import static com.codeborne.selenide.Selenide.$x;
 
-public class AddNewSpendingPage {
+public class AddNewSpendingPage extends BasePage<AddNewSpendingPage> {
 
     private final SelenideElement title = $x("//h2[contains(text(), 'spending')]");
 

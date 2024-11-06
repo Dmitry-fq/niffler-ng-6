@@ -2,24 +2,23 @@ package guru.qa.niffler.service;
 
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
-import lombok.NonNull;
-
-import java.util.Optional;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Optional;
+import java.util.UUID;
 
 @ParametersAreNonnullByDefault
 public interface SpendClient {
 
-    @Nonnull
+    @Nullable
     SpendJson createSpend(SpendJson spend);
 
-    @Nonnull
+    @Nullable
     SpendJson updateSpend(SpendJson spend);
 
-    @Nonnull
+    @Nullable
     CategoryJson createCategory(CategoryJson category);
 
     @Nonnull

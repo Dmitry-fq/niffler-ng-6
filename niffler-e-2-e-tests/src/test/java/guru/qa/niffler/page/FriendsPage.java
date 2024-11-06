@@ -14,7 +14,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$x;
 
 @ParametersAreNonnullByDefault
-public class FriendsPage {
+public class FriendsPage extends BasePage<FriendsPage> {
 
     private final SelenideElement friendsTab = $x("//h2[text()='Friends']");
 
@@ -39,7 +39,6 @@ public class FriendsPage {
     @Nonnull
     @Step("Проверка, что друг присутствует по имени")
     public FriendsPage checkFriends(String friendName) {
-        SelenideElement friend = friends.find(text(friendName));
         searchUserByText(friendName);
         friends.find(text(friendName)).shouldBe(visible);
 
@@ -57,7 +56,6 @@ public class FriendsPage {
     @Nonnull
     @Step("Проверка входящего запроса дружбы")
     public FriendsPage checkIncomeInvitation(String username) {
-        SelenideElement incomeInvitation = friends.find(text(username));
         searchUserByText(username);
         friends.find(text(username)).shouldBe(visible);
 

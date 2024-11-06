@@ -4,7 +4,7 @@ import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
-import lombok.NonNull;
+import guru.qa.niffler.service.SpendClient;
 import retrofit2.Response;
 
 import javax.annotation.Nonnull;
@@ -20,7 +20,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ParametersAreNonnullByDefault
-public class SpendApiClient extends RestClient {
+public class SpendApiClient extends RestClient implements SpendClient {
 
     private final SpendApi spendApi;
 
@@ -71,7 +71,7 @@ public class SpendApiClient extends RestClient {
         return response.body();
     }
 
-    @NonNull
+    @Nonnull
     public List<SpendJson> getSpends(String username, @Nullable CurrencyValues currency, @Nullable Date from,
                                      @Nullable Date to) {
         final Response<List<SpendJson>> response;

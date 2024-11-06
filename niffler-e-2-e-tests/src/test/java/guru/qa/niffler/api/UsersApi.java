@@ -5,16 +5,16 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface UsersApi {
 
-    @GET("internal/users/current")
-    Call<UserJson> currentUser(@Path("username") String username);
+    @GET("/internal/users/current")
+    Call<UserJson> currentUser(@Query("username") String username);
 
     @GET("internal/users/all")
-    Call<UserJson> allUsers(@Path("username") String username,
-                            @Path("searchQuery") String searchQuery);
+    Call<UserJson> allUsers(@Query("username") String username,
+                            @Query("searchQuery") String searchQuery);
 
     @POST("internal/users/update")
     Call<UserJson> updateUserInfo(@Body UserJson user);

@@ -1,15 +1,23 @@
 package guru.qa.niffler.test.api;
 
-import guru.qa.niffler.api.SpendApiClient;
+import guru.qa.niffler.api.AuthApiClient;
+import guru.qa.niffler.api.UsersApiClient;
+import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import org.junit.jupiter.api.Test;
 
 public class ApiTest {
 
     @Test
     void test1() {
-        SpendApiClient spendApiClient = new SpendApiClient();
-        System.out.println(
-                spendApiClient.findByUsernameAndDescription("duck", "Обучение Advanced 2.0")
-        );
+        AuthApiClient authApiClient = new AuthApiClient();
+
+        authApiClient.getRegisterPage();
+        String csrf = ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN");
+
+//        authApiClient.registerUser("testuuuusssserrr", "12345", "12345", csrf);
+//        authApiClient.login("test", "test", csrf);
+
+        UsersApiClient usersApiClient = new UsersApiClient();
+        usersApiClient.createUser("dasdadad3", "12345");
     }
 }

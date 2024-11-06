@@ -1,44 +1,69 @@
 package guru.qa.niffler.api;
 
-import guru.qa.niffler.config.Config;
+import com.google.common.base.Stopwatch;
+import guru.qa.niffler.api.core.RestClient;
+import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UsersClient;
 import org.jetbrains.annotations.NotNull;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UsersApiClient implements UsersClient {
+public class UsersApiClient extends RestClient implements UsersClient {
 
-    private final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(Config.getInstance().userdataUrl())
-            .addConverterFactory(JacksonConverterFactory.create())
-            .build();
+    private final UsersApi usersApi;
 
-    private final UsersApi usersApi = retrofit.create(UsersApi.class);
+    private final AuthApiClient authApiClient = new AuthApiClient();
 
-    @NotNull
-    @Override
-    public UserJson createUser(String username, String password) {
-        throw new UnsupportedOperationException("Действие не поддерживается в API");
+    public UsersApiClient() {
+        super(CFG.userdataUrl());
+        this.usersApi = retrofit.create(UsersApi.class);
     }
 
-    @NotNull
+    @Nonnull
+    @Override
+    public UserJson createUser(@NotNull String username, @NotNull String password) {
+        try {
+            authApiClient.getRegisterPage();
+            authApiClient.registerUser(
+                    username,
+                    password,
+                    password,
+                    ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN")
+            );
+            int maxWaitTime = 3000;
+            Stopwatch sw = Stopwatch.createStarted();
+            while (sw.elapsed(TimeUnit.MILLISECONDS) < maxWaitTime) {
+                UserJson userJson = usersApi.currentUser(username).execute().body();
+                if (userJson != null && userJson.id() != null) {
+                    return userJson;
+                } else {
+                    Thread.sleep(100);
+                }
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        throw new AssertionError("Пользователь " + username + " не был найден за отведённое время");
+    }
+
+    @Nonnull
     @Override
     public Optional<UserJson> findUserById(UUID id) {
         throw new UnsupportedOperationException("Действие не поддерживается в API");
     }
 
-    @NotNull
+    @Nonnull
     @Override
-    public Optional<UserJson> findUserByUsername(String username) {
+    public Optional<UserJson> findUserByUsername(@NotNull String username) {
         final Response<UserJson> response;
         try {
             response = usersApi.currentUser(username)
@@ -51,19 +76,19 @@ public class UsersApiClient implements UsersClient {
         return Optional.ofNullable(response.body());
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<UserJson> addIncomeInvitation(UserJson targetUser, int count) {
         throw new UnsupportedOperationException("Действие не поддерживается в API, т.к. невозможно создать юзера");
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<UserJson> addOutcomeInvitation(UserJson targetUser, int count) {
         throw new UnsupportedOperationException("Действие не поддерживается в API, т.к. невозможно создать юзера");
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<UserJson> addFriends(UserJson targetUser, int count) {
         throw new UnsupportedOperationException("Действие не поддерживается в API, т.к. невозможно создать юзера");
