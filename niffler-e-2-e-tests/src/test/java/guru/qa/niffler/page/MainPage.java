@@ -3,6 +3,7 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.page.component.SpendingTable;
+import guru.qa.niffler.page.component.StatComponent;
 import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
@@ -18,19 +19,21 @@ import static guru.qa.niffler.utils.ScreenshotAssertions.imagesShouldBeEquals;
 @ParametersAreNonnullByDefault
 public class MainPage extends BasePage<MainPage> {
 
-    private final Header header = new Header();
+    protected final Header header = new Header();
 
-    private final SelenideElement statisticText = $x("//h2[text()='Statistics']");
+    protected final SelenideElement statisticText = $x("//h2[text()='Statistics']");
 
-    private final SelenideElement statisticsDiagram = $x("//canvas");
+    protected final SelenideElement statisticsDiagram = $x("//canvas");
 
-    private final SelenideElement statisticChartBars = $x("//ul");
+    protected final SelenideElement statisticChartBars = $x("//ul");
 
-    private final SelenideElement historyOfSpendingsText = $x("//h2[text()='History of Spendings']");
+    protected final SelenideElement historyOfSpendingsText = $x("//h2[text()='History of Spendings']");
 
-    private final SelenideElement alertDeleteButton = $x("//div[h2[contains(text(), 'spending')]]//button[text() = 'Delete']");
+    protected final SelenideElement alertDeleteButton = $x("//div[h2[contains(text(), 'spending')]]//button[text() = 'Delete']");
 
-    private final SpendingTable spendingTable = new SpendingTable();
+    protected final SpendingTable spendingTable = new SpendingTable();
+
+    protected final StatComponent statComponent = new StatComponent();
 
     @Nonnull
     @Step("Проверка элементов на главной странице")
@@ -92,6 +95,28 @@ public class MainPage extends BasePage<MainPage> {
     public MainPage statisticChartBarsShouldNotExist() {
         statisticChartBars.shouldNotBe(visible);
 
+        return this;
+    }
+
+    @Nonnull
+    public StatComponent getStatComponent() {
+        statComponent.getSelf().scrollIntoView(true);
+        return statComponent;
+    }
+
+    @Nonnull
+    public SpendingTable getSpendingTable() {
+        spendingTable.getSelf().scrollIntoView(true);
+        return spendingTable;
+    }
+
+    @Step("Check that page is loaded")
+    @Override
+    @Nonnull
+    public MainPage checkThatPageLoaded() {
+        header.getSelf().should(visible).shouldHave(text("Niffler"));
+        statComponent.getSelf().should(visible).shouldHave(text("Statistics"));
+        spendingTable.getSelf().should(visible).shouldHave(text("History of Spendings"));
         return this;
     }
 }

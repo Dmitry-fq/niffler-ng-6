@@ -2,6 +2,7 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
@@ -115,6 +116,23 @@ public class SpendingWebTest {
                 .deleteSpending(user.testData().spendings().getFirst().description())
                 .checkStatDiagramByScreenshot(expected)
                 .statisticChartBarsShouldNotExist();
+    }
+
+    @ScreenShotTest("img/expected-stat.png")
+    void checkStatComponentTest(UserJson user, BufferedImage expected) throws IOException, InterruptedException {
+        StatComponent statComponent = Selenide.open(LoginPage.URL, LoginPage.class)
+                .fillLoginPage(user.username(), user.testData().password())
+                .submit(new MainPage())
+                .getStatComponent();
+
+        Thread.sleep(3000);
+
+        assertFalse(new ScreenDiffResult(
+                expected,
+                statComponent.chartScreenshot()
+        ), "Screen comparison failure");
+
+        statComponent.checkBubbles(Color.yellow);
     }
 }
 
