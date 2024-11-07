@@ -9,7 +9,7 @@ import java.time.Month;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$x;
 
-public class Calendar {
+public class Calendar extends BaseComponent {
 
     private final SelenideElement calendarBody = $x("//div[contains(@class, 'MuiDateCalendar-viewTransitionContainer')]");
 
@@ -18,6 +18,10 @@ public class Calendar {
     private final SelenideElement arrowLeftButton = $x("//*[@data-testid = 'ArrowLeftIcon']");
 
     private final SelenideElement arrowRightButton = $x("//*[@data-testid = 'ArrowRightIcon']");
+
+    public Calendar() {
+        super($x("//div[div[contains(@class, 'MuiDateCalendar-viewTransitionContainer')]]"));
+    }
 
     @Step("Установка даты")
     public Calendar selectDateInCalendar(LocalDate date) {

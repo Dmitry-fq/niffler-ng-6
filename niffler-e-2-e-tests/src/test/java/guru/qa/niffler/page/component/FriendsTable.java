@@ -8,13 +8,13 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$$x;
 import static com.codeborne.selenide.Selenide.$x;
 
-public class FriendsTable {
+public class FriendsTable extends BaseComponent {
 
     private final SelenideElement searchInput = $x("//input[@aria-label= 'search']");
 
     private final SelenideElement inputClearButton = $x("//button[@id = 'input-clear']");
 
-    private final ElementsCollection tableRows = $$x("//tbody[@id='requests']/tr");
+    private final ElementsCollection tableRows = $$x("//tbody/tr");
 
     private final SelenideElement acceptButton = $x("//button[text() = 'Accept']");
 
@@ -25,6 +25,10 @@ public class FriendsTable {
     private final SelenideElement unfriendButton = $x("//button[text() = 'Unfriend']");
 
     private final SelenideElement deleteButton = $x("//button[text() = 'Delete']");
+
+    public FriendsTable() {
+        super($x("//tbody"));
+    }
 
     @Step("Поиск друзей по логину или имени")
     private FriendsTable searchFriendByLoginOrName(String loginOrName) {

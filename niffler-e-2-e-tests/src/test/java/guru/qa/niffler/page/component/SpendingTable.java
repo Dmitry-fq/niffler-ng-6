@@ -13,7 +13,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$$x;
 import static com.codeborne.selenide.Selenide.$x;
 
-public class SpendingTable {
+public class SpendingTable extends BaseComponent {
 
     private final SelenideElement searchInput = $x("//input[@aria-label= 'search']");
 
@@ -21,7 +21,11 @@ public class SpendingTable {
 
     private final SelenideElement periodDropdown = $x("//div[@id = 'period']");
 
-    private final ElementsCollection tableRows = $$x("//div[@id='spendings']//tbody/tr");
+    private final ElementsCollection tableRows = $$x("//tbody/tr");
+
+    public SpendingTable() {
+        super($x("//tbody"));
+    }
 
     @Step("Выбор периода")
     public SpendingTable selectPeriod(DataFilterValues period) {

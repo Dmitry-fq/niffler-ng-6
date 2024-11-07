@@ -16,7 +16,7 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$x;
 
 @ParametersAreNonnullByDefault
-public class Header {
+public class Header extends BaseComponent {
 
     private static final String PROFILE_BUTTON_TEXT = "Profile";
 
@@ -33,6 +33,10 @@ public class Header {
     private final SelenideElement settingsButton = $x("//div[contains(@class, 'MuiAvatar-root')]");
 
     private final ElementsCollection settingsRows = $x("//ul[@role ='menu']").$$x("li");
+
+    public Header() {
+        super($x("//header"));
+    }
 
     @Step("Переход на страницу друзей")
     public FriendsPage toFriendsPage() {
