@@ -15,6 +15,8 @@ import static com.codeborne.selenide.Selenide.$x;
 
 public class SpendingTable extends BaseComponent {
 
+    private static final String ELEMENT_XPATH = "//tbody";
+
     private final SelenideElement searchInput = $x("//input[@aria-label= 'search']");
 
     private final SelenideElement inputClearButton = $x("//button[@id = 'input-clear']");
@@ -24,7 +26,14 @@ public class SpendingTable extends BaseComponent {
     private final ElementsCollection tableRows = $$x("//tbody/tr");
 
     public SpendingTable() {
-        super($x("//tbody"));
+        super($x(ELEMENT_XPATH));
+    }
+
+    @Step("Проверка отображения элемента")
+    public SpendingTable checkVisible() {
+        $x(ELEMENT_XPATH).shouldBe(visible);
+
+        return this;
     }
 
     @Step("Выбор периода")

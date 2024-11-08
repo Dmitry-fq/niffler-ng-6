@@ -13,10 +13,13 @@ import io.qameta.allure.Step;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$x;
 
 @ParametersAreNonnullByDefault
 public class Header extends BaseComponent {
+
+    private static final String ELEMENT_XPATH = "//header";
 
     private static final String PROFILE_BUTTON_TEXT = "Profile";
 
@@ -35,7 +38,14 @@ public class Header extends BaseComponent {
     private final ElementsCollection settingsRows = $x("//ul[@role ='menu']").$$x("li");
 
     public Header() {
-        super($x("//header"));
+        super($x(ELEMENT_XPATH));
+    }
+
+    @Step("Проверка отображения элемента")
+    public Header checkVisible() {
+        $x(ELEMENT_XPATH).shouldBe(visible);
+
+        return this;
     }
 
     @Step("Переход на страницу друзей")

@@ -2,7 +2,7 @@ package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.SelenideElement;
 
-public class BaseComponent {
+public abstract class BaseComponent {
 
     protected final SelenideElement self;
 
@@ -10,7 +10,5 @@ public class BaseComponent {
         this.self = self;
     }
 
-    public void checkVisible() {
-
-    }
+    public abstract BaseComponent checkVisible();
 }

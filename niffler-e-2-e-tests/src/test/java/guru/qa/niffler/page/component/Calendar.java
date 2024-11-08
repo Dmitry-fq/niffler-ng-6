@@ -7,9 +7,12 @@ import java.time.LocalDate;
 import java.time.Month;
 
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$x;
 
 public class Calendar extends BaseComponent {
+
+    private static final String ELEMENT_XPATH = "//div[div[contains(@class, 'MuiDateCalendar-viewTransitionContainer')]]";
 
     private final SelenideElement calendarBody = $x("//div[contains(@class, 'MuiDateCalendar-viewTransitionContainer')]");
 
@@ -20,7 +23,14 @@ public class Calendar extends BaseComponent {
     private final SelenideElement arrowRightButton = $x("//*[@data-testid = 'ArrowRightIcon']");
 
     public Calendar() {
-        super($x("//div[div[contains(@class, 'MuiDateCalendar-viewTransitionContainer')]]"));
+        super($x(ELEMENT_XPATH));
+    }
+
+    @Step("Проверка отображения элемента")
+    public Calendar checkVisible() {
+        $x(ELEMENT_XPATH).shouldBe(visible);
+
+        return this;
     }
 
     @Step("Установка даты")
