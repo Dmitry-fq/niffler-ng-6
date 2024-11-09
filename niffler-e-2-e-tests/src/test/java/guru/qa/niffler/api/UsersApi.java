@@ -7,14 +7,16 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
+import java.util.List;
+
 public interface UsersApi {
 
     @GET("/internal/users/current")
     Call<UserJson> currentUser(@Query("username") String username);
 
     @GET("internal/users/all")
-    Call<UserJson> allUsers(@Query("username") String username,
-                            @Query("searchQuery") String searchQuery);
+    Call<List<UserJson>> allUsers(@Query("username") String username,
+                                  @Query("searchQuery") String searchQuery);
 
     @POST("internal/users/update")
     Call<UserJson> updateUserInfo(@Body UserJson user);

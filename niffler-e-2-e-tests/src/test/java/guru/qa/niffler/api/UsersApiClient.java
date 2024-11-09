@@ -9,7 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import retrofit2.Response;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -92,5 +94,23 @@ public class UsersApiClient extends RestClient implements UsersClient {
     @Override
     public List<UserJson> addFriends(UserJson targetUser, int count) {
         throw new UnsupportedOperationException("Действие не поддерживается в API, т.к. невозможно создать юзера");
+    }
+
+    @Nonnull
+    public List<UserJson> getAllUsersByUsernameAndSearchQuery(@Nonnull String username, @Nullable String searchQuery) {
+        final Response<List<UserJson>> response;
+        try {
+            response = usersApi.allUsers(username, searchQuery)
+                    .execute();
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+        assertThat(response.code()).isEqualTo(200);
+
+        List<UserJson> userJsons = response.body();
+
+        return userJsons != null
+                ? userJsons
+                : Collections.emptyList();
     }
 }

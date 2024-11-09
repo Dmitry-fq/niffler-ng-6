@@ -1,23 +1,36 @@
 package guru.qa.niffler.test.api;
 
-import guru.qa.niffler.api.AuthApiClient;
 import guru.qa.niffler.api.UsersApiClient;
-import guru.qa.niffler.api.core.ThreadSafeCookieStore;
-import org.junit.jupiter.api.Test;
 
 public class ApiTest {
 
-    @Test
-    void test1() {
-        AuthApiClient authApiClient = new AuthApiClient();
+    private static final UsersApiClient usersApiClient = new UsersApiClient();
 
-        authApiClient.getRegisterPage();
-        String csrf = ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN");
+//    @Order(MIN_VALUE)
+//    @Test
+//    void testForHw8_2() {
+//        List<UserJson> userJsonList = usersApiClient.getAllUsersByUsernameAndSearchQuery("test", null);
+//
+//        assertThat(userJsonList)
+//                .as("Список пользователей пустой")
+//                .isNotEmpty();
+//    }
+//
+//    @Order(MAX_VALUE)
+//    @Test
+//    void test2ForHw8_2() {
+//        List<UserJson> userJsonList = usersApiClient.getAllUsersByUsernameAndSearchQuery("☺", "☺");
+//
+//        assertThat(userJsonList)
+//                .as("Список пользователей не пустой")
+//                .isEmpty();
+//    }
 
-//        authApiClient.registerUser("testuuuusssserrr", "12345", "12345", csrf);
-//        authApiClient.login("test", "test", csrf);
-
-        UsersApiClient usersApiClient = new UsersApiClient();
-        usersApiClient.createUser("dasdadad3", "12345");
-    }
+//    @Test
+//    void testSpen() {
+//        SpendRepositoryHibernate spendRepositoryHibernate = new SpendRepositoryHibernate();
+////        Optional<SpendEntity> spendEntity = spendRepositoryHibernate.findByUsernameAndSpendDescription("duck", "обучение");
+//
+//        System.out.println("123");
+//    }
 }
