@@ -20,7 +20,7 @@ public class TestLast {
         List<UserJson> userJsonList = usersApiClient.getAllUsersByUsernameAndSearchQuery("☺", "☺");
 
         assertThat(userJsonList)
-                .as("Список пользователей не пустой")
+                .as("Список пользователей пустой")
                 .isEmpty();
     }
 }
