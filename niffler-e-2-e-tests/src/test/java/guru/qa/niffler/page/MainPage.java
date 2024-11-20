@@ -1,6 +1,7 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.page.component.SpendingTable;
 import guru.qa.niffler.page.component.StatComponent;
@@ -19,6 +20,10 @@ import static guru.qa.niffler.utils.ScreenshotAssertions.imagesShouldBeEquals;
 
 @ParametersAreNonnullByDefault
 public class MainPage extends BasePage<MainPage> {
+
+    private static final Config CFG = Config.getInstance();
+
+    public static final String URL = CFG.frontUrl() + "main";
 
     protected final Header header = new Header();
 
@@ -116,7 +121,7 @@ public class MainPage extends BasePage<MainPage> {
     public MainPage checkThatPageLoaded() {
         header.getSelf().should(visible).shouldHave(text("Niffler"));
         statComponent.getSelf().should(visible).shouldHave(text("Statistics"));
-        spendingTable.getSelf().should(visible).shouldHave(text("History of Spendings"));
+        historyOfSpendingsText.should(visible);
         return this;
     }
 }

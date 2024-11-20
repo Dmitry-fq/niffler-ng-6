@@ -32,9 +32,13 @@ public abstract class RestClient {
         this(baseUrl, followRedirect, JacksonConverterFactory.create(), HEADERS, new Interceptor[0]);
     }
 
-    public RestClient(String baseUrl, HttpLoggingInterceptor.Level loggingLevel) {
-        this(baseUrl, false, JacksonConverterFactory.create(), loggingLevel, new Interceptor[0]);
-    }
+  public RestClient(String baseUrl, boolean followRedirect, @Nullable Interceptor... interceptors) {
+    this(baseUrl, followRedirect, JacksonConverterFactory.create(), HEADERS, interceptors);
+  }
+
+  public RestClient(String baseUrl, HttpLoggingInterceptor.Level loggingLevel) {
+    this(baseUrl, false, JacksonConverterFactory.create(), loggingLevel, new Interceptor[0]);
+  }
 
     public RestClient(String baseUrl, Converter.Factory converterFactory, HttpLoggingInterceptor.Level loggingLevel) {
         this(baseUrl, false, converterFactory, loggingLevel, new Interceptor[0]);
@@ -77,5 +81,38 @@ public abstract class RestClient {
                 .baseUrl(baseUrl)
                 .addConverterFactory(converterFactory)
                 .build();
+    }
+    public <T> T create(final Class<T> service) {
+        return this.retrofit.create(service);
+    }
+
+    public static final class EmptyClient extends RestClient {
+        public EmptyClient(String baseUrl) {
+            super(baseUrl);
+        }
+
+        public EmptyClient(String baseUrl, boolean followRedirect) {
+            super(baseUrl, followRedirect);
+        }
+
+        public EmptyClient(String baseUrl, HttpLoggingInterceptor.Level loggingLevel) {
+            super(baseUrl, loggingLevel);
+        }
+
+        public EmptyClient(String baseUrl, Converter.Factory converterFactory, HttpLoggingInterceptor.Level loggingLevel) {
+            super(baseUrl, converterFactory, loggingLevel);
+        }
+
+        public EmptyClient(String baseUrl, boolean followRedirect, HttpLoggingInterceptor.Level loggingLevel) {
+            super(baseUrl, followRedirect, loggingLevel);
+        }
+
+        public EmptyClient(String baseUrl, boolean followRedirect, Converter.Factory converterFactory, HttpLoggingInterceptor.Level loggingLevel) {
+            super(baseUrl, followRedirect, converterFactory, loggingLevel);
+        }
+
+        public EmptyClient(String baseUrl, boolean followRedirect, Converter.Factory converterFactory, HttpLoggingInterceptor.Level loggingLevel, @org.jetbrains.annotations.Nullable Interceptor... interceptors) {
+            super(baseUrl, followRedirect, converterFactory, loggingLevel, interceptors);
+        }
     }
 }

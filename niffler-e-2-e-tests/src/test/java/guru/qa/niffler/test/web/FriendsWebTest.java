@@ -26,13 +26,13 @@ public class FriendsWebTest {
     void friendsShouldBePresentInFriendsTable(UserJson user) {
         String username = user.username();
         String password = user.testData().password();
-        List<String> friendNameList = user.testData().friends();
+        List<UserJson> friendNameList = user.testData().friends();
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(username, password);
 
         header.toFriendsPage()
-                .checkFriends(friendNameList.getFirst());
+              .checkFriends(friendNameList.getFirst().firstname());
     }
 
     @User
@@ -45,7 +45,7 @@ public class FriendsWebTest {
                 .login(username, password);
 
         header.toFriendsPage()
-                .checkFriendsListEmpty();
+              .checkFriendsListEmpty();
     }
 
     @User(
@@ -55,13 +55,13 @@ public class FriendsWebTest {
     void incomeInvitationBePresentInFriendsTable(UserJson user) {
         String username = user.username();
         String password = user.testData().password();
-        List<String> incomeInvitationUsernameList = user.testData().incomeInvitation();
+        List<UserJson> incomeInvitationUsernameList = user.testData().incomeInvitation();
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(username, password);
 
         header.toFriendsPage()
-                .checkIncomeInvitation(incomeInvitationUsernameList.getFirst());
+              .checkIncomeInvitation(incomeInvitationUsernameList.getFirst().username());
     }
 
     @User(
@@ -71,14 +71,14 @@ public class FriendsWebTest {
     void outcomeInvitationBePresentInAllPeoplesTable(UserJson user) {
         String username = user.username();
         String password = user.testData().password();
-        List<String> outcomeInvitationUsernameList = user.testData().outcomeInvitation();
+        List<UserJson> outcomeInvitationUsernameList = user.testData().outcomeInvitation();
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(username, password);
 
         header.toFriendsPage()
-                .clickAllPeopleTab()
-                .checkOutcomeFriendRequest(outcomeInvitationUsernameList.getFirst());
+              .clickAllPeopleTab()
+              .checkOutcomeFriendRequest(outcomeInvitationUsernameList.getFirst().username());
     }
 
     @User(
@@ -88,14 +88,14 @@ public class FriendsWebTest {
     void friendRequestsShouldBeAccept(UserJson user) {
         String username = user.username();
         String password = user.testData().password();
-        String incomeInvitationUsername = user.testData().incomeInvitation().getFirst();
+        String incomeInvitationUsername = user.testData().incomeInvitation().getFirst().username();
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(username, password);
 
         header.toFriendsPage()
-                .acceptFriendRequestByLoginOrName(incomeInvitationUsername)
-                .userIsFriend(incomeInvitationUsername);
+              .acceptFriendRequestByLoginOrName(incomeInvitationUsername)
+              .userIsFriend(incomeInvitationUsername);
     }
 
     @User(
@@ -105,13 +105,13 @@ public class FriendsWebTest {
     void friendRequestsShouldBeDecline(UserJson user) {
         String username = user.username();
         String password = user.testData().password();
-        String incomeInvitationUsername = user.testData().incomeInvitation().getFirst();
+        String incomeInvitationUsername = user.testData().incomeInvitation().getFirst().username();
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .login(username, password);
 
         header.toFriendsPage()
-                .declineFriendRequestByLoginOrName(incomeInvitationUsername)
-                .checkFriendsListEmpty();
+              .declineFriendRequestByLoginOrName(incomeInvitationUsername)
+              .checkFriendsListEmpty();
     }
 }

@@ -1,10 +1,10 @@
 package guru.qa.niffler.service.impl;
 
 import com.google.common.base.Stopwatch;
-import guru.qa.niffler.api.AuthApiClient;
 import guru.qa.niffler.api.UsersApi;
 import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.api.core.ThreadSafeCookieStore;
+import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UsersClient;
 import io.qameta.allure.Step;
@@ -53,7 +53,9 @@ public class UsersApiClient extends RestClient implements UsersClient {
             while (sw.elapsed(TimeUnit.MILLISECONDS) < maxWaitTime) {
                 UserJson userJson = usersApi.currentUser(username).execute().body();
                 if (userJson != null && userJson.id() != null) {
-                    return userJson;
+                    return userJson.addTestData(
+                            new TestData(password)
+                    );
                 } else {
                     Thread.sleep(1000);
                 }
@@ -76,7 +78,7 @@ public class UsersApiClient extends RestClient implements UsersClient {
         final Response<UserJson> response;
         try {
             response = usersApi.currentUser(username)
-                    .execute();
+                               .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
@@ -96,6 +98,8 @@ public class UsersApiClient extends RestClient implements UsersClient {
                 createdUser = createUser(randomUserName, DEFAULT_PASSWORD);
                 sendInvitation(createdUser.username(), targetUser.username());
                 incomeUsers.add(createdUser);
+
+                targetUser.testData().incomeInvitation().add(createdUser);
             }
             return incomeUsers;
         }
@@ -113,6 +117,8 @@ public class UsersApiClient extends RestClient implements UsersClient {
                 createdUser = createUser(randomUserName, DEFAULT_PASSWORD);
                 sendInvitation(targetUser.username(), createdUser.username());
                 outcomeUsers.add(createdUser);
+
+                createdUser.testData().outcomeInvitation().add(createdUser);
             }
             return outcomeUsers;
         }
@@ -145,19 +151,21 @@ public class UsersApiClient extends RestClient implements UsersClient {
                 sendInvitation(targetUser.username(), createdUser.username());
                 acceptInvitation(createdUser.username(), targetUser.username());
                 friends.add(createdUser);
+
+                targetUser.testData().friends().addAll(friends);
             }
             return friends;
         }
         return Collections.emptyList();
     }
 
-    @Step("Принятие приглашения от пользователя {username} пользователю {targetUsername}")
+    @Step("Принятие приглашения от пользователя {username} пользователем {targetUsername}")
     @Nullable
     public UserJson acceptInvitation(@Nonnull String username, @Nonnull String targetUsername) {
         final Response<UserJson> response;
         try {
             response = usersApi.acceptInvitation(username, targetUsername)
-                    .execute();
+                               .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
@@ -171,7 +179,7 @@ public class UsersApiClient extends RestClient implements UsersClient {
         final Response<List<UserJson>> response;
         try {
             response = usersApi.allUsers(username, searchQuery)
-                    .execute();
+                               .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
