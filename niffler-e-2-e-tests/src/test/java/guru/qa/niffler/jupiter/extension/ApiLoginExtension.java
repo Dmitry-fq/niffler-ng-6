@@ -15,7 +15,7 @@ import guru.qa.niffler.service.impl.AuthApiClient;
 import guru.qa.niffler.service.impl.SpendApiClient;
 import guru.qa.niffler.service.impl.UsersApiClient;
 import jaxb.userdata.FriendState;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -25,7 +25,7 @@ import org.openqa.selenium.Cookie;
 
 import java.util.List;
 
-public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver {
+public class ApiLoginExtension implements BeforeTestExecutionCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ApiLoginExtension.class);
 
@@ -47,9 +47,9 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
         this.setupBrowser = true;
     }
 
-    public static ApiLoginExtension restApiLoginExtension() {
-        return new ApiLoginExtension(false);
-    }
+  public static ApiLoginExtension rest() {
+    return new ApiLoginExtension(false);
+  }
 
     public static String getToken() {
         return TestMethodContextExtension.context().getStore(NAMESPACE).get("token", String.class);
@@ -75,7 +75,7 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
     }
 
     @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
+    public void beforeTestExecution(ExtensionContext context) throws Exception {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), ApiLogin.class)
                          .ifPresent(apiLogin -> {
 
@@ -110,10 +110,7 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
                                  Selenide.open(CFG.frontUrl());
                                  Selenide.localStorage().setItem("id_token", getToken());
                                  WebDriverRunner.getWebDriver().manage().addCookie(
-                                         new Cookie(
-                                                 "JSESSIONID",
-                                                 ThreadSafeCookieStore.INSTANCE.cookieValue("JSESSIONID")
-                                         )
+                                         getJsessionIdCookie()
                                  );
                                  Selenide.open(MainPage.URL, MainPage.class).checkThatPageLoaded();
                              }

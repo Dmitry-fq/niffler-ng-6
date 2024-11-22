@@ -15,9 +15,7 @@ public class FriendsWebTest {
 
     private final Header header = new Header();
 
-    @User(
-            friends = 1
-    )
+    @User(friends = 1)
     @ApiLogin
     @Test
     void friendsShouldBePresentInFriendsTable(UserJson user) {
@@ -38,9 +36,7 @@ public class FriendsWebTest {
               .checkFriendsListEmpty();
     }
 
-    @User(
-            incomeInvitation = 1
-    )
+    @User(incomeInvitation = 1)
     @ApiLogin
     @Test
     void incomeInvitationBePresentInFriendsTable(UserJson user) {
@@ -52,9 +48,7 @@ public class FriendsWebTest {
                                          .username());
     }
 
-    @User(
-            outcomeInvitation = 1
-    )
+    @User(outcomeInvitation = 1)
     @ApiLogin
     @Test
     void outcomeInvitationBePresentInAllPeoplesTable(UserJson user) {
@@ -67,9 +61,7 @@ public class FriendsWebTest {
                                              .username());
     }
 
-    @User(
-            incomeInvitation = 1
-    )
+    @User(incomeInvitation = 1)
     @ApiLogin
     @Test
     void friendRequestsShouldBeAccept(UserJson user) {
@@ -83,9 +75,7 @@ public class FriendsWebTest {
               .userIsFriend(incomeInvitationUsername);
     }
 
-    @User(
-            incomeInvitation = 1
-    )
+    @User(incomeInvitation = 1)
     @ApiLogin
     @Test
     void friendRequestsShouldBeDecline(UserJson user) {
