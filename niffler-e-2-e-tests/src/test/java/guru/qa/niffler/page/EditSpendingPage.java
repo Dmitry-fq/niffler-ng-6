@@ -14,20 +14,32 @@ public class EditSpendingPage extends BasePage<EditSpendingPage> {
 
     private final SelenideElement title = $x("//h2[contains(text(), 'spending')]");
 
+    private final SelenideElement amountInput = $x("//input[@id = 'amount']");
+
     private final SelenideElement descriptionInput = $("#description");
 
     private final SelenideElement saveBtn = $("#save");
 
     @Nonnull
-    @Step("Установка описания трате")
+    @Step("Редактирование описания трате")
     public EditSpendingPage setSpendingDescription(String description) {
         descriptionInput.setValue(description);
 
         return this;
     }
 
+    @Nonnull
+    @Step("Редактирование суммы трате")
+    public EditSpendingPage setAmountDescription(String amount) {
+        amountInput.setValue(amount);
+
+        return this;
+    }
+
     @Step("Нажатие на кнопку Сохранить")
-    public void save() {
+    public MainPage save() {
         saveBtn.click();
+
+        return new MainPage();
     }
 }

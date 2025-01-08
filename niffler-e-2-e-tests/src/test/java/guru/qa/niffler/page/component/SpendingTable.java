@@ -23,6 +23,8 @@ public class SpendingTable extends BaseComponent {
 
     private final SelenideElement periodDropdown = $x("//div[@id = 'period']");
 
+    private final SelenideElement deleteButton = $x("//button[@id = 'delete']");
+
     private final ElementsCollection tableRows = $$x("//tbody/tr");
 
     public SpendingTable() {
@@ -43,7 +45,7 @@ public class SpendingTable extends BaseComponent {
         return new SpendingTable();
     }
 
-    @Step("Редактирование траты")
+    @Step("Редактирование траты по описанию")
     public EditSpendingPage editSpending(String description) {
         searchSpendingByDescription(description);
 
@@ -55,7 +57,7 @@ public class SpendingTable extends BaseComponent {
         return new EditSpendingPage();
     }
 
-    @Step("Удаление траты")
+    @Step("Удаление траты по описанию")
     public SpendingTable deleteSpending(String description) {
         searchSpendingByDescription(description);
 
@@ -63,6 +65,7 @@ public class SpendingTable extends BaseComponent {
         tableRows.find(text(description))
                 .$x(checkboxXpath)
                 .click();
+        deleteButton.click();
 
         return new SpendingTable();
     }

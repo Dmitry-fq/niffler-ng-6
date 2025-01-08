@@ -3,6 +3,7 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.CategoryJson;
@@ -12,6 +13,9 @@ import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 @ExtendWith(BrowserExtension.class)
 public class ProfileWebTest {
@@ -44,11 +48,7 @@ public class ProfileWebTest {
 
     @User(
             username = "duck",
-            categories = {
-                    @Category(
-                            archived = false
-                    )
-            }
+            categories = @Category()
     )
     @Test
     void activeCategoryShouldPresentInCategoriesList(CategoryJson[] category) {
@@ -79,5 +79,16 @@ public class ProfileWebTest {
                 .clickSaveChangesButton()
                 .checkAlert("Profile successfully updated")
                 .checkName(newName);
+    }
+
+    @User
+    @ScreenShotTest("img/expected-avatar.png")
+    void avatarShouldBeCorrect(UserJson user, BufferedImage expectedImage) throws IOException {
+        Selenide.open(LoginPage.URL, LoginPage.class)
+                .login(user.username(), user.testData().password());
+
+        header.toProfilePage()
+                .setNewAvatar()
+                .avatarShouldBeCorrect(expectedImage);
     }
 }

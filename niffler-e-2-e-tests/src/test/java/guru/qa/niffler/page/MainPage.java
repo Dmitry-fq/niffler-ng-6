@@ -7,9 +7,13 @@ import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$x;
+import static guru.qa.niffler.utils.ScreenshotAssertions.imagesShouldBeEquals;
 
 @ParametersAreNonnullByDefault
 public class MainPage extends BasePage<MainPage> {
@@ -20,7 +24,11 @@ public class MainPage extends BasePage<MainPage> {
 
     private final SelenideElement statisticsDiagram = $x("//canvas");
 
+    private final SelenideElement statisticChartBars = $x("//ul");
+
     private final SelenideElement historyOfSpendingsText = $x("//h2[text()='History of Spendings']");
+
+    private final SelenideElement alertDeleteButton = $x("//div[h2[contains(text(), 'spending')]]//button[text() = 'Delete']");
 
     private final SpendingTable spendingTable = new SpendingTable();
 
@@ -43,6 +51,15 @@ public class MainPage extends BasePage<MainPage> {
     }
 
     @Nonnull
+    @Step("Удаление траты по описанию")
+    public MainPage deleteSpending(String spendingDescription) {
+        spendingTable.deleteSpending(spendingDescription);
+        alertDeleteButton.click();
+
+        return new MainPage();
+    }
+
+    @Nonnull
     @Step("Переход на страницу добавления траты")
     public AddNewSpendingPage toAddSpendingPage() {
         header.toAddSpendingPage();
@@ -53,5 +70,28 @@ public class MainPage extends BasePage<MainPage> {
     @Step("Проверка, что таблица трат содержит трату по описанию")
     public void checkThatTableContainsSpending(String spendingDescription) {
         spendingTable.checkTableContains(spendingDescription);
+    }
+
+    @Step("Проверка диаграммы статистики по картинке")
+    public MainPage checkStatDiagramByScreenshot(BufferedImage expectedImage) throws IOException {
+        imagesShouldBeEquals(expectedImage, statisticsDiagram);
+
+        return this;
+    }
+
+    @Step("Проверка плашек диаграммы статистики")
+    public MainPage checkStatisticChartBars(String... barTexts) {
+        for (String s : barTexts) {
+            statisticChartBars.shouldHave(exactText(s));
+        }
+
+        return this;
+    }
+
+    @Step("Проверка плашек диаграммы статистики")
+    public MainPage statisticChartBarsShouldNotExist() {
+        statisticChartBars.shouldNotBe(visible);
+
+        return this;
     }
 }

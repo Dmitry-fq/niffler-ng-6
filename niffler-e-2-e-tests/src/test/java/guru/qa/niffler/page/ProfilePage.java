@@ -6,15 +6,22 @@ import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import static com.codeborne.selenide.Condition.attribute;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$x;
+import static guru.qa.niffler.utils.ScreenshotAssertions.imagesShouldBeEquals;
 
 @ParametersAreNonnullByDefault
 public class ProfilePage extends BasePage<ProfilePage> {
 
     public static String url = Config.getInstance().frontUrl() + "profile";
+
+    private final SelenideElement avatarImg = $x("//div[input[@id = 'image__input']]//img");
+
+    private final SelenideElement uploadNewPictureButton = $x("//input[@id = 'image__input']");
 
     private final SelenideElement usernameInput = $x("//input[@id='username']");
 
@@ -26,6 +33,13 @@ public class ProfilePage extends BasePage<ProfilePage> {
 
     public void checkUsername(String currentUsername) {
         usernameInput.shouldHave(attribute("value", currentUsername));
+    }
+
+    @Step("Установка нового аватара")
+    public ProfilePage setNewAvatar() {
+        uploadNewPictureButton.uploadFromClasspath("img/expected-avatar.png");
+
+        return this;
     }
 
     @Nonnull
@@ -80,5 +94,12 @@ public class ProfilePage extends BasePage<ProfilePage> {
     @Step("Получение элемента категории по имени категории")
     private SelenideElement getCategoryByCategoryName(String categoryName) {
         return $x(String.format("//*[text()='%s']", categoryName));
+    }
+
+    @Step("Проверка корректности отображения аватарки")
+    public ProfilePage avatarShouldBeCorrect(BufferedImage expected) throws IOException {
+        imagesShouldBeEquals(expected, avatarImg);
+
+        return this;
     }
 }
