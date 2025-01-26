@@ -89,6 +89,7 @@ public class ProfileWebTest {
 
         header.toProfilePage()
                 .setNewAvatar()
+                .clickSaveChangesButton()
                 .avatarShouldBeCorrect(expectedImage);
     }
 }

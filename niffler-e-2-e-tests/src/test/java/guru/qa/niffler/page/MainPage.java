@@ -88,7 +88,7 @@ public class MainPage extends BasePage<MainPage> {
         return this;
     }
 
-    @Step("Проверка плашек диаграммы статистики")
+    @Step("Проверка отсутствия плашек диаграммы статистики")
     public MainPage statisticChartBarsShouldNotExist() {
         statisticChartBars.shouldNotBe(visible);
 
