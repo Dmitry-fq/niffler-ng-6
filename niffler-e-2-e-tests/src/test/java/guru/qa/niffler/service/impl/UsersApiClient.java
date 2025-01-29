@@ -1,6 +1,8 @@
-package guru.qa.niffler.api;
+package guru.qa.niffler.service.impl;
 
 import com.google.common.base.Stopwatch;
+import guru.qa.niffler.api.AuthApiClient;
+import guru.qa.niffler.api.UsersApi;
 import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.model.UserJson;
@@ -59,7 +61,7 @@ public class UsersApiClient extends RestClient implements UsersClient {
 
     @Nonnull
     @Override
-    public Optional<UserJson> findUserById(UUID id) {
+    public Optional<UserJson> findUserById(@NotNull UUID id) {
         throw new UnsupportedOperationException("Действие не поддерживается в API");
     }
 

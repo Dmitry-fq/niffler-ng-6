@@ -3,7 +3,7 @@ package guru.qa.niffler.test.web;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.service.UsersDbClient;
+import guru.qa.niffler.service.impl.UsersDbClient;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;

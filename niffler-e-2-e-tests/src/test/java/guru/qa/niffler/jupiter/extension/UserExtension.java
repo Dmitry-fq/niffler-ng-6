@@ -3,10 +3,8 @@ package guru.qa.niffler.jupiter.extension;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.UsersClient;
-import guru.qa.niffler.service.UsersDbClient;
-import guru.qa.niffler.service.impl.SpendDbClient;
+import guru.qa.niffler.service.impl.UsersApiClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -24,9 +22,7 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
 
     private static final String defaultPassword = "12345";
 
-    private final UsersClient usersClient = new UsersDbClient();
-
-    private final SpendClient spendClient = new SpendDbClient();
+    private final UsersClient usersClient = new UsersApiClient();
 
     @Override
     public void beforeEach(ExtensionContext context) {

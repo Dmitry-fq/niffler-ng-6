@@ -1,7 +1,7 @@
 package guru.qa.niffler.test.api;
 
-import guru.qa.niffler.api.UsersApiClient;
 import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.service.impl.UsersApiClient;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
