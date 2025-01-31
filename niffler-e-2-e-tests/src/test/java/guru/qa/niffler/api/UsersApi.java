@@ -12,24 +12,36 @@ import java.util.List;
 public interface UsersApi {
 
     @GET("/internal/users/current")
-    Call<UserJson> currentUser(@Query("username") String username);
+    Call<UserJson> currentUser(
+            @Query("username") String username
+    );
 
     @GET("internal/users/all")
-    Call<List<UserJson>> allUsers(@Query("username") String username,
-                                  @Query("searchQuery") String searchQuery);
+    Call<List<UserJson>> allUsers(
+            @Query("username") String username,
+            @Query("searchQuery") String searchQuery
+    );
 
     @POST("internal/users/update")
-    Call<UserJson> updateUserInfo(@Body UserJson user);
+    Call<UserJson> updateUserInfo(
+            @Body UserJson user
+    );
 
     @POST("internal/invitations/send")
-    Call<UserJson> sendInvitation(@Body String username,
-                                  @Body String targetUsername);
+    Call<UserJson> sendInvitation(
+            @Query("username") String username,
+            @Query("targetUsername") String targetUsername
+    );
 
     @POST("internal/invitations/accept")
-    Call<UserJson> acceptInvitation(@Body String username,
-                                    @Body String targetUsername);
+    Call<UserJson> acceptInvitation(
+            @Query("username") String username,
+            @Query("targetUsername") String targetUsername
+    );
 
     @POST("internal/invitations/decline")
-    Call<UserJson> declineInvitation(@Body String username,
-                                     @Body String targetUsername);
+    Call<UserJson> declineInvitation(
+            @Query("username") String username,
+            @Query("targetUsername") String targetUsername
+    );
 }
