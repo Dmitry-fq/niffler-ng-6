@@ -72,7 +72,7 @@ public class SpendingWebTest {
     )
     @ApiLogin
     @ScreenShotTest(expected = "expected-stat.png")
-    void checkStatComponentTest(UserJson user, BufferedImage expected) throws IOException {
+    void checkStatComponentTest(BufferedImage expected) throws IOException {
         Selenide.open(MainPage.URL, MainPage.class)
                 .checkStatDiagramByScreenshot(expected)
                 .checkStatisticChartBars("Обучение 79990 ₽")

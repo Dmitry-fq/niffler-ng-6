@@ -5,10 +5,10 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -53,8 +53,8 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
         try {
             return Optional.of(
                     entityManager.createQuery("select u from UserEntity u where u.username =: username", AuthUserEntity.class)
-                            .setParameter("username", username)
-                            .getSingleResult()
+                                 .setParameter("username", username)
+                                 .getSingleResult()
             );
         } catch (NoResultException e) {
             return Optional.empty();
@@ -65,5 +65,11 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
     public void remove(AuthUserEntity user) {
         entityManager.joinTransaction();
         entityManager.remove(user);
+    }
+
+    @Override
+    public List<AuthUserEntity> all() {
+        return entityManager.createQuery("select u from AuthUserEntity u", AuthUserEntity.class)
+                            .getResultList();
     }
 }

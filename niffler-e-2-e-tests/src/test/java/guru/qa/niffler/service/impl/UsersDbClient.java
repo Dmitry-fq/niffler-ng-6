@@ -186,4 +186,13 @@ public class UsersDbClient implements UsersClient {
         );
         return authUser;
     }
+
+    @Override
+    public List<UserJson> all() {
+        return authUserRepository.all().stream()
+                                 .map(e -> new UserJson(
+                                         e.getUsername()
+                                 ))
+                                 .toList();
+    }
 }

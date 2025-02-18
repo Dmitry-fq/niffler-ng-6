@@ -11,24 +11,27 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EntityManagers {
-    private static final Map<String, EntityManagerFactory> emfs = new ConcurrentHashMap<>();
+  private EntityManagers() {
+  }
 
-    @SuppressWarnings("resource")
-    @Nonnull
-    public static EntityManager em(@Nonnull String jdbcUrl) {
-      return new ThreadSafeEntityManager(
-          emfs.computeIfAbsent(
-              jdbcUrl,
-              key -> {
-                DataSources.dataSource(jdbcUrl);
-                final String persistenceUnitName = StringUtils.substringAfter(jdbcUrl, "5432/");
-                return Persistence.createEntityManagerFactory(persistenceUnitName);
-              }
-          ).createEntityManager()
-      );
-    }
+  private static final Map<String, EntityManagerFactory> emfs = new ConcurrentHashMap<>();
 
-    public static void closeAllEmfs() {
-        emfs.values().forEach(EntityManagerFactory::close);
-    }
+  @SuppressWarnings("resource")
+  @Nonnull
+  public static EntityManager em(@Nonnull String jdbcUrl) {
+    return new ThreadSafeEntityManager(
+        emfs.computeIfAbsent(
+            jdbcUrl,
+            key -> {
+              DataSources.dataSource(jdbcUrl);
+              final String persistenceUnitName = StringUtils.substringAfter(jdbcUrl, "5432/");
+              return Persistence.createEntityManagerFactory(persistenceUnitName);
+            }
+        ).createEntityManager()
+    );
+  }
+
+  public static void closeAllEmfs() {
+    emfs.values().forEach(EntityManagerFactory::close);
+  }
 }

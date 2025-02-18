@@ -205,4 +205,9 @@ public class UserdataApiClient extends RestClient implements UsersClient {
                 ? userJsons
                 : Collections.emptyList();
     }
+
+    @Override
+    public List<UserJson> all() {
+        throw new UnsupportedOperationException();
+    }
 }

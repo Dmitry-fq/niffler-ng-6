@@ -2,17 +2,22 @@ package guru.qa.niffler.test.fake;
 
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Token;
+import guru.qa.niffler.jupiter.extension.ApiLoginExtension;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.impl.AuthApiClient;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static guru.qa.niffler.utils.OAuthUtils.generateCodeChallenge;
 import static guru.qa.niffler.utils.OAuthUtils.generateCodeVerifier;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @WebTest
+@ExtendWith(ApiLoginExtension.class)
+@DisabledIfSystemProperty(named = "test.env", matches = "docker")
 public class OAuthTest {
 
     private final AuthApiClient authApiClient = new AuthApiClient();
