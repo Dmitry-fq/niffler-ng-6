@@ -2,7 +2,9 @@ package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.SelenideElement;
 
-public abstract class BaseComponent {
+import javax.annotation.Nonnull;
+
+public abstract class BaseComponent<T extends BaseComponent<?>> {
 
     protected final SelenideElement self;
 
@@ -10,5 +12,8 @@ public abstract class BaseComponent {
         this.self = self;
     }
 
-    public abstract BaseComponent checkVisible();
+    @Nonnull
+    public SelenideElement getSelf() {
+        return self;
+    }
 }

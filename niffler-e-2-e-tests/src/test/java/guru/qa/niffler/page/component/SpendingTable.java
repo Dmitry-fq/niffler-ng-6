@@ -2,16 +2,20 @@ package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.EditSpendingPage;
 import io.qameta.allure.Step;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.List;
 
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$$x;
 import static com.codeborne.selenide.Selenide.$x;
+import static guru.qa.niffler.condition.SpendingConditions.spends;
 
 public class SpendingTable extends BaseComponent {
 
@@ -97,5 +101,13 @@ public class SpendingTable extends BaseComponent {
         tableRows.shouldHave(size(expectedSize));
 
         return new SpendingTable();
+    }
+
+    @Step("Проверка трат")
+    @Nonnull
+    public SpendingTable checkSpendings(List<SpendJson> expectedSpendings) {
+        tableRows.should(spends(expectedSpendings));
+
+        return this;
     }
 }

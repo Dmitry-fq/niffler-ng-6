@@ -1,11 +1,14 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.condition.Bubble;
+import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
+import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
@@ -14,6 +17,7 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 
 @WebTest
 public class SpendingWebTest {
@@ -78,7 +82,9 @@ public class SpendingWebTest {
         Selenide.open(LoginPage.URL, LoginPage.class)
                 .login(user.username(), user.testData().password())
                 .checkStatDiagramByScreenshot(expected)
-                .checkStatisticChartBars("Обучение 79990 ₽");
+                .checkStatisticChartBars("Обучение 79990 ₽")
+                .getStatComponent()
+                .checkFirstBubble(new Bubble(Color.yellow, "Обучение 79990 ₽"));
     }
 
     @User(
@@ -115,6 +121,59 @@ public class SpendingWebTest {
                 .deleteSpending(user.testData().spendings().getFirst().description())
                 .checkStatDiagramByScreenshot(expected)
                 .statisticChartBarsShouldNotExist();
+    }
+
+    @User(
+            spendings = {
+                    @Spending(
+                            category = "Обучение",
+                            description = "Обучение Advanced 2.0",
+                            amount = 79990
+                    ),
+                    @Spending(category = "Развлечения",
+                            description = "Рыбалка",
+                            amount = 89990
+                    ),
+                    @Spending(category = "123",
+                            description = "123",
+                            amount = 123
+                    )
+            }
+
+    )
+    @Test
+    void checkStatComponentContainsBubblesTest(UserJson user) {
+        Selenide.open(LoginPage.URL, LoginPage.class)
+                .login(user.username(), user.testData().password())
+                .getStatComponent()
+                .checkBubblesContains(
+                        new Bubble(Color.green, "Обучение 79990 ₽"),
+                        new Bubble(Color.yellow, "Развлечения 89990 ₽")
+                );
+    }
+
+    @User(
+            spendings = {
+                    @Spending(
+                            category = "Обучение",
+                            description = "Обучение Advanced 2.0",
+                            amount = 79990
+                    ),
+                    @Spending(category = "Развлечения",
+                            description = "Рыбалка",
+                            amount = 89990
+                    )
+            }
+
+    )
+    @Test
+    void checkSpendExistTest(UserJson user) {
+        List<SpendJson> expectedSpends = user.testData().spendings();
+
+        Selenide.open(LoginPage.URL, LoginPage.class)
+                .login(user.username(), user.testData().password())
+                .getSpendingTable()
+                .checkSpendings(expectedSpends);
     }
 }
 
