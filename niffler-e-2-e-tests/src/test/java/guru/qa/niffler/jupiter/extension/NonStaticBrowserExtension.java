@@ -16,16 +16,16 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BrowserExtension implements
+public class NonStaticBrowserExtension implements
         BeforeEachCallback,
         AfterEachCallback,
         TestExecutionExceptionHandler,
         LifecycleMethodExecutionExceptionHandler {
 
-    private final ThreadLocal<List<SelenideDriver>> drivers = ThreadLocal.withInitial(ArrayList::new);
+    private final List<SelenideDriver> drivers = new ArrayList<>();
 
     private void doScreenshot() {
-        for (SelenideDriver driver : drivers.get()) {
+        for (SelenideDriver driver : drivers) {
             if (driver.hasWebDriverStarted()) {
                 Allure.addAttachment(
                         "Screen on fail for browser: " + driver.getSessionId(),
@@ -38,12 +38,12 @@ public class BrowserExtension implements
     }
 
     public List<SelenideDriver> drivers() {
-        return drivers.get();
+        return drivers;
     }
 
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
-        for (SelenideDriver driver : drivers.get()) {
+        for (SelenideDriver driver : drivers) {
             if (driver.hasWebDriverStarted()) {
                 driver.close();
             }
