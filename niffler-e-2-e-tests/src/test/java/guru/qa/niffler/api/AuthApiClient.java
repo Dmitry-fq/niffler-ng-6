@@ -3,11 +3,11 @@ package guru.qa.niffler.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.api.core.ThreadSafeCookieStore;
+import org.apache.commons.lang3.StringUtils;
 import retrofit2.Response;
 
 import java.io.IOException;
 
-import static guru.qa.niffler.utils.OAuthUtils.getCodeFromRedirectUrl;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AuthApiClient extends RestClient {
@@ -81,7 +81,8 @@ public class AuthApiClient extends RestClient {
         }
         assertThat(response.code()).isEqualTo(200);
 
-        return getCodeFromRedirectUrl(response.raw().request().url().toString());
+        String url = response.raw().request().url().toString();
+        return StringUtils.substringAfter(url, "code=");
     }
 
     public String token(String code, String codeVerifier) {

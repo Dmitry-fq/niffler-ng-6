@@ -1,4 +1,4 @@
-package guru.qa.niffler.test.api;
+package guru.qa.niffler.test.fake;
 
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.impl.UsersApiClient;
@@ -7,20 +7,20 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static java.lang.Integer.MIN_VALUE;
+import static java.lang.Integer.MAX_VALUE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Order(MIN_VALUE)
-public class TestFirst {
+@Order(MAX_VALUE)
+public class TestLast {
 
     private static final UsersApiClient usersApiClient = new UsersApiClient();
 
     @Test
-    void testFirst() {
-        List<UserJson> userJsonList = usersApiClient.getAllUsersByUsernameAndSearchQuery("test", null);
+    void testLast() {
+        List<UserJson> userJsonList = usersApiClient.getAllUsersByUsernameAndSearchQuery("☺", "☺");
 
         assertThat(userJsonList)
-                .as("Список пользователей не пустой")
-                .isNotEmpty();
+                .as("Список пользователей пустой")
+                .isEmpty();
     }
 }

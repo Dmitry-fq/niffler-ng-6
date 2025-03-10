@@ -1,4 +1,4 @@
-package guru.qa.niffler.test.api;
+package guru.qa.niffler.test.fake;
 
 import guru.qa.niffler.api.AuthApiClient;
 import guru.qa.niffler.jupiter.annotation.User;
@@ -26,6 +26,7 @@ public class OAuthTest {
         String code = authApiClient.login(user.username(), user.testData().password());
         String token = authApiClient.token(code, codeVerifier);
 
+        System.out.println(token);
         assertThat(token).isNotNull();
     }
 }
