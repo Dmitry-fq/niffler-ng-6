@@ -22,6 +22,12 @@ public interface UsersApi {
             @Query("searchQuery") String searchQuery
     );
 
+    @GET("internal/friends/all")
+    Call<List<UserJson>> friends(
+            @Query("username") String username,
+            @Query("searchQuery") String searchQuery
+    );
+
     @POST("internal/users/update")
     Call<UserJson> updateUserInfo(
             @Body UserJson user

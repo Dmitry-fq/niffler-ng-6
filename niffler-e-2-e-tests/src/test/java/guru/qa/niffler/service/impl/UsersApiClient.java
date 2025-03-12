@@ -191,4 +191,22 @@ public class UsersApiClient extends RestClient implements UsersClient {
                 ? userJsons
                 : Collections.emptyList();
     }
+
+    @Nonnull
+    public List<UserJson> getAllFriendsByUsernameAndSearchQuery(@Nonnull String username, @Nullable String searchQuery) {
+        final Response<List<UserJson>> response;
+        try {
+            response = usersApi.friends(username, searchQuery)
+                               .execute();
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+        assertThat(response.code()).isEqualTo(200);
+
+        List<UserJson> userJsons = response.body();
+
+        return userJsons != null
+                ? userJsons
+                : Collections.emptyList();
+    }
 }

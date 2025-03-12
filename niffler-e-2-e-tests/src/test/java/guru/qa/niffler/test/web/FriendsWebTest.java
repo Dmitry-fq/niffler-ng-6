@@ -1,49 +1,39 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.component.Header;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.List;
-
 @ExtendWith(BrowserExtension.class)
 public class FriendsWebTest {
-
-    private static final Config CFG = Config.getInstance();
 
     private final Header header = new Header();
 
     @User(
             friends = 1
     )
+    @ApiLogin
     @Test
     void friendsShouldBePresentInFriendsTable(UserJson user) {
-        String username = user.username();
-        String password = user.testData().password();
-        List<UserJson> friendNameList = user.testData().friends();
-
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(username, password);
-
+        Selenide.open(MainPage.URL, MainPage.class);
         header.toFriendsPage()
-              .checkFriends(friendNameList.getFirst().firstname());
+              .checkFriends(user.testData()
+                                .friends()
+                                .getFirst()
+                                .username());
     }
 
     @User
+    @ApiLogin
     @Test
-    void friendsTableShouldBeEmptyForNewUser(UserJson user) {
-        String username = user.username();
-        String password = user.testData().password();
-
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(username, password);
-
+    void friendsTableShouldBeEmptyForNewUser() {
+        Selenide.open(MainPage.URL, MainPage.class);
         header.toFriendsPage()
               .checkFriendsListEmpty();
     }
@@ -51,48 +41,43 @@ public class FriendsWebTest {
     @User(
             incomeInvitation = 1
     )
+    @ApiLogin
     @Test
     void incomeInvitationBePresentInFriendsTable(UserJson user) {
-        String username = user.username();
-        String password = user.testData().password();
-        List<UserJson> incomeInvitationUsernameList = user.testData().incomeInvitation();
-
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(username, password);
-
+        Selenide.open(MainPage.URL, MainPage.class);
         header.toFriendsPage()
-              .checkIncomeInvitation(incomeInvitationUsernameList.getFirst().username());
+              .checkIncomeInvitation(user.testData()
+                                         .incomeInvitation()
+                                         .getFirst()
+                                         .username());
     }
 
     @User(
             outcomeInvitation = 1
     )
+    @ApiLogin
     @Test
     void outcomeInvitationBePresentInAllPeoplesTable(UserJson user) {
-        String username = user.username();
-        String password = user.testData().password();
-        List<UserJson> outcomeInvitationUsernameList = user.testData().outcomeInvitation();
-
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(username, password);
-
+        Selenide.open(MainPage.URL, MainPage.class);
         header.toFriendsPage()
               .clickAllPeopleTab()
-              .checkOutcomeFriendRequest(outcomeInvitationUsernameList.getFirst().username());
+              .checkOutcomeFriendRequest(user.testData()
+                                             .outcomeInvitation()
+                                             .getFirst()
+                                             .username());
     }
 
     @User(
             incomeInvitation = 1
     )
+    @ApiLogin
     @Test
     void friendRequestsShouldBeAccept(UserJson user) {
-        String username = user.username();
-        String password = user.testData().password();
-        String incomeInvitationUsername = user.testData().incomeInvitation().getFirst().username();
-
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(username, password);
-
+        Selenide.open(MainPage.URL, MainPage.class);
+        String incomeInvitationUsername = user.testData()
+                                              .incomeInvitation()
+                                              .getFirst()
+                                              .username();
         header.toFriendsPage()
               .acceptFriendRequestByLoginOrName(incomeInvitationUsername)
               .userIsFriend(incomeInvitationUsername);
@@ -101,17 +86,15 @@ public class FriendsWebTest {
     @User(
             incomeInvitation = 1
     )
+    @ApiLogin
     @Test
     void friendRequestsShouldBeDecline(UserJson user) {
-        String username = user.username();
-        String password = user.testData().password();
-        String incomeInvitationUsername = user.testData().incomeInvitation().getFirst().username();
-
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(username, password);
-
+        Selenide.open(MainPage.URL, MainPage.class);
         header.toFriendsPage()
-              .declineFriendRequestByLoginOrName(incomeInvitationUsername)
+              .declineFriendRequestByLoginOrName(user.testData()
+                                                     .incomeInvitation()
+                                                     .getFirst()
+                                                     .username())
               .checkFriendsListEmpty();
     }
 }

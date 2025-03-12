@@ -12,6 +12,8 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
+import java.util.List;
+
 public class UserExtension implements BeforeEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(UserExtension.class);
@@ -39,14 +41,23 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
                          .ifPresent(userAnno -> {
                              if ("".equals(userAnno.username())) {
                                  final String username = RandomDataUtils.randomUsername();
-                                 UserJson testUser = usersClient.createUser(username, defaultPassword);
+                                 UserJson user = usersClient.createUser(username, defaultPassword);
+                                 addTestData(user, userAnno);
 
-                                 usersClient.addIncomeInvitation(testUser, userAnno.incomeInvitation());
-                                 usersClient.addOutcomeInvitation(testUser, userAnno.outcomeInvitation());
-                                 usersClient.addFriends(testUser, userAnno.friends());
-                                 setUser(testUser);
+                                 setUser(user);
                              }
                          });
+    }
+
+    private void addTestData(UserJson user, User userAnno) {
+        List<UserJson> incomeInvitationUsers = usersClient.addIncomeInvitation(user, userAnno.incomeInvitation());
+        user.testData().incomeInvitation().addAll(incomeInvitationUsers);
+
+        List<UserJson> outcomeInvitationUsers = usersClient.addOutcomeInvitation(user, userAnno.outcomeInvitation());
+        user.testData().outcomeInvitation().addAll(outcomeInvitationUsers);
+
+        List<UserJson> friends = usersClient.addFriends(user, userAnno.friends());
+        user.testData().friends().addAll(friends);
     }
 
     @Override

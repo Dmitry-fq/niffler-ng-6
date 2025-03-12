@@ -16,7 +16,7 @@ public class ScreenshotAssertions {
 
     @Step("Проверка, что изображения отображаются одинаково")
     public static void imagesShouldBeEquals(@Nonnull BufferedImage expectedImage, @Nonnull SelenideElement actualElement) throws IOException {
-        Selenide.sleep(3000);
+        Selenide.sleep(4000);
 
         BufferedImage actualImage = ImageIO.read(Objects.requireNonNull(actualElement.screenshot()));
         assertFalse(new ScreenDiffResult(

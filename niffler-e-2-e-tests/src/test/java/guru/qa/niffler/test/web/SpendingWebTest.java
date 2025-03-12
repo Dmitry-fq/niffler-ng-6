@@ -3,14 +3,13 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.condition.Bubble;
 import guru.qa.niffler.condition.Color;
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
@@ -22,8 +21,6 @@ import java.util.List;
 @WebTest
 public class SpendingWebTest {
 
-    private static final Config CFG = Config.getInstance();
-
     @User(
             spendings = {
                     @Spending(
@@ -33,16 +30,14 @@ public class SpendingWebTest {
                     )
             }
     )
+    @ApiLogin()
     @Test
     void categoryDescriptionShouldBeChangedFromTable(UserJson user) {
-        String username = user.username();
-        String password = "12345";
         String description = user.testData().spendings().getFirst().description();
 
         final String newDescription = "Обучение Niffler Next Generation";
 
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(username, password)
+        Selenide.open(MainPage.URL, MainPage.class)
                 .editSpending(description)
                 .setSpendingDescription(newDescription)
                 .save();
@@ -51,16 +46,14 @@ public class SpendingWebTest {
     }
 
     @User
+    @ApiLogin()
     @Test
     void newSpendingShouldBeCreated(UserJson user) {
-        String username = user.username();
-        String password = "12345";
         Double amount = RandomDataUtils.randomAmount();
         String categoryName = RandomDataUtils.randomCategoryName();
         String description = RandomDataUtils.randomSentence(2);
 
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(username, password)
+        Selenide.open(MainPage.URL, MainPage.class)
                 .toAddSpendingPage()
                 .addAmount(amount)
                 .addCategory(categoryName)
@@ -77,10 +70,10 @@ public class SpendingWebTest {
                     amount = 79990
             )
     )
+    @ApiLogin()
     @ScreenShotTest("img/expected-stat.png")
     void checkStatComponentTest(UserJson user, BufferedImage expected) throws IOException {
-        Selenide.open(LoginPage.URL, LoginPage.class)
-                .login(user.username(), user.testData().password())
+        Selenide.open(MainPage.URL, MainPage.class)
                 .checkStatDiagramByScreenshot(expected)
                 .checkStatisticChartBars("Обучение 79990 ₽")
                 .getStatComponent()
@@ -94,12 +87,12 @@ public class SpendingWebTest {
                     amount = 79990
             )
     )
+    @ApiLogin()
     @ScreenShotTest("img/expected-stat-edit.png")
     void checkStatComponentWithEditSpendingTest(UserJson user, BufferedImage expected) throws IOException {
         double newAmount = 100.0;
 
-        Selenide.open(LoginPage.URL, LoginPage.class)
-                .login(user.username(), user.testData().password())
+        Selenide.open(MainPage.URL, MainPage.class)
                 .editSpending(user.testData().spendings().getFirst().description())
                 .setAmountDescription(Double.toString(newAmount))
                 .save()
@@ -114,10 +107,10 @@ public class SpendingWebTest {
                     amount = 79990
             )
     )
+    @ApiLogin()
     @ScreenShotTest("img/expected-stat-clear.png")
     void checkStatComponentWithoutSpendingsTest(UserJson user, BufferedImage expected) throws IOException {
-        Selenide.open(LoginPage.URL, LoginPage.class)
-                .login(user.username(), user.testData().password())
+        Selenide.open(MainPage.URL, MainPage.class)
                 .deleteSpending(user.testData().spendings().getFirst().description())
                 .checkStatDiagramByScreenshot(expected)
                 .statisticChartBarsShouldNotExist();
@@ -141,10 +134,10 @@ public class SpendingWebTest {
             }
 
     )
+    @ApiLogin()
     @Test
-    void checkStatComponentContainsBubblesTest(UserJson user) {
-        Selenide.open(LoginPage.URL, LoginPage.class)
-                .login(user.username(), user.testData().password())
+    void checkStatComponentContainsBubblesTest() {
+        Selenide.open(MainPage.URL, MainPage.class)
                 .getStatComponent()
                 .checkBubblesContains(
                         new Bubble(Color.green, "Обучение 79990 ₽"),
@@ -166,12 +159,12 @@ public class SpendingWebTest {
             }
 
     )
+    @ApiLogin()
     @Test
     void checkSpendExistTest(UserJson user) {
         List<SpendJson> expectedSpends = user.testData().spendings();
 
-        Selenide.open(LoginPage.URL, LoginPage.class)
-                .login(user.username(), user.testData().password())
+        Selenide.open(MainPage.URL, MainPage.class)
                 .getSpendingTable()
                 .checkSpendings(expectedSpends);
     }
