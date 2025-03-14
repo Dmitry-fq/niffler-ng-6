@@ -3,8 +3,8 @@ package guru.qa.niffler.jupiter.extension;
 import com.github.jknack.handlebars.internal.lang3.ArrayUtils;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.CategoryJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.impl.SpendDbClient;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -27,39 +27,39 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver 
     @Override
     public void beforeEach(ExtensionContext context) {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
-                .ifPresent(userAnno -> {
-                    if (ArrayUtils.isNotEmpty(userAnno.categories())) {
-                        List<CategoryJson> result = new ArrayList<>();
+                         .ifPresent(userAnno -> {
+                             if (ArrayUtils.isNotEmpty(userAnno.categories())) {
+                                 List<CategoryJson> result = new ArrayList<>();
 
-                        UserJson user = context.getStore(UserExtension.NAMESPACE)
-                                .get(context.getUniqueId(), UserJson.class);
+                                 UserJson user = context.getStore(UserExtension.NAMESPACE)
+                                                        .get(context.getUniqueId(), UserJson.class);
 
-                        for (Category categoryAnno : userAnno.categories()) {
-                            final String categoryName = "".equals(categoryAnno.name())
-                                    ? randomCategoryName()
-                                    : categoryAnno.name();
+                                 for (Category categoryAnno : userAnno.categories()) {
+                                     final String categoryName = "".equals(categoryAnno.name())
+                                             ? randomCategoryName()
+                                             : categoryAnno.name();
 
-                            CategoryJson category = new CategoryJson(
-                                    null,
-                                    categoryName,
-                                    user != null ? user.username() : userAnno.username(),
-                                    categoryAnno.archived()
-                            );
+                                     CategoryJson category = new CategoryJson(
+                                             null,
+                                             categoryName,
+                                             user != null ? user.username() : userAnno.username(),
+                                             categoryAnno.archived()
+                                     );
 
-                            CategoryJson createdCategory = spendDbClient.createCategory(category);
-                            result.add(createdCategory);
-                        }
+                                     CategoryJson createdCategory = spendDbClient.createCategory(category);
+                                     result.add(createdCategory);
+                                 }
 
-                        if (user != null) {
-                            user.testData().categories().addAll(result);
-                        } else {
-                            context.getStore(NAMESPACE).put(
-                                    context.getUniqueId(),
-                                    result
-                            );
-                        }
-                    }
-                });
+                                 if (user != null) {
+                                     user.testData().categories().addAll(result);
+                                 } else {
+                                     context.getStore(NAMESPACE).put(
+                                             context.getUniqueId(),
+                                             result
+                                     );
+                                 }
+                             }
+                         });
     }
 
     @Override

@@ -3,14 +3,13 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.component.Header;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith(BrowserExtension.class)
+@WebTest
 public class FriendsWebTest {
 
     private final Header header = new Header();
@@ -36,19 +35,19 @@ public class FriendsWebTest {
               .checkFriendsListEmpty();
     }
 
-    @User(incomeInvitation = 1)
+    @User(incomeInvitations = 1)
     @ApiLogin
     @Test
     void incomeInvitationBePresentInFriendsTable(UserJson user) {
         Selenide.open(MainPage.URL, MainPage.class);
         header.toFriendsPage()
               .checkIncomeInvitation(user.testData()
-                                         .incomeInvitation()
+                                         .incomeInvitations()
                                          .getFirst()
                                          .username());
     }
 
-    @User(outcomeInvitation = 1)
+    @User(outcomeInvitations = 1)
     @ApiLogin
     @Test
     void outcomeInvitationBePresentInAllPeoplesTable(UserJson user) {
@@ -56,18 +55,18 @@ public class FriendsWebTest {
         header.toFriendsPage()
               .clickAllPeopleTab()
               .checkOutcomeFriendRequest(user.testData()
-                                             .outcomeInvitation()
+                                             .outcomeInvitations()
                                              .getFirst()
                                              .username());
     }
 
-    @User(incomeInvitation = 1)
+    @User(incomeInvitations = 1)
     @ApiLogin
     @Test
     void friendRequestsShouldBeAccept(UserJson user) {
         Selenide.open(MainPage.URL, MainPage.class);
         String incomeInvitationUsername = user.testData()
-                                              .incomeInvitation()
+                                              .incomeInvitations()
                                               .getFirst()
                                               .username();
         header.toFriendsPage()
@@ -75,14 +74,14 @@ public class FriendsWebTest {
               .userIsFriend(incomeInvitationUsername);
     }
 
-    @User(incomeInvitation = 1)
+    @User(incomeInvitations = 1)
     @ApiLogin
     @Test
     void friendRequestsShouldBeDecline(UserJson user) {
         Selenide.open(MainPage.URL, MainPage.class);
         header.toFriendsPage()
               .declineFriendRequestByLoginOrName(user.testData()
-                                                     .incomeInvitation()
+                                                     .incomeInvitations()
                                                      .getFirst()
                                                      .username())
               .checkFriendsListEmpty();

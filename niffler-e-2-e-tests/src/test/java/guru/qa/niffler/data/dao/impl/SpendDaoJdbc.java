@@ -4,8 +4,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.SpendDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
-import guru.qa.niffler.model.CurrencyValues;
-import org.jetbrains.annotations.NotNull;
+import guru.qa.niffler.model.rest.CurrencyValues;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -144,10 +143,10 @@ public class SpendDaoJdbc implements SpendDao {
         String currency = rs.getString("currency");
         CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc();
         CategoryEntity categoryEntity = categoryDaoJdbc.findCategoryById(
-                        rs.getObject("category_id", UUID.class))
-                .orElseThrow(
-                        () -> new SQLException("category not found")
-                );
+                                                               rs.getObject("category_id", UUID.class))
+                                                       .orElseThrow(
+                                                               () -> new SQLException("category not found")
+                                                       );
 
         return new SpendEntity(rs.getObject("id", UUID.class),
                 rs.getString("username"),

@@ -6,15 +6,15 @@ import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Token;
-import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.SpendJson;
-import guru.qa.niffler.model.TestData;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.CategoryJson;
+import guru.qa.niffler.model.rest.FriendState;
+import guru.qa.niffler.model.rest.SpendJson;
+import guru.qa.niffler.model.rest.TestData;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.service.impl.AuthApiClient;
 import guru.qa.niffler.service.impl.SpendApiClient;
-import guru.qa.niffler.service.impl.UsersApiClient;
-import jaxb.userdata.FriendState;
+import guru.qa.niffler.service.impl.UserdataApiClient;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -35,7 +35,7 @@ public class ApiLoginExtension implements BeforeTestExecutionCallback, Parameter
 
     private final SpendApiClient spendApiClient = new SpendApiClient();
 
-    private final UsersApiClient usersApiClient = new UsersApiClient();
+    private final UserdataApiClient userdataApiClient = new UserdataApiClient();
 
     private final boolean setupBrowser;
 
@@ -47,9 +47,9 @@ public class ApiLoginExtension implements BeforeTestExecutionCallback, Parameter
         this.setupBrowser = true;
     }
 
-  public static ApiLoginExtension rest() {
-    return new ApiLoginExtension(false);
-  }
+    public static ApiLoginExtension rest() {
+        return new ApiLoginExtension(false);
+    }
 
     public static String getToken() {
         return TestMethodContextExtension.context().getStore(NAMESPACE).get("token", String.class);
@@ -75,7 +75,7 @@ public class ApiLoginExtension implements BeforeTestExecutionCallback, Parameter
     }
 
     @Override
-    public void beforeTestExecution(ExtensionContext context) throws Exception {
+    public void beforeTestExecution(ExtensionContext context) {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), ApiLogin.class)
                          .ifPresent(apiLogin -> {
 
@@ -121,7 +121,7 @@ public class ApiLoginExtension implements BeforeTestExecutionCallback, Parameter
         addCategories(user);
         addSpendings(user);
 
-        List<UserJson> allFriends = usersApiClient.getAllFriendsByUsernameAndSearchQuery(
+        List<UserJson> allFriends = userdataApiClient.getAllFriendsByUsernameAndSearchQuery(
                 user.username(), null
         );
         addFriends(user, allFriends);
@@ -148,28 +148,28 @@ public class ApiLoginExtension implements BeforeTestExecutionCallback, Parameter
             .friends()
             .addAll(
                     allFriends.stream()
-                              .filter(f -> FriendState.FRIEND.equals(f.friendState()))
+                              .filter(f -> f.friendState() == FriendState.FRIEND)
                               .toList()
             );
     }
 
     private void addIncomeInvitations(UserJson user, List<UserJson> allFriends) {
         user.testData()
-            .incomeInvitation()
+            .incomeInvitations()
             .addAll(
                     allFriends.stream()
-                              .filter(f -> FriendState.INVITE_RECEIVED.equals(f.friendState()))
+                              .filter(f -> f.friendState() == FriendState.INVITE_RECEIVED)
                               .toList()
             );
     }
 
     private void addOutcomeInvitations(UserJson user) {
-        List<UserJson> allUsers = usersApiClient.getAllUsersByUsernameAndSearchQuery(user.username(), null);
+        List<UserJson> allUsers = userdataApiClient.getAllUsersByUsernameAndSearchQuery(user.username(), null);
         user.testData()
-            .outcomeInvitation()
+            .outcomeInvitations()
             .addAll(
                     allUsers.stream()
-                            .filter(f -> FriendState.INVITE_SENT.equals(f.friendState()))
+                            .filter(f -> f.friendState() == FriendState.INVITE_SENT)
                             .toList()
             );
     }
@@ -182,6 +182,6 @@ public class ApiLoginExtension implements BeforeTestExecutionCallback, Parameter
 
     @Override
     public String resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return getToken();
+        return "Bearer " + getToken();
     }
 }

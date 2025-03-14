@@ -2,9 +2,9 @@ package guru.qa.niffler.service.impl;
 
 import guru.qa.niffler.api.SpendApi;
 import guru.qa.niffler.api.core.RestClient;
-import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.rest.CategoryJson;
+import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.service.SpendClient;
 import retrofit2.Response;
 
@@ -35,7 +35,7 @@ public class SpendApiClient extends RestClient implements SpendClient {
         final Response<SpendJson> response;
         try {
             response = spendApi.addSpend(spend)
-                    .execute();
+                               .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
@@ -49,7 +49,7 @@ public class SpendApiClient extends RestClient implements SpendClient {
         final Response<SpendJson> response;
         try {
             response = spendApi.editSpend(spend)
-                    .execute();
+                               .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
@@ -63,7 +63,7 @@ public class SpendApiClient extends RestClient implements SpendClient {
         final Response<SpendJson> response;
         try {
             response = spendApi.getSpend(id, username)
-                    .execute();
+                               .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
@@ -78,7 +78,7 @@ public class SpendApiClient extends RestClient implements SpendClient {
         final Response<List<SpendJson>> response;
         try {
             response = spendApi.getSpends(username, currency, from, to)
-                    .execute();
+                               .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
@@ -92,7 +92,7 @@ public class SpendApiClient extends RestClient implements SpendClient {
         final Response<SpendJson> response;
         try {
             response = spendApi.deleteSpends(username, ids)
-                    .execute();
+                               .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
@@ -106,7 +106,7 @@ public class SpendApiClient extends RestClient implements SpendClient {
         final Response<CategoryJson> response;
         try {
             response = spendApi.addCategory(category)
-                    .execute();
+                               .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
@@ -125,7 +125,7 @@ public class SpendApiClient extends RestClient implements SpendClient {
         final Response<List<CategoryJson>> response;
         try {
             response = spendApi.getCategories(username, false)
-                    .execute();
+                               .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
@@ -135,8 +135,8 @@ public class SpendApiClient extends RestClient implements SpendClient {
         if (Objects.nonNull(categoryJsonList)) {
 
             return categoryJsonList.stream()
-                    .filter(categoryJson -> name.equals(categoryJson.name()))
-                    .findFirst();
+                                   .filter(categoryJson -> name.equals(categoryJson.name()))
+                                   .findFirst();
         } else {
             return Optional.empty();
         }
@@ -152,7 +152,7 @@ public class SpendApiClient extends RestClient implements SpendClient {
         final Response<List<SpendJson>> response;
         try {
             response = spendApi.getSpends(username, null, null, null)
-                    .execute();
+                               .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
@@ -162,8 +162,8 @@ public class SpendApiClient extends RestClient implements SpendClient {
         if (Objects.nonNull(spendJsonList)) {
 
             return spendJsonList.stream()
-                    .filter(categoryJson -> description.equals(categoryJson.description()))
-                    .findFirst();
+                                .filter(categoryJson -> description.equals(categoryJson.description()))
+                                .findFirst();
         } else {
             return Optional.empty();
         }
@@ -178,7 +178,7 @@ public class SpendApiClient extends RestClient implements SpendClient {
         final Response<CategoryJson> response;
         try {
             response = spendApi.updateCategory(category)
-                    .execute();
+                               .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
@@ -192,7 +192,7 @@ public class SpendApiClient extends RestClient implements SpendClient {
         final Response<List<CategoryJson>> response;
         try {
             response = spendApi.getCategories(username, excludeArchived)
-                    .execute();
+                               .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }

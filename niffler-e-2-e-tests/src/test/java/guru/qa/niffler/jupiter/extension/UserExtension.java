@@ -1,9 +1,9 @@
 package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.UsersClient;
-import guru.qa.niffler.service.impl.UsersApiClient;
+import guru.qa.niffler.service.impl.UserdataApiClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -20,7 +20,7 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
 
     private static final String defaultPassword = "12345";
 
-    private final UsersClient usersClient = new UsersApiClient();
+    private final UsersClient usersClient = new UserdataApiClient();
 
     public static void setUser(UserJson testUser) {
         final ExtensionContext context = TestMethodContextExtension.context();
@@ -50,11 +50,11 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
     }
 
     private void addTestData(UserJson user, User userAnno) {
-        List<UserJson> incomeInvitationUsers = usersClient.addIncomeInvitation(user, userAnno.incomeInvitation());
-        user.testData().incomeInvitation().addAll(incomeInvitationUsers);
+        List<UserJson> incomeInvitationUsers = usersClient.addIncomeInvitation(user, userAnno.incomeInvitations());
+        user.testData().incomeInvitations().addAll(incomeInvitationUsers);
 
-        List<UserJson> outcomeInvitationUsers = usersClient.addOutcomeInvitation(user, userAnno.outcomeInvitation());
-        user.testData().outcomeInvitation().addAll(outcomeInvitationUsers);
+        List<UserJson> outcomeInvitationUsers = usersClient.addOutcomeInvitation(user, userAnno.outcomeInvitations());
+        user.testData().outcomeInvitations().addAll(outcomeInvitationUsers);
 
         List<UserJson> friends = usersClient.addFriends(user, userAnno.friends());
         user.testData().friends().addAll(friends);

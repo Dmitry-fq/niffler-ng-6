@@ -1,6 +1,6 @@
 package guru.qa.niffler.api;
 
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.UserJson;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -9,7 +9,7 @@ import retrofit2.http.Query;
 
 import java.util.List;
 
-public interface UsersApi {
+public interface UserdataApi {
 
     @GET("/internal/users/current")
     Call<UserJson> currentUser(
@@ -23,7 +23,7 @@ public interface UsersApi {
     );
 
     @GET("internal/friends/all")
-    Call<List<UserJson>> friends(
+    Call<List<UserJson>> allFriends(
             @Query("username") String username,
             @Query("searchQuery") String searchQuery
     );

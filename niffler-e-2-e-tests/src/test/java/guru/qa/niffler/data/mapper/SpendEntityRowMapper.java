@@ -1,11 +1,9 @@
 package guru.qa.niffler.data.mapper;
 
 import guru.qa.niffler.data.entity.spend.SpendEntity;
-import guru.qa.niffler.model.CurrencyValues;
-import lombok.NonNull;
+import guru.qa.niffler.model.rest.CurrencyValues;
 import org.springframework.jdbc.core.RowMapper;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nonnull;
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -10,8 +10,8 @@ import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.data.repository.impl.AuthUserRepositoryHibernate;
 import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryHibernate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.UsersClient;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,13 +59,13 @@ public class UsersDbClient implements UsersClient {
     @Nonnull
     public Optional<UserJson> findUserById(UUID id) {
         return userdataUserRepository.findById(id)
-                .map(userEntity -> UserJson.fromEntity(userEntity, null));
+                                     .map(userEntity -> UserJson.fromEntity(userEntity, null));
     }
 
     @Nonnull
     public Optional<UserJson> findUserByUsername(String username) {
         return userdataUserRepository.findByUsername(username)
-                .map(userEntity -> UserJson.fromEntity(userEntity, null));
+                                     .map(userEntity -> UserJson.fromEntity(userEntity, null));
     }
 
     @Nonnull
