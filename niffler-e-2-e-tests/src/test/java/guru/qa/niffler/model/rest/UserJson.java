@@ -61,4 +61,10 @@ public record UserJson(
                 id, username, firstname, surname, fullname, currency, photo, photoSmall, friendState, testData
         );
     }
+
+    public UserJson addFriendState(FriendState friendState) {
+        return new UserJson(
+                id, username, firstname, surname, fullname, currency, photo, photoSmall, friendState, testData
+        );
+    }
 }

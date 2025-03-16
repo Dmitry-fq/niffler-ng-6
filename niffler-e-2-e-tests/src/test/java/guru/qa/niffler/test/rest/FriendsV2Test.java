@@ -28,7 +28,7 @@ public class FriendsV2Test {
     @User(friends = 2, incomeInvitations = 1)
     @ApiLogin
     @Test
-    void allFriendsAndIncomeInvitationsShouldBeReturnedFroUser(UserJson user, @Token String token) {
+    void allFriendsAndIncomeInvitationsWithFiltrationByUsernameShouldBeReturned(UserJson user, @Token String token) {
         final List<String> expectedFriendUsernames = user.testData().friends().stream()
                                                          .map(UserJson::username)
                                                          .toList();
@@ -52,14 +52,11 @@ public class FriendsV2Test {
                 u -> u.friendState() == FriendState.INVITE_RECEIVED
         ).toList();
 
-        Assertions.assertEquals(2, friendsFromResponse.size());
-        Assertions.assertEquals(1, invitationsFromResponse.size());
+        assertThat(1).isEqualTo(invitationsFromResponse.size());
+        assertThat(expectedInvitations.getFirst().username())
+                .isEqualTo(invitationsFromResponse.getFirst().username());
 
-        Assertions.assertEquals(
-                expectedInvitations.getFirst().username(),
-                invitationsFromResponse.getFirst().username()
-        );
-
+        assertThat(2).isEqualTo(friendsFromResponse.size());
         List<String> friendUsernamesFromResponse = friendsFromResponse.stream().map(UserJson::username).toList();
         assertThat(expectedFriendUsernames).containsExactlyInAnyOrderElementsOf(friendUsernamesFromResponse);
     }
