@@ -1,26 +1,22 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
-import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
+import guru.qa.niffler.model.rest.CategoryJson;
+import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-@ExtendWith(BrowserExtension.class)
+@WebTest
 public class ProfileWebTest {
-
-    private static final Config CFG = Config.getInstance();
 
     private final Header header = new Header();
 
@@ -32,64 +28,53 @@ public class ProfileWebTest {
                     )
             }
     )
+    @ApiLogin(username = "duck", password = "12345")
     @Test
     void archivedCategoryShouldPresentInCategoriesList(CategoryJson[] category) {
-        final String username = category[0].username();
-        final String password = "12345";
-        final String categoryName = category[0].name();
-
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(username, password);
+        Selenide.open(MainPage.URL, MainPage.class);
 
         header.toProfilePage()
-                .clickShowArchivedCheckbox()
-                .checkCategoryArchived(categoryName);
+              .clickShowArchivedCheckbox()
+              .checkCategoryArchived(category[0].name());
     }
 
     @User(
             username = "duck",
             categories = @Category()
     )
+    @ApiLogin(username = "duck", password = "12345")
     @Test
     void activeCategoryShouldPresentInCategoriesList(CategoryJson[] category) {
-        final String username = category[0].username();
-        final String password = "12345";
-        final String categoryName = category[0].name();
-
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(username, password);
+        Selenide.open(MainPage.URL, MainPage.class);
 
         header.toProfilePage()
-                .clickShowArchivedCheckbox()
-                .checkCategoryActive(categoryName);
+              .clickShowArchivedCheckbox()
+              .checkCategoryActive(category[0].name());
     }
 
     @User
+    @ApiLogin
     @Test
-    void nameShouldBeChanged(UserJson user) {
-        final String username = user.username();
-        final String password = "12345";
+    void nameShouldBeChanged() {
+        Selenide.open(MainPage.URL, MainPage.class);
+
         final String newName = RandomDataUtils.randomName();
-
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .login(username, password);
-
         header.toProfilePage()
-                .setNewName(newName)
-                .clickSaveChangesButton()
-                .checkAlert("Profile successfully updated")
-                .checkName(newName);
+              .setNewName(newName)
+              .clickSaveChangesButton()
+              .checkAlert("Profile successfully updated")
+              .checkName(newName);
     }
 
     @User
+    @ApiLogin
     @ScreenShotTest("img/expected-avatar.png")
-    void avatarShouldBeCorrect(UserJson user, BufferedImage expectedImage) throws IOException {
-        Selenide.open(LoginPage.URL, LoginPage.class)
-                .login(user.username(), user.testData().password());
+    void avatarShouldBeCorrect(BufferedImage expectedImage) throws IOException {
+        Selenide.open(MainPage.URL, MainPage.class);
 
         header.toProfilePage()
-                .setNewAvatar()
-                .clickSaveChangesButton()
-                .avatarShouldBeCorrect(expectedImage);
+              .setNewAvatar()
+              .clickSaveChangesButton()
+              .avatarShouldBeCorrect(expectedImage);
     }
 }

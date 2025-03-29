@@ -6,8 +6,8 @@ import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.repository.SpendRepository;
 import guru.qa.niffler.data.repository.impl.SpendRepositoryHibernate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
-import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.rest.CategoryJson;
+import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.service.SpendClient;
 
 import javax.annotation.Nonnull;
@@ -62,25 +62,25 @@ public class SpendDbClient implements SpendClient {
     @Nonnull
     public Optional<CategoryJson> findCategoryById(UUID id) {
         return spendRepository.findCategoryById(id)
-                .map(CategoryJson::fromEntity);
+                              .map(CategoryJson::fromEntity);
     }
 
     @Nonnull
     public Optional<CategoryJson> findCategoryByUsernameAndSpendName(String username, String name) {
         return spendRepository.findCategoryByUsernameAndCategoryName(username, name)
-                .map(CategoryJson::fromEntity);
+                              .map(CategoryJson::fromEntity);
     }
 
     @Nonnull
     public Optional<SpendJson> findSpendById(UUID id) {
         return spendRepository.findById(id)
-                .map(SpendJson::fromEntity);
+                              .map(SpendJson::fromEntity);
     }
 
     @Nonnull
     public Optional<SpendJson> findByUsernameAndDescription(String username, String description) {
         return spendRepository.findByUsernameAndSpendDescription(username, description)
-                .map(SpendJson::fromEntity);
+                              .map(SpendJson::fromEntity);
     }
 
     public void removeCategory(CategoryJson category) {

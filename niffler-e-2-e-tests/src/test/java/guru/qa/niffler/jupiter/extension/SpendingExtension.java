@@ -2,10 +2,10 @@ package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.SpendJson;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.CategoryJson;
+import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.model.rest.SpendJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.impl.SpendDbClient;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -28,42 +28,42 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
-                .ifPresent(userAnno -> {
-                    if (ArrayUtils.isNotEmpty(userAnno.spendings())) {
-                        List<SpendJson> result = new ArrayList<>();
-                        UserJson user = context.getStore(UserExtension.NAMESPACE)
-                                .get(context.getUniqueId(), UserJson.class);
+                         .ifPresent(userAnno -> {
+                             if (ArrayUtils.isNotEmpty(userAnno.spendings())) {
+                                 List<SpendJson> result = new ArrayList<>();
+                                 UserJson user = context.getStore(UserExtension.NAMESPACE)
+                                                        .get(context.getUniqueId(), UserJson.class);
 
-                        for (Spending spendAnno : userAnno.spendings()) {
-                            SpendJson spend = new SpendJson(
-                                    null,
-                                    new Date(),
-                                    new CategoryJson(
-                                            null,
-                                            spendAnno.category(),
-                                            user != null ? user.username() : userAnno.username(),
-                                            false
-                                    ),
-                                    CurrencyValues.RUB,
-                                    spendAnno.amount(),
-                                    spendAnno.description(),
-                                    user != null ? user.username() : userAnno.username()
-                            );
+                                 for (Spending spendAnno : userAnno.spendings()) {
+                                     SpendJson spend = new SpendJson(
+                                             null,
+                                             new Date(),
+                                             new CategoryJson(
+                                                     null,
+                                                     spendAnno.category(),
+                                                     user != null ? user.username() : userAnno.username(),
+                                                     false
+                                             ),
+                                             CurrencyValues.RUB,
+                                             spendAnno.amount(),
+                                             spendAnno.description(),
+                                             user != null ? user.username() : userAnno.username()
+                                     );
 
-                            SpendJson createdSpend = spendDbClient.createSpend(spend);
-                            result.add(createdSpend);
-                        }
+                                     SpendJson createdSpend = spendDbClient.createSpend(spend);
+                                     result.add(createdSpend);
+                                 }
 
-                        if (user != null) {
-                            user.testData().spendings().addAll(result);
-                        } else {
-                            context.getStore(NAMESPACE).put(
-                                    context.getUniqueId(),
-                                    result
-                            );
-                        }
-                    }
-                });
+                                 if (user != null) {
+                                     user.testData().spendings().addAll(result);
+                                 } else {
+                                     context.getStore(NAMESPACE).put(
+                                             context.getUniqueId(),
+                                             result
+                                     );
+                                 }
+                             }
+                         });
     }
 
     @Override

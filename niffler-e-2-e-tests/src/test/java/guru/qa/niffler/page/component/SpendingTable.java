@@ -2,7 +2,7 @@ package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.page.EditSpendingPage;
 import io.qameta.allure.Step;
 
@@ -55,8 +55,8 @@ public class SpendingTable extends BaseComponent {
 
         String editButtonXpath = ".//button";
         tableRows.find(text(description))
-                .$x(editButtonXpath)
-                .click();
+                 .$x(editButtonXpath)
+                 .click();
 
         return new EditSpendingPage();
     }
@@ -67,8 +67,8 @@ public class SpendingTable extends BaseComponent {
 
         String checkboxXpath = ".//input";
         tableRows.find(text(description))
-                .$x(checkboxXpath)
-                .click();
+                 .$x(checkboxXpath)
+                 .click();
         deleteButton.click();
 
         return new SpendingTable();
@@ -77,7 +77,7 @@ public class SpendingTable extends BaseComponent {
     @Step("Поиск траты по описанию")
     private SpendingTable searchSpendingByDescription(String description) {
         searchInput.setValue(description)
-                .pressEnter();
+                   .pressEnter();
 
         return new SpendingTable();
     }
@@ -85,13 +85,13 @@ public class SpendingTable extends BaseComponent {
     @Step("Проверка, что таблица трат содержит траты")
     public SpendingTable checkTableContains(String... expectedSpends) {
         Arrays.stream(expectedSpends)
-                .forEach(
-                        description -> {
-                            searchSpendingByDescription(description);
-                            tableRows.find(text(description)).shouldBe(visible);
-                            inputClearButton.click();
-                        }
-                );
+              .forEach(
+                      description -> {
+                          searchSpendingByDescription(description);
+                          tableRows.find(text(description)).shouldBe(visible);
+                          inputClearButton.click();
+                      }
+              );
 
         return new SpendingTable();
     }

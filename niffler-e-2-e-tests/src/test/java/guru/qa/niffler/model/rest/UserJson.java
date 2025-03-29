@@ -1,11 +1,12 @@
-package guru.qa.niffler.model;
+package guru.qa.niffler.model.rest;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
-import jaxb.userdata.FriendState;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
@@ -32,6 +33,14 @@ public record UserJson(
         @JsonIgnore
         TestData testData) {
 
+    public UserJson(@Nonnull String username) {
+        this(username, null);
+    }
+
+    public UserJson(@Nonnull String username, @Nullable TestData testData) {
+        this(null, username, null, null, null, null, null, null, null, testData);
+    }
+
     public static UserJson fromEntity(UserEntity entity, FriendState friendState) {
         return new UserJson(
                 entity.getId(),
@@ -48,6 +57,12 @@ public record UserJson(
     }
 
     public UserJson addTestData(TestData testData) {
+        return new UserJson(
+                id, username, firstname, surname, fullname, currency, photo, photoSmall, friendState, testData
+        );
+    }
+
+    public UserJson addFriendState(FriendState friendState) {
         return new UserJson(
                 id, username, firstname, surname, fullname, currency, photo, photoSmall, friendState, testData
         );

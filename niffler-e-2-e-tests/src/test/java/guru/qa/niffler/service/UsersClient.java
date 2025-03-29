@@ -1,14 +1,12 @@
 package guru.qa.niffler.service;
 
-import guru.qa.niffler.model.UserJson;
-import lombok.NonNull;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import guru.qa.niffler.model.rest.UserJson;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @ParametersAreNonnullByDefault
 public interface UsersClient {
