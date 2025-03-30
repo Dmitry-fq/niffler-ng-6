@@ -83,7 +83,7 @@ public class UserEntity implements Serializable {
         return ue;
     }
 
-    public void addFriends(FriendshipStatus status, UserEntity... friends) {
+    public void addFriends(InvitationStatus status, UserEntity... friends) {
         List<FriendshipEntity> friendsEntities = Stream.of(friends)
                                                        .map(f -> {
                                                            FriendshipEntity fe = new FriendshipEntity();
@@ -102,7 +102,7 @@ public class UserEntity implements Serializable {
                                                                FriendshipEntity fe = new FriendshipEntity();
                                                                fe.setRequester(i);
                                                                fe.setAddressee(this);
-                                                               fe.setStatus(FriendshipStatus.PENDING);
+                                                               fe.setStatus(InvitationStatus.PENDING);
                                                                fe.setCreatedDate(new Date());
                                                                return fe;
                                                            }).toList();

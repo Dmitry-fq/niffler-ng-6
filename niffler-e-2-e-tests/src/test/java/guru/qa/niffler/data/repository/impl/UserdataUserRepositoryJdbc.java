@@ -2,7 +2,7 @@ package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.impl.UserdataUserDaoJdbc;
-import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
+import guru.qa.niffler.data.entity.userdata.InvitationStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 
@@ -67,7 +67,7 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
     public void addFriend(UserEntity requester, UserEntity addressee) {
         UUID requesterId = getUserOrCreateIfAbsent(requester).getId();
         UUID addresseeId = getUserOrCreateIfAbsent(addressee).getId();
-        String acceptedFriendshipStatus = FriendshipStatus.ACCEPTED.name();
+        String acceptedFriendshipStatus = InvitationStatus.ACCEPTED.name();
 
         try (
                 PreparedStatement outgoingRequestPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(

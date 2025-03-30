@@ -7,7 +7,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Token;
 import guru.qa.niffler.model.rest.CategoryJson;
-import guru.qa.niffler.model.rest.FriendState;
+import guru.qa.niffler.model.rest.FriendshipStatus;
 import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.model.rest.TestData;
 import guru.qa.niffler.model.rest.UserJson;
@@ -148,7 +148,7 @@ public class ApiLoginExtension implements BeforeTestExecutionCallback, Parameter
             .friends()
             .addAll(
                     allFriends.stream()
-                              .filter(f -> f.friendState() == FriendState.FRIEND)
+                              .filter(f -> f.friendshipStatus() == FriendshipStatus.FRIEND)
                               .toList()
             );
     }
@@ -158,7 +158,7 @@ public class ApiLoginExtension implements BeforeTestExecutionCallback, Parameter
             .incomeInvitations()
             .addAll(
                     allFriends.stream()
-                              .filter(f -> f.friendState() == FriendState.INVITE_RECEIVED)
+                              .filter(f -> f.friendshipStatus() == FriendshipStatus.INVITE_RECEIVED)
                               .toList()
             );
     }
@@ -169,7 +169,7 @@ public class ApiLoginExtension implements BeforeTestExecutionCallback, Parameter
             .outcomeInvitations()
             .addAll(
                     allUsers.stream()
-                            .filter(f -> f.friendState() == FriendState.INVITE_SENT)
+                            .filter(f -> f.friendshipStatus() == FriendshipStatus.INVITE_SENT)
                             .toList()
             );
     }

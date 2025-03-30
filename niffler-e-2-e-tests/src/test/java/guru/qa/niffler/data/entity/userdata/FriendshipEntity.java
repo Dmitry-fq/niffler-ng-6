@@ -42,7 +42,7 @@ public class FriendshipEntity implements Serializable {
     private Date createdDate;
 
     @Enumerated(EnumType.STRING)
-    private FriendshipStatus status;
+    private InvitationStatus status;
 
     @Override
     public final boolean equals(Object o) {
