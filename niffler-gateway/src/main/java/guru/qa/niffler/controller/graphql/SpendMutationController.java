@@ -21,45 +21,38 @@ import java.util.List;
 @PreAuthorize("isAuthenticated()")
 public class SpendMutationController {
 
-  private final RestSpendClient restSpendClient;
+    private final RestSpendClient restSpendClient;
 
-  @Autowired
-  public SpendMutationController(RestSpendClient restSpendClient, GrpcCurrencyClient grpcCurrencyClient) {
-    this.restSpendClient = restSpendClient;
-  }
+    @Autowired
+    public SpendMutationController(RestSpendClient restSpendClient, GrpcCurrencyClient grpcCurrencyClient) {
+        this.restSpendClient = restSpendClient;
+    }
 
-  @MutationMapping
-  public SpendJson spend(@AuthenticationPrincipal Jwt principal,
-                         @Valid @Argument SpendGqlInput input) {
-    final String username = principal.getClaim("sub");
-    final SpendJson spendJson = SpendJson.fromSpendInput(input, username);
-    return input.id() == null
-        ? restSpendClient.addSpend(spendJson)
-        : restSpendClient.editSpend(spendJson);
-  }
+    @MutationMapping
+    public SpendJson spend(@AuthenticationPrincipal Jwt principal,
+                           @Valid @Argument SpendGqlInput input) {
+        final String username = principal.getClaim("sub");
+        final SpendJson spendJson = SpendJson.fromSpendInput(input, username);
+        return input.id() == null
+                ? restSpendClient.addSpend(spendJson)
+                : restSpendClient.editSpend(spendJson);
+    }
 
-  @MutationMapping
-  public CategoryJson category(@AuthenticationPrincipal Jwt principal,
-                               @Argument @Valid CategoryGqlInput input) {
-    final String username = principal.getClaim("sub");
+    @MutationMapping
+    public CategoryJson category(@AuthenticationPrincipal Jwt principal,
+                                 @Argument @Valid CategoryGqlInput input) {
+        final String username = principal.getClaim("sub");
+        final CategoryJson categoryJson = CategoryJson.fromCategoryInput(input, username);
+        return input.id() == null
+                ? restSpendClient.addCategory(categoryJson)
+                : restSpendClient.updateCategory(categoryJson);
+    }
 
-    final CategoryJson categoryJson = new CategoryJson(
-        input.id(),
-        input.name(),
-        username,
-        input.archived()
-    );
-
-    return input.id() == null
-        ? restSpendClient.addCategory(categoryJson)
-        : restSpendClient.updateCategory(categoryJson);
-  }
-
-  @MutationMapping
-  public List<String> deleteSpend(@AuthenticationPrincipal Jwt principal,
-                                  @Argument List<String> ids) {
-    String username = principal.getClaim("sub");
-    restSpendClient.deleteSpends(username, ids);
-    return ids;
-  }
+    @MutationMapping
+    public List<String> deleteSpend(@AuthenticationPrincipal Jwt principal,
+                                    @Argument List<String> ids) {
+        String username = principal.getClaim("sub");
+        restSpendClient.deleteSpends(username, ids);
+        return ids;
+    }
 }

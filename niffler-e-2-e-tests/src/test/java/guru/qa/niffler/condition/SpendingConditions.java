@@ -48,11 +48,15 @@ public class SpendingConditions {
 
                 for (int i = 0; i < actualElements.size(); i++) {
                     WebElement spendingRow = actualElements.get(i);
-                    SpendJson expectedSpend = expectedSpendings.get(i);
+//                    SpendJson expectedSpend = expectedSpendings.get(i);
                     List<WebElement> actualSpendingCells = spendingRow.findElements(By.tagName("td"));
 
                     WebElement actualCategory = actualSpendingCells.get(CATEGORY_COLUMN_NUMBER);
                     String actualCategoryText = actualCategory.getText();
+                    SpendJson expectedSpend = expectedSpendings.stream()
+                                                               .filter(spend -> spend.category().name().equals(actualCategoryText))
+                                                               .findFirst()
+                                                               .orElseThrow(() -> new IllegalArgumentException("There are no expected spendings"));
                     String expectedCategoryText = expectedSpend.category().name();
                     if (!actualCategoryText.equals(expectedCategoryText)) {
                         String message = String.format(
