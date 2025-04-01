@@ -12,24 +12,19 @@ import org.junit.jupiter.api.Test;
 
 public class StatGraphQlTest extends BaseGraphQlTest {
 
-  @User
-  @Test
-  @ApiLogin
-  void statTest(@Token String bearerToken) {
-    final ApolloCall<StatQuery.Data> currenciesCall = apolloClient.query(StatQuery.builder()
-            .filterCurrency(null)
-            .statCurrency(null)
-            .filterPeriod(null)
-            .build())
-        .addHttpHeader("authorization", bearerToken);
+    @User
+    @Test
+    @ApiLogin
+    void statTest(@Token String bearerToken) {
+        final ApolloCall<StatQuery.Data> currenciesCall = apolloClient.query(StatQuery.builder().build())
+                                                                      .addHttpHeader("authorization", bearerToken);
 
-    final ApolloResponse<StatQuery.Data> response = Rx2Apollo.single(currenciesCall).blockingGet();
-    final StatQuery.Data data = response.dataOrThrow();
-    StatQuery.Stat result = data.stat;
-    Assertions.assertEquals(
-        0.0,
-        result.total
-    );
-  }
-
+        final ApolloResponse<StatQuery.Data> response = Rx2Apollo.single(currenciesCall).blockingGet();
+        final StatQuery.Data data = response.dataOrThrow();
+        StatQuery.Stat result = data.stat;
+        Assertions.assertEquals(
+                0.0,
+                result.total
+        );
+    }
 }
