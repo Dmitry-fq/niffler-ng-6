@@ -4,7 +4,7 @@ import com.google.common.base.Stopwatch;
 import guru.qa.niffler.api.UserdataApi;
 import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.api.core.ThreadSafeCookieStore;
-import guru.qa.niffler.model.rest.FriendState;
+import guru.qa.niffler.model.rest.FriendshipStatus;
 import guru.qa.niffler.model.rest.TestData;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.UsersClient;
@@ -96,7 +96,7 @@ public class UserdataApiClient extends RestClient implements UsersClient {
             for (int i = 0; i < count; i++) {
                 String randomUserName = randomUsername();
                 UserJson createdUser = createUser(randomUserName, DEFAULT_PASSWORD)
-                        .addFriendState(FriendState.INVITE_RECEIVED);
+                        .addFriendshipStatus(FriendshipStatus.INVITE_RECEIVED);
                 sendInvitation(createdUser.username(), targetUser.username());
                 incomeUsers.add(createdUser);
             }
@@ -114,7 +114,7 @@ public class UserdataApiClient extends RestClient implements UsersClient {
                 String randomUserName = randomUsername();
                 UserJson createdUser;
                 createdUser = createUser(randomUserName, DEFAULT_PASSWORD)
-                        .addFriendState(FriendState.INVITE_SENT);
+                        .addFriendshipStatus(FriendshipStatus.INVITE_SENT);
                 sendInvitation(targetUser.username(), createdUser.username());
                 outcomeUsers.add(createdUser);
             }

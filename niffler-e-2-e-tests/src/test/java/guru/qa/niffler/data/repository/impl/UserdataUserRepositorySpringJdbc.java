@@ -2,7 +2,7 @@ package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.impl.UserdataUserDaoSpringJdbc;
-import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
+import guru.qa.niffler.data.entity.userdata.InvitationStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.data.tpl.DataSources;
@@ -70,7 +70,7 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
     public void addFriend(UserEntity requester, UserEntity addressee) {
         UUID requesterId = getUserOrCreateIfAbsent(requester).getId();
         UUID addresseeId = getUserOrCreateIfAbsent(addressee).getId();
-        String acceptedFriendshipStatus = FriendshipStatus.ACCEPTED.name();
+        String acceptedFriendshipStatus = InvitationStatus.ACCEPTED.name();
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
         String sql = "INSERT INTO friendship (requester_id, addressee_id, status) VALUES (?, ?, ?)";

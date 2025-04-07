@@ -37,7 +37,7 @@ public class LoginWebTest {
 
     @User(
             categories = {
-                    @Category(name = "cat_1", archived = false),
+                    @Category(name = "cat_1"),
                     @Category(name = "cat_2", archived = true),
             },
             spendings = {
@@ -54,9 +54,6 @@ public class LoginWebTest {
         final String password = user.testData().password();
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-//TODO закомментил, чтобы поддержать экстеншены
-//                .clickCreateNewAccount()
-//                .register(username, password)
                 .login(username, password)
                 .checkElementsMainPage();
     }

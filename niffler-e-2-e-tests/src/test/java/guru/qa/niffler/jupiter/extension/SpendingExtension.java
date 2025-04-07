@@ -3,10 +3,9 @@ package guru.qa.niffler.jupiter.extension;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.rest.CategoryJson;
-import guru.qa.niffler.model.rest.CurrencyValues;
 import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.model.rest.UserJson;
-import guru.qa.niffler.service.impl.SpendDbClient;
+import guru.qa.niffler.service.impl.SpendApiClient;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -23,10 +22,10 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
 
-    private final SpendDbClient spendDbClient = new SpendDbClient();
+    private final SpendApiClient spendApiClient = new SpendApiClient();
 
     @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
+    public void beforeEach(ExtensionContext context) {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
                          .ifPresent(userAnno -> {
                              if (ArrayUtils.isNotEmpty(userAnno.spendings())) {
@@ -44,13 +43,13 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                                                      user != null ? user.username() : userAnno.username(),
                                                      false
                                              ),
-                                             CurrencyValues.RUB,
+                                             spendAnno.currency(),
                                              spendAnno.amount(),
                                              spendAnno.description(),
                                              user != null ? user.username() : userAnno.username()
                                      );
 
-                                     SpendJson createdSpend = spendDbClient.createSpend(spend);
+                                     SpendJson createdSpend = spendApiClient.createSpend(spend);
                                      result.add(createdSpend);
                                  }
 

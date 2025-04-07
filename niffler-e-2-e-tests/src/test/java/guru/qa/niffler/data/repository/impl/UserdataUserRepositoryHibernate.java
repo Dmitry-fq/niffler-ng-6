@@ -1,12 +1,11 @@
 package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
+import guru.qa.niffler.data.entity.userdata.InvitationStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -54,8 +53,8 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
         try {
             return Optional.of(
                     entityManager.createQuery("select u from UserEntity u where u.username =: username", UserEntity.class)
-                            .setParameter("username", username)
-                            .getSingleResult()
+                                 .setParameter("username", username)
+                                 .getSingleResult()
             );
         } catch (NoResultException e) {
             return Optional.empty();
@@ -71,8 +70,8 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
     @Override
     public void addFriend(UserEntity requester, UserEntity addressee) {
         entityManager.joinTransaction();
-        requester.addFriends(FriendshipStatus.ACCEPTED, addressee);
-        addressee.addFriends(FriendshipStatus.ACCEPTED, requester);
+        requester.addFriends(InvitationStatus.ACCEPTED, addressee);
+        addressee.addFriends(InvitationStatus.ACCEPTED, requester);
     }
 
     @Override
