@@ -41,11 +41,9 @@ public interface Config {
     String currencyGrpcAddress();
 
     default int currencyGrpcPort() {
-        return 8092;
+      return 8092;
     }
 
     @Nonnull
-    default String ghUrl() {
-      return "https://api.github.com/";
-    }
+    String screenshotBaseDir();
 }

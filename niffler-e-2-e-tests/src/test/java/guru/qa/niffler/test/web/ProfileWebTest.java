@@ -68,7 +68,7 @@ public class ProfileWebTest {
 
     @User
     @ApiLogin
-    @ScreenShotTest("img/expected-avatar.png")
+    @ScreenShotTest(expected = "expected-avatar.png")
     void avatarShouldBeCorrect(BufferedImage expectedImage) throws IOException {
         Selenide.open(MainPage.URL, MainPage.class);
 

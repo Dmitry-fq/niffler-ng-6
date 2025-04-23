@@ -30,7 +30,7 @@ public class SpendingWebTest {
                     )
             }
     )
-    @ApiLogin()
+    @ApiLogin
     @Test
     void categoryDescriptionShouldBeChangedFromTable(UserJson user) {
         String description = user.testData().spendings().getFirst().description();
@@ -46,7 +46,7 @@ public class SpendingWebTest {
     }
 
     @User
-    @ApiLogin()
+    @ApiLogin
     @Test
     void newSpendingShouldBeCreated(UserJson user) {
         Double amount = RandomDataUtils.randomAmount();
@@ -70,8 +70,8 @@ public class SpendingWebTest {
                     amount = 79990
             )
     )
-    @ApiLogin()
-    @ScreenShotTest("img/expected-stat.png")
+    @ApiLogin
+    @ScreenShotTest(expected = "expected-stat.png")
     void checkStatComponentTest(UserJson user, BufferedImage expected) throws IOException {
         Selenide.open(MainPage.URL, MainPage.class)
                 .checkStatDiagramByScreenshot(expected)
@@ -87,8 +87,8 @@ public class SpendingWebTest {
                     amount = 79990
             )
     )
-    @ApiLogin()
-    @ScreenShotTest("img/expected-stat-edit.png")
+    @ApiLogin
+    @ScreenShotTest(expected = "expected-stat-edit.png")
     void checkStatComponentWithEditSpendingTest(UserJson user, BufferedImage expected) throws IOException {
         double newAmount = 100.0;
 
@@ -107,8 +107,8 @@ public class SpendingWebTest {
                     amount = 79990
             )
     )
-    @ApiLogin()
-    @ScreenShotTest("img/expected-stat-clear.png")
+    @ApiLogin
+    @ScreenShotTest(expected = "expected-stat-clear.png")
     void checkStatComponentWithoutSpendingsTest(UserJson user, BufferedImage expected) throws IOException {
         Selenide.open(MainPage.URL, MainPage.class)
                 .deleteSpending(user.testData().spendings().getFirst().description())
@@ -134,7 +134,7 @@ public class SpendingWebTest {
             }
 
     )
-    @ApiLogin()
+    @ApiLogin
     @Test
     void checkStatComponentContainsBubblesTest() {
         Selenide.open(MainPage.URL, MainPage.class)
@@ -159,7 +159,7 @@ public class SpendingWebTest {
             }
 
     )
-    @ApiLogin()
+    @ApiLogin
     @Test
     void checkSpendExistTest(UserJson user) {
         List<SpendJson> expectedSpends = user.testData().spendings();
@@ -169,4 +169,3 @@ public class SpendingWebTest {
                 .checkSpendings(expectedSpends);
     }
 }
-

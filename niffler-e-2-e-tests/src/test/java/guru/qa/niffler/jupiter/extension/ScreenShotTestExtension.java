@@ -1,6 +1,7 @@
 package guru.qa.niffler.jupiter.extension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.model.allure.ScreenDif;
 import io.qameta.allure.Allure;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.springframework.core.io.ClassPathResource;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -20,17 +22,63 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 
+@ParametersAreNonnullByDefault
 public class ScreenShotTestExtension implements ParameterResolver, TestExecutionExceptionHandler {
 
-    public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ScreenShotTestExtension.class);
+  private static final Config CFG = Config.getInstance();
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+  public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ScreenShotTestExtension.class);
+  public static final String ASSERT_SCREEN_MESSAGE = "Screen comparison failure";
 
-    private static final Base64.Encoder encoder = Base64.getEncoder();
+  private static final ObjectMapper objectMapper = new ObjectMapper();
+  private static final Base64.Encoder encoder = Base64.getEncoder();
 
-    public static BufferedImage getExpected() {
-        return TestMethodContextExtension.context().getStore(NAMESPACE).get("expected", BufferedImage.class);
+  @Override
+  public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    return AnnotationSupport.isAnnotated(extensionContext.getRequiredTestMethod(), ScreenShotTest.class) &&
+           parameterContext.getParameter().getType().isAssignableFrom(BufferedImage.class);
+  }
+
+  @SneakyThrows
+  @Override
+  public BufferedImage resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    final ScreenShotTest screenShotTest = extensionContext.getRequiredTestMethod().getAnnotation(ScreenShotTest.class);
+    return ImageIO.read(
+        new ClassPathResource(
+            CFG.screenshotBaseDir() + screenShotTest.expected()
+        ).getInputStream()
+    );
+  }
+
+  @Override
+  public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+    final ScreenShotTest screenShotTest = context.getRequiredTestMethod().getAnnotation(ScreenShotTest.class);
+    if (screenShotTest.rewriteExpected()) {
+      final BufferedImage actual = getActual();
+      if (actual != null) {
+        ImageIO.write(
+            actual,
+            "png",
+            new File(".screen-output/" + CFG.screenshotBaseDir() + screenShotTest.expected())
+        );
+      }
     }
+
+    if (throwable.getMessage().contains(ASSERT_SCREEN_MESSAGE)) {
+      ScreenDif screenDif = new ScreenDif(
+          "data:image/png;base64," + encoder.encodeToString(imageToBytes(getExpected())),
+          "data:image/png;base64," + encoder.encodeToString(imageToBytes(getActual())),
+          "data:image/png;base64," + encoder.encodeToString(imageToBytes(getDiff()))
+      );
+
+      Allure.addAttachment(
+          "Screenshot diff",
+          "application/vnd.allure.image.diff",
+          objectMapper.writeValueAsString(screenDif)
+      );
+    }
+    throw throwable;
+  }
 
     public static void setExpected(BufferedImage expected) {
         TestMethodContextExtension.context().getStore(NAMESPACE).put("expected", expected);
@@ -52,56 +100,12 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
         TestMethodContextExtension.context().getStore(NAMESPACE).put("diff", diff);
     }
 
-    private static byte[] imageToBytes(BufferedImage image) {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            ImageIO.write(image, "png", outputStream);
-            return outputStream.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+  private static byte[] imageToBytes(BufferedImage image) {
+    try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+      ImageIO.write(image, "png", outputStream);
+      return outputStream.toByteArray();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
-
-    @Override
-    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return AnnotationSupport.isAnnotated(extensionContext.getRequiredTestMethod(), ScreenShotTest.class) &&
-                parameterContext.getParameter().getType().isAssignableFrom(BufferedImage.class);
-    }
-
-    @SneakyThrows
-    @Override
-    public BufferedImage resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return ImageIO.read(new ClassPathResource(extensionContext.getRequiredTestMethod()
-                .getAnnotation(ScreenShotTest.class).value()).getInputStream());
-    }
-
-    @Override
-    public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-        ScreenDif screenDif = new ScreenDif(
-                "data:image/png;base64," + encoder.encodeToString(imageToBytes(getExpected())),
-                "data:image/png;base64," + encoder.encodeToString(imageToBytes(getActual())),
-                "data:image/png;base64," + encoder.encodeToString(imageToBytes(getDiff()))
-        );
-
-        ScreenShotTest annotation = context.getRequiredTestMethod().getAnnotation(ScreenShotTest.class);
-        boolean rewriteScreenshot = annotation.rewriteExpected();
-        if (rewriteScreenshot) {
-            rewriteScreenshot(annotation);
-        }
-
-        Allure.addAttachment(
-                "Screenshot diff",
-                "application/vnd.allure.image.diff",
-                objectMapper.writeValueAsString(screenDif)
-        );
-
-        throw throwable;
-    }
-
-    private void rewriteScreenshot(ScreenShotTest annotation) throws Throwable {
-        BufferedImage actualImage = getActual();
-        String expectedPath = annotation.value();
-        File file = new File("src/test/resources/" + expectedPath);
-
-        ImageIO.write(actualImage, "png", file);
-    }
+  }
 }
