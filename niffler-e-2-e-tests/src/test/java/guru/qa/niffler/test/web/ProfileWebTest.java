@@ -21,14 +21,13 @@ public class ProfileWebTest {
     private final Header header = new Header();
 
     @User(
-            username = "duck",
             categories = {
                     @Category(
                             archived = true
                     )
             }
     )
-    @ApiLogin(username = "duck", password = "12345")
+    @ApiLogin
     @Test
     void archivedCategoryShouldPresentInCategoriesList(CategoryJson[] category) {
         Selenide.open(MainPage.URL, MainPage.class);
@@ -39,10 +38,9 @@ public class ProfileWebTest {
     }
 
     @User(
-            username = "duck",
-            categories = @Category()
+            categories = @Category
     )
-    @ApiLogin(username = "duck", password = "12345")
+    @ApiLogin
     @Test
     void activeCategoryShouldPresentInCategoriesList(CategoryJson[] category) {
         Selenide.open(MainPage.URL, MainPage.class);
