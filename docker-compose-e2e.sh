@@ -31,6 +31,13 @@ java --version
 bash ./gradlew clean
 bash ./gradlew jibDockerBuild -x :niffler-e-2-e-tests:test
 
-docker pull selenoid/vnc_chrome:127.0
+if [ "$1" == "firefox" ]; then
+  docker pull selenoid/vnc_firefox:125.0
+  export BROWSER="firefox"
+else
+  docker pull selenoid/vnc_chrome:127.0
+  export BROWSER="chrome"
+fi
+
 docker compose up -d
 docker ps -a

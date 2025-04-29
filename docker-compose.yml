@@ -183,6 +183,7 @@ services:
       - BUILD_URL=${BUILD_URL}
       - HEAD_COMMIT_MESSAGE=${HEAD_COMMIT_MESSAGE}
       - EXECUTION_TYPE=${EXECUTION_TYPE}
+      - BROWSER=${BROWSER}
     volumes:
       - allure-results:/niffler/niffler-e-2-e-tests/build/allure-results
       - ./niffler-e-2-e-tests/.screen-output/screenshots/selenoid:/niffler/niffler-e-2-e-tests/.screen-output/screenshots/selenoid
