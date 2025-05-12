@@ -51,4 +51,7 @@ public interface Config {
     default String ghUrl() {
         return "https://api.github.com/";
     }
+
+    @Nonnull
+    String allureServiceUrl();
 }

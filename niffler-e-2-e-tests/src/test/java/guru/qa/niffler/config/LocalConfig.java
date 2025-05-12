@@ -72,4 +72,10 @@ enum LocalConfig implements Config {
     public String screenshotBaseDir() {
         return ".screen-output/screenshots/local/";
     }
+
+    @Nonnull
+    @Override
+    public String allureServiceUrl() {
+        return "http://127.0.0.1:5050/";
+    }
 }

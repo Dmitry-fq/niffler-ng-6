@@ -1,6 +1,7 @@
 package guru.qa.niffler.config;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 enum DockerConfig implements Config {
     INSTANCE;
@@ -69,5 +70,12 @@ enum DockerConfig implements Config {
     @Override
     public String screenshotBaseDir() {
         return ".screen-output/screenshots/selenoid/";
+    }
+
+    @Nonnull
+    @Override
+    public String allureServiceUrl() {
+        String allureDockerApiUrl = System.getenv("ALLURE_DOCKER_API");
+        return Objects.requireNonNullElse(allureDockerApiUrl, "http://allure:5050/");
     }
 }

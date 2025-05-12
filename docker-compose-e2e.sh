@@ -13,7 +13,6 @@ java --version
 
 docker compose down
 docker_containers=$(docker ps -a -q)
-docker_images=$(docker images --format '{{.Repository}}:{{.Tag}}' | grep 'niffler')
 
 if [ ! -z "$docker_containers" ]; then
   echo "### Stop containers: $docker_containers ###"
@@ -23,10 +22,8 @@ fi
 
 images=("postgres" "zookeeper" "kafka" "niffler-auth-docker" "niffler-currency-docker" "niffler-gateway-docker"
  "niffler-spend-docker" "niffler-userdata-docker" "niffler-ng-client-docker" "selenoid" "selenoid-ui"
-  "niffler-e-2-e-tests" "allure-docker-service" "allure-docker-service-ui")
-
+ "allure-docker-service" "allure-docker-service-ui")
 build_needed=false
-
 for image in "${images[@]}"; do
   if ! docker images --format "{{.Repository}}" | grep -q "${image}"; then
     echo "### Image not found: '${image}'. Build needed ###"
@@ -34,13 +31,20 @@ for image in "${images[@]}"; do
   fi
 done
 
+E2E_IMAGE=$(docker images --format "{{.Repository}}:{{.Tag}}" | grep "niffler-e-2-e-tests")
+docker rmi "$E2E_IMAGE"
+echo "### $E2E_IMAGE removed ###"
+
 if $build_needed; then
-  echo "### Build all images ###"
+  echo "### Build all images except $E2E_IMAGE ###"
   bash ./gradlew clean
-  bash ./gradlew jibDockerBuild -x :niffler-e-2-e-tests:test
+  bash ./gradlew jibDockerBuild -x :niffler-e-2-e-tests:build -x :niffler-e-2-e-tests:test
 else
-  echo "### All images exist. No build needed ###"
+  echo "### All images exist except $E2E_IMAGE. No build needed ###"
 fi
+
+#bash ./gradlew jibDockerBuild -PimageName=$E2E_IMAGE -x :niffler-e-2-e-tests:test
+#echo "### $E2E_IMAGE built ###"
 
 if [ "$1" == "firefox" ]; then
   docker pull selenoid/vnc_firefox:125.0
