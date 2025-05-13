@@ -7,7 +7,6 @@ import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.mapper.AuthUserEntityRowMapper;
 import guru.qa.niffler.data.repository.AuthUserRepository;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -127,5 +126,10 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
     @Override
     public void remove(AuthUserEntity user) {
         authUserDaoJdbc.deleteUser(user);
+    }
+
+    @Override
+    public List<AuthUserEntity> all() {
+        throw new UnsupportedOperationException();
     }
 }

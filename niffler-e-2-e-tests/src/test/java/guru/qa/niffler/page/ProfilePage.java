@@ -37,7 +37,7 @@ public class ProfilePage extends BasePage<ProfilePage> {
 
     @Step("Установка нового аватара")
     public ProfilePage setNewAvatar() {
-        uploadNewPictureButton.uploadFromClasspath("img/expected-avatar.png");
+        uploadNewPictureButton.uploadFromClasspath("img/cat.jpeg");
 
         return this;
     }

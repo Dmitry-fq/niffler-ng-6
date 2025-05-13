@@ -68,7 +68,7 @@ public class LoginPage extends BasePage<LoginPage> {
     @Nonnull
     @Step("Проверка сообщения об ошибке")
     public LoginPage checkErrorText() {
-        String expectedText = "Неверные учетные данные пользователя";
+        String expectedText = "Bad credentials";
 
         error.shouldHave(text(expectedText));
 

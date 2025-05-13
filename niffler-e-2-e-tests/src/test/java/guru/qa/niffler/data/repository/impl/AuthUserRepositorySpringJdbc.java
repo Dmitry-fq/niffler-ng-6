@@ -8,12 +8,11 @@ import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.mapper.AuthUserEntityRowMapper;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.tpl.DataSources;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -63,5 +62,10 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     @Override
     public void remove(AuthUserEntity user) {
         authUserDaoSpringJdbc.deleteUser(user);
+    }
+
+    @Override
+    public List<AuthUserEntity> all() {
+        throw new UnsupportedOperationException();
     }
 }

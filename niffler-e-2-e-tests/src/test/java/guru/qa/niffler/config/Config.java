@@ -45,5 +45,13 @@ public interface Config {
     }
 
     @Nonnull
-    String ghUrl();
+    String screenshotBaseDir();
+
+    @Nonnull
+    default String ghUrl() {
+        return "https://api.github.com/";
+    }
+
+    @Nonnull
+    String allureServiceUrl();
 }
